@@ -13,3 +13,57 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Movie {
+  id          Int      @id @default(autoincrement())
+  title       String
+  releaseDate DateTime
+  runtime     Int?
+  description String?
+  imageURL    String
+
+  price Int
+  stock Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  genres    Genre[]
+  directors Director[]
+  actors    Actor[]
+}
+
+model Genre {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movies Movie[]
+}
+
+model Director {
+  id          Int       @id @default(autoincrement())
+  name        String
+  birthday    DateTime?
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movies Movie[]
+}
+
+model Actor {
+  id          Int       @id @default(autoincrement())
+  name        String
+  birthday    DateTime?
+  description DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movies Movie[]
+}
