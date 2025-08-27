@@ -17,42 +17,32 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { authClient } from "@/lib/auth-client";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import z from "zod";
 
-const FormSchema = z
-  .object({
-    name: z.string().min(2).max(50),
-    email: z.email().max(100),
-    password: z.string().min(6).max(100),
-    confirmPass: z.string(),
-  })
-  .refine((values) => values.password === values.confirmPass, {
-    message: "Passwords do not match",
-    path: ["confirmPass"],
-  });
+const FormSchema = z.object({
+  email: z.email().max(250),
+  password: z.string().min(6).max(128),
+});
 
 type FormValues = z.infer<typeof FormSchema>;
 
-export default function SignUpForm() {
+export default function SignInForm() {
   const router = useRouter();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
-      confirmPass: "",
     },
   });
 
   async function onSubmit(values: FormValues) {
-    const { error } = await authClient.signUp.email({
-      name: values.name,
+    const { error } = await authClient.signIn.email({
       email: values.email,
       password: values.password,
     });
@@ -68,28 +58,15 @@ export default function SignUpForm() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Sign Up</CardTitle>
+        <CardTitle>Sign In</CardTitle>
         <CardDescription>
-          Enter your information below to create an account
+          Enter your details below to sign in to your account
         </CardDescription>
       </CardHeader>
+
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="email"
@@ -118,26 +95,12 @@ export default function SignUpForm() {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="confirmPass"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <Button
-              type="submit"
               className="w-auto"
+              type="submit"
               disabled={form.formState.isSubmitting}
             >
-              Create Account
+              {form.formState.isSubmitting ? "Loading..." : "Sign In"}
             </Button>
           </form>
         </Form>
