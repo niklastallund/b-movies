@@ -1,135 +1,111 @@
-använd api från IMDB för att importera filmer
+##  MovieShop Teknisk Specifikation
+• Projektöversikt
+• MovieShop är en e-handelsplattform för att köpa och hantera filmer. Projektet kommer att utvecklas av grupper på 4–5 studenter.
+• Teknisk stack
+• NextJS 15 med App Router
+• PostgreSQL
+• Prisma (ORM)
+• Tailwind CSS (Styling)
+• ShadCN (UI-komponenter)
+• Better Auth (Autentisering)
+• Zod (Datavalidering)
+• Kärnfunktioner
+______________________________________________________________
+1. Användarautentisering
+Implementera registrering och inloggning med Better Auth
+Använd Better Auths standardschema för användardata
+Skapa användarroller: Kund och Admin (valfritt)
+______________________________________________________________
+2. Filhantering (Admin)
+CRUD-operationer för filmer:
+Lägg till nya filmer med detaljer (titel, beskrivning, pris, releasedatum, regissör, skådespelare osv.)
+Redigera befintlig filminformation
+Ta bort filmer
+Lista alla filmer med paginering (valfritt)
+Genrer:
+CRUD-operationer för genrer
+Tilldela filmer till flera genrer
+Personer kopplade till filmer:
+Lägg till och redigera information om regissörer och skådespelare
+Associera personer med filmer i olika roller (regissör, skådespelare)
+______________________________________________________________
+3. Köpupplevelse (Kund)
+Startsida
+Topp 5 mest köpta filmer
+Topp 5 senaste filmer
+Topp 5 äldsta filmer
+Topp 5 billigaste filmer
 
-MovieShop Technical Specification
-Project Overview
-MovieShop is an e-commerce platform for purchasing and managing movies. The
-Tech Stack
-
- PostgreSQL
- Prisma (ORM)
-
- Tailwind CSS (Styling)
- ShadCN (UI Components)
- Zod (Data Validation)
-Core Features
+Bläddra filmer (valfria filter)
+Efter genre
+Efter regissör
+Efter skådespelare
+Sökfunktion (grundläggande sökning på titel)
+Detaljvy för filmer
+Kundvagn
+Lägg till filmer (lagras i cookies)
+Hantera kundvagn (lägg till, ta bort, uppdatera antal)
+Kassa
+Ange adress
+Betalningssimulering (ingen riktig betalningslösning krävs)
+Orderbekräftelse
+______________________________________________________________
+4. Användarpanel
+Se orderhistorik
+Hantera kontoinformation (valfritt)
+______________________________________________________________
+5. Adminpanel (valfritt)
+Visa försäljningsstatistik
+Hantera användarkonton (med Better Auth)
 
-1. User Authentication
-   
-    Create user roles: Customer and Admin (optional)
-   
-2. Movie Management (Admin)
-    CRUD operations for movies:
-   o Add new movies with details (title, description, price, release date,
-   director, actors, etc.)
-   o Edit existing movie information
-   o Delete movies
-   o List all movies with pagination (optional pagination)
-    Implement movie genre management:
-   o CRUD operations for genres
-   o Assign movies to multiple genres
-    Manage people associated with movies:
-   o Add and edit information about directors and actors
-   NextJS 15 with App Router
-   project will be developed by teams of 4-5 students.
-   Better Auth (Authentication)
-   Implement user registration and login functionality using Better Auth
-   Utilize Better Auth default schema for user data
-   o Associate people with movies in diƯerent roles (director, actor)
-3. Shopping Experience (Customer)
-    Landing page
-   o Top 5 most purchased movie
-   o Top 5 most recent movies
-   o Top 5 Oldest Movies
-   o Top 5 cheapest Movie
-    Browse movies (optional filtering)
-   o By genre
-   o By director
-   o By actor
-    Search functionality for movies (basic search by title)
-    View detailed movie information
-    Add movies to cart (stored in cookies)
-    Manage cart (add, remove, update quantities)
-    Checkout process:
-   o Address input
-   o Payment simulation (no real payment gateway required)
-   o Order confirmation
-4. User Dashboard
-    View order history
-    Manage account information (optional)
-5. Admin Dashboard (optional)
-    View sales statistics
-    Manage user accounts (using Better Auth features)
-   Database Models (Examples of potential props)
-   Note: These are examples of props the models could contain, not the full schema.
-   
-    Movie:
-   o title, description, price, releaseDate, imageUrl, stock, runtime
-    Genre:
-   o name, description
-    Order:
-   o
-    OrderItem:
-   o orderId, movieId, quantity, priceAtPurchase
-   Server Actions and Data Validation
-    Implement server actions for all data mutations:
-   o Movie CRUD operations
-   o Genre management
-   o Cart operations (add, remove, update)
-   o Checkout process
-   o Order management
-    Use Zod for server-side data validation within server actions
-   
-   Cart Implementation
-    Use cookies to store cart information
-    Implement functions to add, remove, and update cart items in the cookie
-   Frontend
-    Develop responsive layouts using Tailwind CSS and ShadCN components
-    Create reusable React components for common UI elements
-    Use React Server Components where appropriate for improved performance
-   
-   userId (reference to Better Auth user), totalAmount, status, orderDate
-   All Better Auth models
-   Utilize Better Auth for user-related actions (registration, login, profile updates)
-   Integrate Better Auth components for user authentication UI
-   Additional Features (Only if there's extra time)
-   Note: These features should only be attempted if the core features are completed and
-   there's additional time available.
-6. Advanced Browsing and Filtering
-   o Implement more complex filters (e.g., release year range, runtime,
-   multiple genres)
-7. User Reviews and Ratings
-   o Allow customers to rate and review purchased movies
-   o Display average ratings on movie listings
-8. Wishlist
-   o Enable users to add movies to a wishlist for future purchase
-9. Basic Recommendation System
-   o Implement a simple recommendation system based on user purchase
-   history, favorite genres, directors, or actors
-10. Movie Trailer Integration
-    o Add functionality to link and display movie trailers (embedded YouTube
-    videos)
-11. Social Sharing
-    o Add buttons to share movie links on social media platforms
-12. Advanced Search
-    o Implement full-text search for movies using PostgreSQL's full-text search
-    capabilities
-    o Include search by director, actor, and genre
-13. Discount System
-    o Create a simple discount system for special oƯers or promotional codes
-    Evaluation Criteria
-     Functionality: All core features working as specified
-     Code Quality: Clean, well-organized, and commented code
-     Database Design: Proper use of Prisma and eƯicient database schema,
-     UI/UX: Intuitive and responsive design using Tailwind and ShadCN
-     Authentication: Secure implementation of user authentication and authorization
-     Server Actions: EƯicient and secure implementation of server actions for data
-    mutations
-     Data Validation: Proper use of Zod for server-side data validation
-     Cart Implementation: Correct use of cookies for cart management
-     Error Handling: Robust error handling and user feedback
-     Additional Features: Successful implementation of extra features (if attempted,
-    not required)
-     Teamwork: EƯective collaboration and task distribution among team members
+## Databasmodeller (exempel på möjliga attribut)
+Film: title, description, price, releaseDate, imageUrl, stock, runtime
+Genre: name, description
+Order: userId (referens till Better Auth-användare), totalAmount, status, orderDate
+OrderItem: orderId, movieId, quantity, priceAtPurchase
+
+## Server Actions och datavalidering
+Implementera server actions för alla datamodifieringar:
+Film-CRUD
+Genrer
+Kundvagnsoperationer (lägg till, ta bort, uppdatera)
+Kassaprocess
+Orderhantering
+Använd Zod för serverside-validering
+
+## Kundvagnsimplementation
+Använd cookies för att lagra kundvagn
+Implementera funktioner för att lägga till, ta bort och uppdatera varor
+
+## Frontend
+Responsiv design med Tailwind CSS och ShadCN
+Återanvändbara React-komponenter för UI
+Använd React Server Components där det är lämpligt för bättre prestanda
+
+## Extra funktioner (endast om tid finns)
+Avancerad filtrering (t.ex. årtal, speltid, flera genrer)
+Användarrecensioner och betyg
+Önskelista
+Enkel rekommendationsmotor (baserad på köp, favoritgenrer, regissörer/skådespelare)
+Filmtrailers (YouTube-embeds)
+Social delning (knappar för sociala medier)
+Avancerad sökning (PostgreSQL fulltext + sökning på regissör, skådespelare, genre)
+Rabattsystem (enkla kampanjkoder)
+
+## Utvärderingskriterier
+Funktionalitet: Alla kärnfunktioner fungerar
+Kodkvalitet: Ren, välstrukturerad och kommenterad kod
+Databasschema: Effektivt med Prisma
+UI/UX: Intuitiv, responsiv design med Tailwind & ShadCN
+Autentisering: Säker hantering av autentisering och behörigheter
+Server Actions: Effektiva och säkra datamodifieringar
+Datavalidering: Korrekt användning av Zod
+Kundvagn: Rätt implementation med cookies
+Felhante­ring: Robust hantering med bra återkoppling
+Extra funktioner: Implementerade om möjligt (ej krav)
+Teamarbete: Effektivt samarbete och uppgiftsfördelning
+______________________________________________________________
+
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 

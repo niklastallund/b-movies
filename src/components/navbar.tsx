@@ -2,20 +2,28 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Menu } from "lucide-react";
+import { Search, Menu, ShoppingCart } from "lucide-react";
 import { ModeToggle } from "@/components/toggle-theme-button";
 
 export function Navbar() {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+
+  // EXEMPERL SÅ LÄNGE TILLS VI HAR API
+  const [cartItems, setCartItems] = useState([
+    { id: 1, name: "Snöhajjar", price: 99 },
+    { id: 2, name: "Apor på mars", price: 129 },
+  ]);
 
   const movies = [
     "Action",
@@ -35,21 +43,26 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="bg-background/95 border-b backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="bg-background/95 border-b border-red-900 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {/* LOGO */}
-        <Link
-          href="/"
-          className="flex items-center space-x-3 rtl:space-x-reverse"
-        >
-          <span className="self-center text-3xl font-extrabold whitespace-nowrap text-primary">
-            B-Movies
-          </span>
-        </Link>
+       <Link
+  href="/"
+  className="flex items-center space-x-3 rtl:space-x-reverse"
+>
+  {/* Lägg till din bild med Next.js Image-komponent */}
+  <Image 
+    src="/image/bfilmer.png" 
+    alt="B-Movies logotyp" 
+    width={600} 
+    height={600} 
+    className="h-26 w-auto" 
+  />
+</Link>
 
-        {/* SÖK - MinaSidor - Mobilknapp */}
+        {/* SÖK - Kundvagn - MinaSidor - Mobilknapp */}
         <div className="flex items-center md:order-2 space-x-2">
-          {/* Sök-knapp och fält */}
+          {/* Sök-knapp som öppnar sökfält */}
           <div className="flex items-center space-x-2">
             {isSearchVisible && (
               <Input
@@ -72,12 +85,53 @@ export function Navbar() {
           {/* Färgtema-knapp */}
           <ModeToggle />
 
+          {/* KUNDVAGN  DROPDOWN */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative text-foreground hover:text-primary transition transform hover:scale-110"
+              >
+                <ShoppingCart className="w-6 h-6" />
+                <span className="sr-only">Kundvagn</span>
+                {cartItems.length > 0 && (
+                  <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-blue-700 rounded-full">
+                    {cartItems.length}
+                  </span>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              {cartItems.length > 0 ? (
+                <>
+                  {cartItems.map((item) => (
+                    <DropdownMenuItem key={item.id} className="flex justify-between items-center">
+                      <span>{item.name}</span>
+                      <span className="text-muted-foreground">{item.price} kr</span>
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/checkout" className="w-full text-center">
+                      <Button className="w-full">Gå till kassan</Button>
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <DropdownMenuItem className="flex justify-center text-muted-foreground">
+                  Kundvagnen är tom
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           {/* DROPDOWN för MinaSidor */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="flex items-center text-foreground hover:text-primary transition transform hover:scale-110"
+                className="flex items-center bg-red-800 text-white hover:text-primary transition transform hover:scale-110"
               >
                 Mina sidor
               </Button>
