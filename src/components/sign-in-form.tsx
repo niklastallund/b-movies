@@ -96,7 +96,7 @@ export default function SignInForm() {
             />
 
             <Button
-              className="w-auto"
+              className="w-auto bg-red-800 text-white"
               type="submit"
               disabled={form.formState.isSubmitting}
             >
