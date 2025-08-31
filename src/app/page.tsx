@@ -37,8 +37,8 @@ export default function Home() {
       {/* HERO FÖR DESKTOP */}
       <section
         id="desktop-hero"
-        className="relative h-screen w-screen hidden md:flex flex-col justify-center items-center text-center px-4"
-        style={{ backgroundImage: 'url("/images/hero1.png")' }}
+  className="relative h-screen w-screen hidden md:flex flex-col justify-center items-center text-center px-4 bg-cover bg-center"
+  style={{ backgroundImage: 'url("/images/hero1.png")' }}
       >
         <div className="absolute inset-0 bg-black opacity-60"></div>
         <div className="z-10 relative">
@@ -86,7 +86,7 @@ export default function Home() {
 
         <div className="relative p-4 w-full h-auto ">
           <Image
-            src="/images/hero1.png"
+            src="/images/hero1mobil.png"
             alt="Hero image of B-movies"
             width={1920}
             height={1080}
