@@ -17,7 +17,7 @@ import { ModeToggle } from "@/components/toggle-theme-button";
 import { ShoppingCartSheet } from "./shopping-cart-sheet";
 import { ProfileDropdown } from "./profile-dropdown";
 
-// Skapa en separat komponent för mobilmenyns länkar
+// Skapa en separat komponent för mobilmenyns länkar!
 const MobileLinks = ({
   movies,
   toplists,
@@ -98,7 +98,7 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="bg-background/95 border-b border-red-900 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 bg-background/95 border-b border-red-900 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {/* LOGO */}
         <Link
@@ -106,7 +106,7 @@ export function Navbar() {
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <Image
-            src="/image/bmovies.png"
+            src="/images/bmovies.png"
             alt="B-Movies logo"
             width={600}
             height={600}
@@ -136,13 +136,13 @@ export function Navbar() {
             </Button>
           </div>
 
-          {/* COLOR THEME BUTTON */}
+          {/* THEME BUTTON */}
           <ModeToggle />
 
-          {/* Använd den nya kundvagns-komponenten */}
+          {/* Kundvagnkomponent */}
           <ShoppingCartSheet />
 
-          {/* Använd den nya 'Mina sidor'-komponenten */}
+          {/* Profil komponenten */}
           <ProfileDropdown />
 
           {/* MOBILE MENU */}
@@ -154,19 +154,19 @@ export function Navbar() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-full sm:max-w-xs">
-              {/* Använd den nya MobileLinks-komponenten för att hantera mobilmenyns länkar */}
+              {/* Mobilmeny Länkar */}
               <MobileLinks movies={movies} toplists={toplists} />
             </SheetContent>
           </Sheet>
         </div>
 
         {/* NAVIGATION FOR DESKTOP */}
-        <div className="hidden w-full md:flex md:w-auto md:order-1 items-center justify-between">
-          <ul className="flex items-center font-medium space-x-8">
+        <div className="hidden w-full md:flex md:w-auto md:order-1 text-sky-800 items-center justify-between">
+          <ul className="flex items-center  font-medium space-x-8">
             <li>
               <Link
                 href="#"
-                className="block text-sm font-medium transition-colors hover:text-primary"
+                className="block  text-md font-medium transition-colors hover:text-primary"
               >
                 Home
               </Link>
@@ -176,7 +176,7 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="link"
-                    className="p-0 h-auto text-sm font-medium text-foreground hover:text-primary"
+                    className="p-0 h-auto  text-md font-medium text-sky-800 hover:text-primary"
                   >
                     Movies
                   </Button>
@@ -195,7 +195,7 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="link"
-                    className="p-0 h-auto text-sm font-medium text-foreground hover:text-primary"
+                    className="p-0 h-auto text-md  font-medium text-sky-800 hover:text-primary"
                   >
                     Top Lists
                   </Button>
@@ -212,7 +212,7 @@ export function Navbar() {
             <li>
               <Link
                 href="#"
-                className="block text-sm font-medium transition-colors hover:text-primary"
+                className="block text-md font-medium transition-colors hover:text-primary"
               >
                 News
               </Link>
