@@ -1,13 +1,10 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import Test from "@/lib/tmdb";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Home() {
-  Test();
-
   useEffect(() => {
     const mainHeading = document.getElementById("main-heading");
     const subHeading = document.getElementById("sub-heading");
