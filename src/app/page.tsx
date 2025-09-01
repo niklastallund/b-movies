@@ -1,10 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import Test from "@/lib/tmdb";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Home() {
+  Test();
+
   useEffect(() => {
     const mainHeading = document.getElementById("main-heading");
     const subHeading = document.getElementById("sub-heading");
@@ -37,8 +40,8 @@ export default function Home() {
       {/* HERO FÖR DESKTOP */}
       <section
         id="desktop-hero"
-  className="relative h-screen w-screen hidden md:flex flex-col justify-center items-center text-center px-4 bg-cover bg-center"
-  style={{ backgroundImage: 'url("/images/hero1.png")' }}
+        className="relative h-screen w-screen hidden md:flex flex-col justify-center items-center text-center px-4 bg-cover bg-center"
+        style={{ backgroundImage: 'url("/images/hero1.png")' }}
       >
         <div className="absolute inset-0 bg-black opacity-60"></div>
         <div className="z-10 relative">
