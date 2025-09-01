@@ -3,7 +3,18 @@ import Link from "next/link";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export function MovieCard({ movieData }) {
+type Movie = {
+  imageUrl: string;
+  title: string;
+  price: number;
+  slug: string;
+};
+
+interface MovieCardProps {
+  movieData: Movie;
+}
+
+export function MovieCard({ movieData }: MovieCardProps) {
   const { imageUrl, title, price, slug } = movieData;
 
   return (
@@ -14,7 +25,7 @@ export function MovieCard({ movieData }) {
           alt={title}
           width={400}
           height={620}
-          objectFit="cover"
+          style={{ objectFit: "cover" }} // ✅ uppdaterad för TS/Next 13+
           className="rounded-t-lg p-2"
         />
       </CardContent>
@@ -31,7 +42,7 @@ export function MovieCard({ movieData }) {
             </Button>
           </div>
         </div>
-        <Link href={`/movies/${slug}`} passHref className="mt-4 w-full">
+        <Link href={`/movies/${slug}`} className="mt-4 w-full">
           <Button variant="outline" className="w-full">
             Läs mer
           </Button>

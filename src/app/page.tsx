@@ -99,7 +99,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/*carousell här*/}
       <div className="relative z-10 py-24 w-full">
         <CarouselSpacing />
         {/* EXEMPEL TOP LISTOR m.m. */}
