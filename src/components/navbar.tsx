@@ -17,13 +17,12 @@ import { ModeToggle } from "@/components/toggle-theme-button";
 import { ShoppingCartSheet } from "./shopping-cart-sheet";
 import { ProfileDropdown } from "./profile-dropdown";
 
-// Skapa en separat komponent för mobilmenyns länkar!
 const MobileLinks = ({
   movies,
   toplists,
 }: {
   movies: string[];
-  toplists: string[];
+  toplists: { label: string; id: string }[];
 }) => (
   <div className="mt-4 flex flex-col space-y-2">
     <Link href="#" className="font-semibold text-primary text-lg">
@@ -57,8 +56,8 @@ const MobileLinks = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent side="right">
         {toplists.map((link) => (
-          <DropdownMenuItem key={link} asChild>
-            <Link href="#">{link}</Link>
+          <DropdownMenuItem key={link.id} asChild>
+            <Link href={`#${link.id}`}>{link.label}</Link>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
@@ -91,10 +90,10 @@ export function Navbar() {
     "Animated",
   ];
   const toplists = [
-    "5 Most Bought Movies",
-    "5 Latest Movies",
-    "5 Oldest Movies",
-    "5 Cheapest Movies",
+    { label: "Top 5 Latest Movies", id: "latest" },
+    { label: "Top 5 Most Popular Movies", id: "popular" },
+    { label: "Top 5 Oldest Movies", id: "oldest" },
+    { label: "Top 5 Cheapest Movies", id: "cheapest" },
   ];
 
   return (
@@ -202,8 +201,9 @@ export function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   {toplists.map((link) => (
-                    <DropdownMenuItem key={link} asChild>
-                      <Link href="#">{link}</Link>
+                    <DropdownMenuItem key={link.id} asChild>
+                      {/* Länk till karusellen med dess unika ID */}
+                      <Link href={`#${link.id}`}>{link.label}</Link>
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>

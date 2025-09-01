@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
+import { CarouselSpacing } from "@/components/carousel";
 
 export default function Home() {
   useEffect(() => {
@@ -37,8 +38,8 @@ export default function Home() {
       {/* HERO FÖR DESKTOP */}
       <section
         id="desktop-hero"
-  className="relative h-screen w-screen hidden md:flex flex-col justify-center items-center text-center px-4 bg-cover bg-center"
-  style={{ backgroundImage: 'url("/images/hero1.png")' }}
+        className="relative h-screen w-screen hidden md:flex flex-col justify-center items-center text-center px-4 bg-cover bg-center"
+        style={{ backgroundImage: 'url("/images/hero1.png")' }}
       >
         <div className="absolute inset-0 bg-black opacity-60"></div>
         <div className="z-10 relative">
@@ -98,9 +99,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* RESTEN AV INNEHÅLLET */}
-      <div className="relative z-10 p-24">
-        {/* EXEMPEL TOP LISTOR OCH BILDSPEL */}
+      {/*carousell här*/}
+      <div className="relative z-10 py-24 w-full">
+        <CarouselSpacing />
+        {/* EXEMPEL TOP LISTOR m.m. */}
       </div>
     </div>
   );
