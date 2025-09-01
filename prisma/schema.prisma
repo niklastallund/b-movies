@@ -19,8 +19,11 @@ model Movie {
   title       String
   releaseDate DateTime
   runtime     Int?
+  budget      Int?
+  revenue     Int?
   description String?
-  imageURL    String
+
+  imageURL String
 
   price Int
   stock Int
@@ -31,6 +34,8 @@ model Movie {
   genres    Genre[]
   directors Director[]
   actors    Actor[]
+
+  OrderItem OrderItem[]
 }
 
 model Genre {
@@ -68,6 +73,33 @@ model Actor {
   movies Movie[]
 }
 
+model Order {
+  id          Int      @id @default(autoincrement())
+  totalAmount Int
+  status      String
+  orderDate   DateTime
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  OrderItem OrderItem[]
+}
+
+model OrderItem {
+  id              Int @id @default(autoincrement())
+  quantity        Int
+  priceAtPurchase Int
+
+  orderId Int
+  order   Order @relation(fields: [orderId], references: [id])
+
+  movieId Int
+  movie   Movie @relation(fields: [movieId], references: [id])
+}
+
 model User {
   id            String    @id
   name          String
@@ -79,8 +111,14 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
+  role       String?
+  banned     Boolean?
+  banReason  String?
+  banExpires DateTime?
+
   @@unique([email])
   @@map("user")
+  Order Order[]
 }
 
 model Session {
@@ -93,6 +131,8 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
 
   @@unique([token])
   @@map("session")
