@@ -1,3 +1,3 @@
 export default function MovieDetailsPage() {
-  return <div>Movie details page!</div>
+  return <div>Movie details page!</div>;
 }
