@@ -8,7 +8,7 @@ export default function SignInPage() {
   return (
     <div className="flex justify-center items-center h-screen">
       <SignInForm />
-      <Button onClick={FindMoviesByDirectors}>
+      <Button className="ml-5" onClick={FindMoviesByDirectors}>
         TMP BUTTON FOR API TESTING
       </Button>
     </div>
