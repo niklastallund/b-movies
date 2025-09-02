@@ -1,47 +1,59 @@
 import { MovieDb, PersonResult } from "moviedb-promise";
 const moviedb = new MovieDb("c0d3fc45d2f4922af3c27e30726b5daa");
 
+// The number of movies we filter from each director
+const NUMBER_OF_MOVIES = 10;
+
 // Had to expand PersonResult because it is defined
 // in the JSON but not in the original interface
 interface PersonResultWithDepartment extends PersonResult {
   known_for_department?: string;
 }
 
-export default async function FindMoviesByDirectors() {
-  const directorNames: string[] = [
-    "James Cameron",
-    "Steven Spielberg",
-    "Sergio Leone",
-  ];
+interface Movie {
+  title: string;
+  releaseDate?: string;
+  popularity?: number;
+  runtime?: number; // In minutes
+  budget?: number;
+  revenue?: number;
+  description?: string;
+  tagline?: string;
+}
+
+// Returns a Movie list with all the details that are needed to add
+// a bunch of movies to the database
+export default async function FindMoviesByDirectors(): Promise<Movie[]> {
+  const directorNames: string[] = ["Edward D. Wood Jr."];
 
   const directorIds: number[] = [];
-  const movieIds: number[] = [];
+  const movies: Movie[] = [];
 
-  //Convert the directorName list to IDs for the most popular director of the query
+  // Convert the directorName list to IDs for the most popular director of the query
   for (const name of directorNames) {
     const res = await moviedb.searchPerson({ query: name, page: 1 });
+    console.log(res);
 
     if (res.results && res.results.length > 0) {
       const matches = res.results.filter(
         (person: PersonResultWithDepartment) =>
-          person.name === name && person.known_for_department === "Directing"
+          person.name === name &&
+          (person.known_for_department === "Directing" ||
+            person.known_for_department === "Writing")
       );
 
+      // Assumption made that the most popular person of the search will be on the first page
       const mostPopular = matches.reduce(
         (max, person) =>
           (person.popularity ?? 0) > (max.popularity ?? 0) ? person : max,
         matches[0]
       );
 
-      console.log(mostPopular);
-
-      if (mostPopular) {
+      if (mostPopular && mostPopular.id) {
         directorIds.push(mostPopular.id as number);
       }
     }
   }
-
-  console.log(directorIds);
 
   for (const id of directorIds) {
     const allCredits = await moviedb.personMovieCredits(id);
@@ -49,17 +61,33 @@ export default async function FindMoviesByDirectors() {
       (credit) => credit.department === "Directing"
     );
 
+    // We take the 10 most popular movies by the director
     if (directedMovies) {
-      for (const movie of directedMovies) {
-        if (movie.id) {
-          movieIds.push(movie.id);
+      const topMovies = directedMovies
+        .sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0))
+        .slice(0, NUMBER_OF_MOVIES);
+
+      for (const topMovie of topMovies) {
+        const movie = await moviedb.movieInfo(topMovie.id as number);
+
+        // If the movie doesn't have a title for some reason we discard it.
+        // Everything else is set as optional in the interface
+        if (movie.title) {
+          movies.push({
+            title: movie.title,
+            releaseDate: movie.release_date,
+            popularity: movie.popularity,
+            runtime: movie.runtime,
+            budget: movie.budget,
+            revenue: movie.revenue,
+            description: movie.overview,
+            tagline: movie.tagline,
+          });
         }
       }
     }
   }
 
-  for (const id of movieIds) {
-    const movie = await moviedb.movieInfo(id);
-    console.log(movie);
-  }
+  console.log(movies); //temporary for testing
+  return movies;
 }
