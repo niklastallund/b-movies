@@ -1,4 +1,5 @@
 import { MovieDb, PersonResult } from "moviedb-promise";
+import { Movie } from "./types";
 const moviedb = new MovieDb("c0d3fc45d2f4922af3c27e30726b5daa");
 
 // The number of movies we filter from each director
@@ -8,17 +9,6 @@ const NUMBER_OF_MOVIES = 10;
 // in the JSON but not in the original interface
 interface PersonResultWithDepartment extends PersonResult {
   known_for_department?: string;
-}
-
-interface Movie {
-  title: string;
-  releaseDate?: string;
-  popularity?: number;
-  runtime?: number; // In minutes
-  budget?: number;
-  revenue?: number;
-  description?: string;
-  tagline?: string;
 }
 
 // Returns a Movie list with all the details that are needed to add
@@ -82,7 +72,7 @@ export default async function FindMoviesByDirectors(): Promise<Movie[]> {
             runtime: movie.runtime,
             budget: movie.budget,
             revenue: movie.revenue,
-            description: movie.overview,
+            overview: movie.overview,
             tagline: movie.tagline,
           });
         }
