@@ -1,3 +1,5 @@
+"use client"; // Vi måste använda "use client" eftersom useState/useEffect behövs
+
 import * as React from "react";
 import { useState, useEffect } from "react";
 import {
@@ -12,10 +14,10 @@ import { MovieCard } from "@/components/card-movies";
 // Datastruktur för att matcha MovieCard-props
 interface Movie {
   id: number;
+  imageURL: string;
   title: string;
-  imageUrl: string;
   price: number;
-  slug: string;
+  stock: number;
   releaseDate: string;
   popularity: number;
 }
@@ -50,8 +52,9 @@ const MovieCarousel = ({
     </Carousel>
   </div>
 );
-//Funktion för att visa upp varje top 5 lista
-export function CarouselSpacing() {
+
+// Huvudkomponent som hämtar och sorterar hårdkodad data
+export default function Carousels() {
   const [movieData, setMovieData] = useState<{
     latest: Movie[];
     popular: Movie[];
@@ -66,193 +69,191 @@ export function CarouselSpacing() {
       try {
         setLoading(true);
 
-        // Tills vi har en api
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
+        // Hårdkodad data som simulerar ett API-anrop
         const apiData: Movie[] = [
           {
             id: 1,
             title: "Dune: Part Two",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 129,
-            slug: "dune-part-two",
+            stock: 10,
             releaseDate: "2024-03-01",
             popularity: 9.5,
           },
           {
             id: 2,
             title: "Spider-Man: Across the Spider-Verse",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 99,
-            slug: "spiderman-across-the-spider-verse",
+            stock: 10,
             releaseDate: "2023-06-02",
             popularity: 9.8,
           },
           {
             id: 3,
             title: "Oppenheimer",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 149,
-            slug: "oppenheimer",
+            stock: 10,
             releaseDate: "2023-07-21",
             popularity: 9.7,
           },
           {
             id: 4,
             title: "The Shawshank Redemption",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 79,
-            slug: "the-shawshank-redemption",
+            stock: 10,
             releaseDate: "1994-09-23",
             popularity: 9.3,
           },
           {
             id: 5,
             title: "Pulp Fiction",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 119,
-            slug: "pulp-fiction",
+            stock: 10,
             releaseDate: "1994-10-14",
             popularity: 8.9,
           },
           {
             id: 6,
             title: "The Godfather",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 89,
-            slug: "the-godfather",
+            stock: 10,
             releaseDate: "1972-03-24",
             popularity: 9.2,
           },
           {
             id: 7,
             title: "Inception",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 159,
-            slug: "inception",
+            stock: 10,
             releaseDate: "2010-07-16",
             popularity: 8.8,
           },
           {
             id: 8,
             title: "The Dark Knight",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 109,
-            slug: "the-dark-knight",
+            stock: 10,
             releaseDate: "2008-07-18",
             popularity: 9.0,
           },
           {
             id: 9,
             title: "Forrest Gump",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 139,
-            slug: "forrest-gump",
+            stock: 10,
             releaseDate: "1994-07-06",
             popularity: 8.8,
           },
           {
             id: 10,
             title: "Avatar: The Way of Water",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 179,
-            slug: "avatar-the-way-of-water",
+            stock: 10,
             releaseDate: "2022-12-16",
             popularity: 8.2,
           },
           {
             id: 11,
             title: "The Matrix",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 69,
-            slug: "the-matrix",
+            stock: 10,
             releaseDate: "1999-03-31",
             popularity: 8.7,
           },
           {
             id: 12,
             title: "Interstellar",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 129,
-            slug: "interstellar",
+            stock: 10,
             releaseDate: "2014-11-07",
             popularity: 8.6,
           },
           {
             id: 13,
             title: "The Silence of the Lambs",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 59,
-            slug: "the-silence-of-the-lambs",
+            stock: 10,
             releaseDate: "1991-02-14",
             popularity: 8.6,
           },
           {
             id: 14,
             title: "The Green Mile",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 105,
-            slug: "the-green-mile",
+            stock: 10,
             releaseDate: "1999-12-10",
             popularity: 8.6,
           },
           {
             id: 15,
             title: "Saving Private Ryan",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 95,
-            slug: "saving-private-ryan",
+            stock: 10,
             releaseDate: "1998-07-24",
             popularity: 8.6,
           },
           {
             id: 16,
             title: "Titanic",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 110,
-            slug: "titanic",
+            stock: 10,
             releaseDate: "1997-12-19",
             popularity: 7.9,
           },
           {
             id: 17,
             title: "Jurassic Park",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 65,
-            slug: "jurassic-park",
+            stock: 10,
             releaseDate: "1993-06-11",
             popularity: 8.2,
           },
           {
             id: 18,
             title: "The Lion King",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 50,
-            slug: "the-lion-king",
+            stock: 10,
             releaseDate: "1994-06-24",
             popularity: 8.5,
           },
           {
             id: 19,
             title: "Toy Story",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 45,
-            slug: "toy-story",
+            stock: 10,
             releaseDate: "1995-11-22",
             popularity: 8.3,
           },
           {
             id: 20,
             title: "Star Wars: A New Hope",
-            imageUrl: "/images/placeholder1.png",
+            imageURL: "https://via.placeholder.com/400x600",
             price: 75,
-            slug: "star-wars-a-new-hope",
+            stock: 10,
             releaseDate: "1977-05-25",
             popularity: 8.6,
           },
         ];
 
-        // Hämtar det Top 5 Fån varje kategori
+        // Hämta de Top 5 från varje kategori
         const latest = [...apiData]
           .sort(
             (a, b) =>
@@ -306,22 +307,22 @@ export function CarouselSpacing() {
       <MovieCarousel
         movies={movieData.latest}
         id="latest"
-        title="Latest Movies"
+        title="Senaste filmerna"
       />
       <MovieCarousel
         movies={movieData.popular}
         id="popular"
-        title="Most Popular Movies"
+        title="Mest populära filmer"
       />
       <MovieCarousel
         movies={movieData.oldest}
         id="oldest"
-        title="Oldest Movies"
+        title="Äldsta filmerna"
       />
       <MovieCarousel
         movies={movieData.cheapest}
         id="cheapest"
-        title="Cheapest Movies"
+        title="Billigast just nu"
       />
     </div>
   );

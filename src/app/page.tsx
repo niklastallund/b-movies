@@ -1,18 +1,21 @@
+// src/app/page.tsx
 "use client";
+
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
-import { CarouselSpacing } from "@/components/carousel";
+import Carousels from "@/components/carousel";
 
 export default function Home() {
   useEffect(() => {
+    // ... din useEffect-logik för animationer
     const mainHeading = document.getElementById("main-heading");
     const subHeading = document.getElementById("sub-heading");
     const mainHeadingMobile = document.getElementById("main-heading-mobile");
     const subHeadingMobile = document.getElementById("sub-heading-mobile");
 
-    // HERO TEXT GLIDER IN FRÅN BOTTEN
+    // Hero-texten glider in från botten
     setTimeout(() => {
       if (mainHeading) {
         mainHeading.classList.remove("translate-y-full", "opacity-0");
@@ -35,7 +38,7 @@ export default function Home() {
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center">
-      {/* HERO FÖR DESKTOP */}
+      {/* HERO för DESKTOP */}
       <section
         id="desktop-hero"
         className="relative h-screen w-screen hidden md:flex flex-col justify-center items-center text-center px-4 bg-cover bg-center"
@@ -64,7 +67,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HERO FÖR MOBIL */}
+      {/* HERO för MOBIL */}
       <section
         id="mobile-hero"
         className="flex flex-col md:hidden w-screen items-center text-center"
@@ -100,8 +103,8 @@ export default function Home() {
       </section>
 
       <div className="relative z-10 py-24 w-full">
-        <CarouselSpacing />
-        {/* EXEMPEL TOP LISTOR m.m. */}
+        {/* Använd din nya, server-renderade karusellkomponent här */}
+        <Carousels />
       </div>
     </div>
   );

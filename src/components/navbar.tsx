@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation"; // Importera useRouter
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +26,7 @@ const MobileLinks = ({
   toplists: { label: string; id: string }[];
 }) => (
   <div className="mt-4 flex flex-col space-y-2">
-    <Link href="#" className="font-semibold text-primary text-lg">
+    <Link href="/" className="font-semibold text-primary text-lg">
       Home
     </Link>
     <DropdownMenu>
@@ -75,6 +76,15 @@ const MobileLinks = ({
 );
 
 export function Navbar() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchTerm.trim() !== "") {
+      router.push(`/movies?search=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
   const movies = [
     "Action",
     "Drama",
@@ -111,12 +121,15 @@ export function Navbar() {
 
         {/* SEARCH - CART - PROFILE - MOBILE BUTTON */}
         <div className="flex items-center md:order-2 space-x-2">
-          {/* Search button that opens a search field */}
+          {/* Search field */}
           <div className="flex items-center space-x-2">
             <Input
               type="search"
-              placeholder="Search for movies..."
+              placeholder="Search for movie or actor..."
               className="w-full md:w-64"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleSearch}
             />
           </div>
 
@@ -149,7 +162,7 @@ export function Navbar() {
           <ul className="flex items-center  font-medium space-x-8">
             <li>
               <Link
-                href="#"
+                href="/"
                 className="block  text-md font-medium transition-colors hover:text-primary"
               >
                 Home
