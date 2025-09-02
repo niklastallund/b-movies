@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation"; // Importera useRouter
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,16 +18,15 @@ import { ModeToggle } from "@/components/toggle-theme-button";
 import { ShoppingCartSheet } from "./shopping-cart-sheet";
 import { ProfileDropdown } from "./profile-dropdown";
 
-// Skapa en separat komponent för mobilmenyns länkar!
 const MobileLinks = ({
   movies,
   toplists,
 }: {
   movies: string[];
-  toplists: string[];
+  toplists: { label: string; id: string }[];
 }) => (
   <div className="mt-4 flex flex-col space-y-2">
-    <Link href="#" className="font-semibold text-primary text-lg">
+    <Link href="/" className="font-semibold text-primary text-lg">
       Home
     </Link>
     <DropdownMenu>
@@ -57,15 +57,13 @@ const MobileLinks = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent side="right">
         {toplists.map((link) => (
-          <DropdownMenuItem key={link} asChild>
-            <Link href="#">{link}</Link>
+          <DropdownMenuItem key={link.id} asChild>
+            <Link href={`#${link.id}`}>{link.label}</Link>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
-    <Link href="#" className="font-semibold text-foreground text-lg">
-      News
-    </Link>
+
     <div className="flex flex-col space-y-2 pt-4 border-t border-border mt-4">
       <Link href="/sign-up" className="font-semibold text-foreground text-lg">
         Sign Up
@@ -78,7 +76,14 @@ const MobileLinks = ({
 );
 
 export function Navbar() {
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchTerm.trim() !== "") {
+      router.push(`/movies?search=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
 
   const movies = [
     "Action",
@@ -91,10 +96,10 @@ export function Navbar() {
     "Animated",
   ];
   const toplists = [
-    "5 Most Bought Movies",
-    "5 Latest Movies",
-    "5 Oldest Movies",
-    "5 Cheapest Movies",
+    { label: "Top 5 Latest Movies", id: "latest" },
+    { label: "Top 5 Most Popular Movies", id: "popular" },
+    { label: "Top 5 Oldest Movies", id: "oldest" },
+    { label: "Top 5 Cheapest Movies", id: "cheapest" },
   ];
 
   return (
@@ -116,24 +121,16 @@ export function Navbar() {
 
         {/* SEARCH - CART - PROFILE - MOBILE BUTTON */}
         <div className="flex items-center md:order-2 space-x-2">
-          {/* Search button that opens a search field */}
+          {/* Search field */}
           <div className="flex items-center space-x-2">
-            {isSearchVisible && (
-              <Input
-                type="search"
-                placeholder="Search for movies..."
-                className="w-full md:w-64"
-              />
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsSearchVisible(!isSearchVisible)}
-              className="text-foreground hover:text-primary transition transform hover:scale-110"
-            >
-              <Search className="w-6 h-6" />
-              <span className="sr-only">SEARCH</span>
-            </Button>
+            <Input
+              type="search"
+              placeholder="Search for movie or actor..."
+              className="w-full md:w-64"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleSearch}
+            />
           </div>
 
           {/* THEME BUTTON */}
@@ -161,11 +158,11 @@ export function Navbar() {
         </div>
 
         {/* NAVIGATION FOR DESKTOP */}
-        <div className="hidden w-full md:flex md:w-auto md:order-1 text-sky-800 items-center justify-between">
+        <div className="hidden w-full md:flex md:w-auto md:order-1 text-sky-600  items-center justify-between">
           <ul className="flex items-center  font-medium space-x-8">
             <li>
               <Link
-                href="#"
+                href="/"
                 className="block  text-md font-medium transition-colors hover:text-primary"
               >
                 Home
@@ -176,7 +173,7 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="link"
-                    className="p-0 h-auto  text-md font-medium text-sky-800 hover:text-primary"
+                    className="p-0 h-auto  text-md font-medium text-sky-600  hover:text-primary"
                   >
                     Movies
                   </Button>
@@ -195,27 +192,20 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="link"
-                    className="p-0 h-auto text-md  font-medium text-sky-800 hover:text-primary"
+                    className="p-0 h-auto text-md  font-medium text-sky-600  hover:text-primary"
                   >
                     Top Lists
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   {toplists.map((link) => (
-                    <DropdownMenuItem key={link} asChild>
-                      <Link href="#">{link}</Link>
+                    <DropdownMenuItem key={link.id} asChild>
+                      {/* Länk till karusellen med dess unika ID */}
+                      <Link href={`#${link.id}`}>{link.label}</Link>
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-            </li>
-            <li>
-              <Link
-                href="#"
-                className="block text-md font-medium transition-colors hover:text-primary"
-              >
-                News
-              </Link>
             </li>
           </ul>
         </div>
