@@ -61,6 +61,10 @@ export default async function FindMoviesByDirectors(): Promise<Movie[]> {
 
       for (const topMovie of topMovies) {
         const movie = await moviedb.movieInfo(topMovie.id as number);
+        const images = await moviedb.movieImages({include_image_language: "en", id: topMovie.id as number});
+
+        const posterPath = images.posters?.[0]?.file_path;
+        const backdropPath = images.backdrops?.[0]?.file_path;
 
         // If the movie doesn't have a title for some reason we discard it.
         // Everything else is set as optional in the interface
@@ -74,6 +78,8 @@ export default async function FindMoviesByDirectors(): Promise<Movie[]> {
             revenue: movie.revenue,
             overview: movie.overview,
             tagline: movie.tagline,
+            posterPath: posterPath,
+            backdropPath: backdropPath,
           });
         }
       }

@@ -7,6 +7,9 @@ export interface Movie {
   revenue?: number;
   overview?: string;
   tagline?: string;
+
+  posterPath?: string;
+  backdropPath?: string;
 }
 
 // TODO
