@@ -10,6 +10,9 @@ export interface Movie {
 
   posterPath?: string;
   backdropPath?: string;
+
+  stock?: number //tmp
+  price?: number //tmp
 }
 
 // TODO

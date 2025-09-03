@@ -61,7 +61,9 @@ export default async function FindMoviesByDirectors(): Promise<Movie[]> {
 
       for (const topMovie of topMovies) {
         const movie = await moviedb.movieInfo(topMovie.id as number);
-        const images = await moviedb.movieImages({include_image_language: "en", id: topMovie.id as number});
+        const images = await moviedb.movieImages(topMovie.id as number);
+
+        console.log(images);
 
         const posterPath = images.posters?.[0]?.file_path;
         const backdropPath = images.backdrops?.[0]?.file_path;
