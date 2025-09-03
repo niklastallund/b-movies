@@ -16,14 +16,17 @@ datasource db {
 
 model Movie {
   id          Int      @id @default(autoincrement())
+  tmdbId      Int?     @unique
   title       String
   releaseDate DateTime
   runtime     Int?
   budget      Int?
   revenue     Int?
-  description String?
+  overview    String? //description
+  tagline     String?
 
-  imageURL String
+  posterPath   String?
+  backdropPath String?
 
   price Int
   stock Int
@@ -32,40 +35,42 @@ model Movie {
   updatedAt DateTime @updatedAt
 
   genres    Genre[]
-  directors Director[]
-  actors    Actor[]
-
   OrderItem OrderItem[]
+  MovieCrew MovieCrew[]
+}
+
+model Person {
+  id        Int       @id @default(autoincrement())
+  tmdbId    Int       @unique
+  name      String
+  birthday  DateTime?
+  biography String?
+
+  movieCrew MovieCrew[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Junction table to link Person to Movie depending on role
+model MovieCrew {
+  id        Int     @id @default(autoincrement())
+  movieId   Int
+  personId  Int
+  role      String
+  character String? // unique to actors
+  order     Int? // tmdb ordering of crew (lead actor first etc)
+
+  movie  Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  person Person @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@unique([movieId, personId, role])
 }
 
 model Genre {
   id          Int     @id @default(autoincrement())
   name        String
   description String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  movies Movie[]
-}
-
-model Director {
-  id          Int       @id @default(autoincrement())
-  name        String
-  birthday    DateTime?
-  description String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  movies Movie[]
-}
-
-model Actor {
-  id          Int       @id @default(autoincrement())
-  name        String
-  birthday    DateTime?
-  description DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -115,10 +120,10 @@ model User {
   banned     Boolean?
   banReason  String?
   banExpires DateTime?
+  Order      Order[]
 
   @@unique([email])
   @@map("user")
-  Order Order[]
 }
 
 model Session {
