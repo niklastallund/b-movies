@@ -36,10 +36,10 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
 
   const handlePoster = getPosterUrl(movie.posterPath) || "/default-image.jpg";
   const handleBackdrop =
-    getBackdropUrl(movie.backdropPath) || "/default-image.jpg";
+    getBackdropUrl(movie.backdropPath, "w1280") || "/default-image.jpg";
 
   return (
-    <Card className="w-full max-w-6xl mx-auto overflow-hidden relative">
+    <Card className="w-full mx-auto overflow-hidden relative border-red-900">
       {/* Backdrop Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -48,16 +48,16 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
           fill
           className="object-cover"
           priority
+          objectPosition="top"
         />
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/70 backdrop-blur-[3px]" />
+        <div className="absolute inset-0 bg-black/75 backdrop-blur-[3px]" />
       </div>
 
       {/* Content with higher z-index */}
       <CardContent className="relative z-10 flex flex-col md:flex-row p-4 md:p-8">
         {/* Vänster Sektion: Bild */}
-        <div className="w-full md:w-1/2 flex justify-center md:justify-end mb-4 md:mb-0 md:pr-4">
-          <div className="relative w-full h-auto max-w-sm">
+        <div className="w-full md:w-1/2 flex items-center justify-center mb-4 md:mb-0 md:pr-4">
+          <div className="relative w-full h-auto max-w-sm flex justify-center items-center">
             <Image
               src={handlePoster}
               alt={movie.title}
@@ -76,19 +76,23 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
             </CardTitle>
             {/* SÄTT TAGLINE HÄR */}
             <CardDescription className="text-gray-200 text-base">
-              Releasedatum: {movie.releaseDate ?? "Okänt datum"}
+              Release Date: {movie.releaseDate ?? "Okänt datum"}
             </CardDescription>
           </CardHeader>
 
+          <p className="mb-4 text-gray-400 leading-relaxed drop-shadow-sm italic">
+            {movie.tagline}
+          </p>
           <p className="mb-4 text-gray-100 leading-relaxed drop-shadow-sm">
             {movie.overview}
           </p>
 
-          {/* Villkorlig rendering för valfria fält */}
           <div className="space-y-2 mb-4 text-gray-200">
-            {movie.runtime && <p>Runtime: {movie.runtime} minutes</p>}
-            {movie.budget && <p>Budget: ${movie.budget}</p>}
-            {movie.revenue && <p>Revenue: ${movie.revenue}</p>}
+            <p>{`Runtime: ${
+              movie.runtime ? `${movie.runtime} minutes` : "Unknown"
+            }`}</p>
+            <p>{`Budget: ${movie.budget ? `$${movie.budget}` : "Unknown"}`}</p>
+            <p>{`Revenue: ${movie.revenue ? movie.revenue : "Unknown"}`}</p>
           </div>
 
           <Separator className="my-4 bg-white/20" />
@@ -120,10 +124,10 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
               </Button>
             </div>
             <Button
-              className="flex-1 bg-white text-black hover:bg-gray-200 font-semibold shadow-lg"
+              className="flex-[0.5] bg-white text-black hover:bg-gray-200 font-semibold shadow-lg"
               disabled={movie.stock === 0}
             >
-              Lägg till i varukorgen
+              Add to cart
             </Button>
           </div>
 
