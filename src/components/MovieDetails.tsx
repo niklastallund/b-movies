@@ -39,21 +39,7 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
     getBackdropUrl(movie.backdropPath, "w1280") || "/default-image.jpg";
 
   return (
-    <Card className="w-full mx-auto overflow-hidden relative border-red-900">
-      {/* Backdrop Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={handleBackdrop}
-          alt={`${movie.title} backdrop`}
-          fill
-          className="object-cover"
-          priority
-          objectPosition="top"
-        />
-        <div className="absolute inset-0 bg-black/75 backdrop-blur-[3px]" />
-      </div>
-
-      {/* Content with higher z-index */}
+    <Card className="w-full mx-auto relative bg-black/20 backdrop-blur-xs border-red-900">
       <CardContent className="relative z-10 flex flex-col md:flex-row p-4 md:p-8">
         {/* Vänster Sektion: Bild */}
         <div className="w-full md:w-1/2 flex items-center justify-center mb-4 md:mb-0 md:pr-4">
