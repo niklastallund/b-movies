@@ -18,7 +18,14 @@ export interface Movie {
 
 // TODO
 export interface Person {
+  id: number;
   name: string;
+  biography?: string;
+  birthday?: string;
+  deathday?: string;
+
+  character?: string; // For cast
+  job?: string; // For crew
 }
 
 // TODO

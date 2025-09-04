@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import FindMoviesByDirectors from "@/lib/tmdb";
+import { FindMoviesByDirectors } from "@/lib/tmdb";
 import { Movie } from "@/lib/types";
 
 // Data matchar movie modell fårn prisma shema

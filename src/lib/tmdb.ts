@@ -1,5 +1,6 @@
 import { MovieDb, PersonResult } from "moviedb-promise";
-import { Movie } from "./types";
+import { Movie, Person } from "./types";
+
 const moviedb = new MovieDb("c0d3fc45d2f4922af3c27e30726b5daa");
 
 // The number of movies we filter from each director
@@ -13,7 +14,7 @@ interface PersonResultWithDepartment extends PersonResult {
 
 // Returns a Movie list with all the details that are needed to add
 // a bunch of movies to the database
-export default async function FindMoviesByDirectors(): Promise<Movie[]> {
+export async function FindMoviesByDirectors(): Promise<Movie[]> {
   const directorNames: string[] = ["Edward D. Wood Jr."];
 
   const directorIds: number[] = [];
@@ -91,4 +92,41 @@ export default async function FindMoviesByDirectors(): Promise<Movie[]> {
 
   console.log(movies); //temporary for testing
   return movies;
+}
+
+export async function FindCrewByMovieId(
+  movieId: string
+): Promise<{ crew: Person[]; cast: Person[] }> {
+  const credits = await moviedb.movieCredits({ id: movieId });
+
+  const cast: Person[] = [];
+  const crew: Person[] = [];
+
+  if (credits.cast) {
+    for (const castMember of credits.cast) {
+      if (castMember.id && castMember.name) {
+        cast.push({
+          id: castMember.id,
+          name: castMember.name,
+          character: castMember.character,
+        });
+      }
+    }
+
+    if (credits.crew) {
+      for (const crewMember of credits.crew) {
+        if (crewMember.id && crewMember.name) {
+          crew.push({
+            id: crewMember.id,
+            name: crewMember.name,
+            job: crewMember.job,
+          });
+        }
+      }
+    }
+  }
+
+  console.log({ crew, cast }); //temporary for testing
+
+  return { crew, cast };
 }

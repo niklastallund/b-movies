@@ -57,9 +57,10 @@ model MovieCrew {
   id        Int     @id @default(autoincrement())
   movieId   Int
   personId  Int
-  role      String
+  role      String //crew or cast
+  job       String? // director, writer, actor, producer, ...
   character String? // unique to actors
-  order     Int? // tmdb ordering of crew (lead actor first etc)
+  order     Int? // tmdb ordering of cast (lead actor first etc)
 
   movie  Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
   person Person @relation(fields: [personId], references: [id], onDelete: Cascade)
