@@ -137,17 +137,15 @@ export async function FindCrewByMovieId(
       const personImages = await moviedb.personImages(crewMember.id);
       const profilePath = personImages.profiles?.[0]?.file_path;
 
-      if (crewMember.id && crewMember.name) {
-        crew.push({
-          id: crewMember.id,
-          name: crewMember.name,
-          job: crewMember.job,
-          biography: personInfo.biography,
-          birthday: personInfo.birthday,
-          deathday: personInfo.deathday,
-          profilePath: profilePath,
-        });
-      }
+      crew.push({
+        id: crewMember.id,
+        name: crewMember.name,
+        job: crewMember.job,
+        biography: personInfo.biography,
+        birthday: personInfo.birthday,
+        deathday: personInfo.deathday,
+        profilePath: profilePath,
+      });
     }
   }
 
