@@ -5,6 +5,8 @@ const moviedb = new MovieDb("c0d3fc45d2f4922af3c27e30726b5daa");
 
 // The number of movies we filter from each director
 const NUMBER_OF_MOVIES = 10;
+const NUMBER_OF_CREW = 10;
+const NUMBER_OF_CAST = 10;
 
 // Had to expand PersonResult because it is defined
 // in the JSON but not in the original interface
@@ -66,12 +68,9 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
         .sort((a, b) => (b.vote_average ?? 0) - (a.vote_average ?? 0))
         .slice(0, NUMBER_OF_MOVIES);
 
-      console.log(directedMovies);
       for (const topMovie of topMovies) {
         const movie = await moviedb.movieInfo(topMovie.id as number);
         const images = await moviedb.movieImages(topMovie.id as number);
-
-        console.log(images);
 
         // Picking the first picture from the list of images, maybe not the best approach
         const posterPath = images.posters?.[0]?.file_path;
@@ -102,6 +101,8 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
   return movies;
 }
 
+// Returns the crew and cast for a specific movie
+// with all the details that are needed to add them to the database
 export async function FindCrewByMovieId(
   movieId: string
 ): Promise<{ crew: Person[]; cast: Person[] }> {
@@ -110,35 +111,46 @@ export async function FindCrewByMovieId(
   const cast: Person[] = [];
   const crew: Person[] = [];
 
-  if (credits.cast) {
-    for (const castMember of credits.cast) {
-      if (castMember.id && castMember.name) {
-        const personInfo = await moviedb.personInfo(castMember.id);
-        const personImages = await moviedb.personImages(castMember.id);
+  const castSlice = credits.cast ? credits.cast.slice(0, NUMBER_OF_CAST) : [];
+  for (const castMember of castSlice) {
+    if (castMember.id && castMember.name) {
+      const personInfo = await moviedb.personInfo(castMember.id);
+      const personImages = await moviedb.personImages(castMember.id);
+      const profilePath = personImages.profiles?.[0]?.file_path;
 
-        cast.push({
-          id: castMember.id,
-          name: castMember.name,
-          character: castMember.character,
-          birthday: personInfo.birthday,
-        });
-      }
+      cast.push({
+        id: castMember.id,
+        name: castMember.name,
+        character: castMember.character,
+        biography: personInfo.biography,
+        birthday: personInfo.birthday,
+        deathday: personInfo.deathday,
+        profilePath: profilePath,
+      });
     }
+  }
 
-    if (credits.crew) {
-      for (const crewMember of credits.crew) {
-        if (crewMember.id && crewMember.name) {
-          crew.push({
-            id: crewMember.id,
-            name: crewMember.name,
-            job: crewMember.job,
-          });
-        }
+  const crewSlice = credits.crew ? credits.crew.slice(0, NUMBER_OF_CREW) : [];
+  for (const crewMember of crewSlice) {
+    if (crewMember.id && crewMember.name) {
+      const personInfo = await moviedb.personInfo(crewMember.id);
+      const personImages = await moviedb.personImages(crewMember.id);
+      const profilePath = personImages.profiles?.[0]?.file_path;
+
+      if (crewMember.id && crewMember.name) {
+        crew.push({
+          id: crewMember.id,
+          name: crewMember.name,
+          job: crewMember.job,
+          biography: personInfo.biography,
+          birthday: personInfo.birthday,
+          deathday: personInfo.deathday,
+          profilePath: profilePath,
+        });
       }
     }
   }
 
-  console.log(credits);
   console.log({ crew, cast }); //temporary for testing
 
   return { crew, cast };

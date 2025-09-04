@@ -21,7 +21,11 @@ export interface Person {
   name: string;
   biography?: string;
   birthday?: string | null;
+  deathday?: string | null;
+  
+  profilePath?: string;
 
+  // Role-specific fields
   character?: string; // For cast
   job?: string; // For crew
 }
