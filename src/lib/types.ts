@@ -12,17 +12,15 @@ export interface Movie {
   posterPath?: string;
   backdropPath?: string;
 
-  stock?: number //tmp
-  price?: number //tmp
+  stock?: number; //tmp
+  price?: number; //tmp
 }
 
-// TODO
 export interface Person {
   id: number;
   name: string;
   biography?: string;
-  birthday?: string;
-  deathday?: string;
+  birthday?: string | null;
 
   character?: string; // For cast
   job?: string; // For crew

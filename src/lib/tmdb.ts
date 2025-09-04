@@ -48,24 +48,32 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
     }
   }
 
+  // For each director, find all the movies they have directed
   for (const id of directorIds) {
     const allCredits = await moviedb.personMovieCredits(id);
     const directedMovies = allCredits.crew?.filter(
-      (credit) => credit.department === "Directing"
+      (credit) =>
+        credit.department === "Directing" &&
+        credit.job === "Director" &&
+        credit.adult === false
     );
 
     // We take the NUMBER_OF_MOVIES most popular movies by the director
+    // (with at least 10 votes to avoid weird edge cases)
     if (directedMovies) {
       const topMovies = directedMovies
-        .sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0))
+        .filter((movie) => (movie.vote_count ?? 0) >= 10)
+        .sort((a, b) => (b.vote_average ?? 0) - (a.vote_average ?? 0))
         .slice(0, NUMBER_OF_MOVIES);
 
+      console.log(directedMovies);
       for (const topMovie of topMovies) {
         const movie = await moviedb.movieInfo(topMovie.id as number);
         const images = await moviedb.movieImages(topMovie.id as number);
 
         console.log(images);
 
+        // Picking the first picture from the list of images, maybe not the best approach
         const posterPath = images.posters?.[0]?.file_path;
         const backdropPath = images.backdrops?.[0]?.file_path;
 
@@ -105,10 +113,14 @@ export async function FindCrewByMovieId(
   if (credits.cast) {
     for (const castMember of credits.cast) {
       if (castMember.id && castMember.name) {
+        const personInfo = await moviedb.personInfo(castMember.id);
+        const personImages = await moviedb.personImages(castMember.id);
+
         cast.push({
           id: castMember.id,
           name: castMember.name,
           character: castMember.character,
+          birthday: personInfo.birthday,
         });
       }
     }
@@ -126,6 +138,7 @@ export async function FindCrewByMovieId(
     }
   }
 
+  console.log(credits);
   console.log({ crew, cast }); //temporary for testing
 
   return { crew, cast };
