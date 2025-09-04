@@ -1,10 +1,25 @@
+"use client";
+
 import Image from "next/image";
 import MovieDetails from "@/components/MovieDetails";
 import FindMoviesByDirectors from "@/lib/tmdb";
 import { getBackdropUrl } from "@/lib/tmdb-image-url";
+import { Movie } from "@/lib/types";
+import { useEffect, useState } from "react";
 
-export default async function MovieDetailsPage() {
-  const movies = await FindMoviesByDirectors();
+export default function MovieDetailsPage() {
+  //THIS IS HARDCODED TO ALWAYS SHOW THE 5TH MOVIE, CHANGE LATER
+  const [movies, setMovies] = useState<Movie[]>([]);
+
+  // Fetch movies on mount
+  useEffect(() => {
+    const fetch = async () => {
+      const data = await FindMoviesByDirectors();
+      setMovies(data);
+    };
+    fetch(); //Needed to be able to use async function inside useEffect
+  }, []);
+
   const movie = movies[4];
 
   if (!movie) {

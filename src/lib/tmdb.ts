@@ -70,8 +70,9 @@ export default async function FindMoviesByDirectors(): Promise<Movie[]> {
 
         // If the movie doesn't have a title for some reason we discard it.
         // Everything else is set as optional in the interface
-        if (movie.title) {
+        if (movie.title && movie.id) {
           movies.push({
+            id: movie.id,
             title: movie.title,
             releaseDate: movie.release_date,
             popularity: movie.popularity,

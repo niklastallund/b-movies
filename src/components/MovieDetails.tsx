@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator"; // Bra för att skapa avdelare
 import { Movie } from "@/lib/types";
-import { getBackdropUrl, getPosterUrl } from "@/lib/tmdb-image-url";
+import { getPosterUrl } from "@/lib/tmdb-image-url";
 
 // Props som komponenten tar emot
 interface MovieDetailsProps {
@@ -35,9 +35,7 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
   };
 
   const handlePoster = getPosterUrl(movie.posterPath) || "/default-image.jpg";
-  const handleBackdrop =
-    getBackdropUrl(movie.backdropPath, "w1280") || "/default-image.jpg";
-
+  
   return (
     <Card className="w-full mx-auto relative bg-black/20 backdrop-blur-xs border-red-900">
       <CardContent className="relative z-10 flex flex-col md:flex-row p-4 md:p-8">
