@@ -11,20 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator"; // Bra för att skapa avdelare
-
-// Gränssnitt för filmdata som matchar din Prisma-modell
-interface Movie {
-  id: number;
-  title: string;
-  releaseDate: Date | null;
-  runtime?: number | null;
-  budget?: number | null;
-  revenue?: number | null;
-  description?: string | null;
-  imageURL: string;
-  price: number;
-  stock: number;
-}
+import { Movie } from "@/lib/types";
+import { getPosterUrl } from "@/lib/tmdb-image-url";
 
 // Props som komponenten tar emot
 interface MovieDetailsProps {
@@ -46,18 +34,20 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
     setQuantity((prev) => prev + 1);
   };
 
+  const handlePoster = getPosterUrl(movie.posterPath) || "/default-image.jpg";
+  
   return (
-    <Card className="w-full max-w-6xl mx-auto">
-      <CardContent className="flex flex-col md:flex-row p-4 md:p-8">
+    <Card className="w-full mx-auto relative bg-black/20 backdrop-blur-xs border-red-900">
+      <CardContent className="relative z-10 flex flex-col md:flex-row p-4 md:p-8">
         {/* Vänster Sektion: Bild */}
-        <div className="w-full md:w-1/2 flex justify-center md:justify-end mb-4 md:mb-0 md:pr-4">
-          <div className="relative w-full h-auto max-w-sm">
+        <div className="w-full md:w-1/2 flex items-center justify-center mb-4 md:mb-0 md:pr-4">
+          <div className="relative w-full h-auto max-w-sm flex justify-center items-center">
             <Image
-              src={movie.imageURL}
+              src={handlePoster}
               alt={movie.title}
               width={400}
               height={600}
-              className="rounded-lg shadow-lg"
+              className="rounded-lg shadow-2xl ring-1 ring-white/20"
             />
           </div>
         </div>
@@ -65,62 +55,69 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
         {/* Höger Sektion: Text och "Lägg i varukorgen" */}
         <div className="w-full md:w-1/2 flex flex-col md:pl-4">
           <CardHeader className="p-0 mb-4">
-            <CardTitle className="text-4xl font-bold mb-2">
+            <CardTitle className="text-4xl font-bold mb-2 text-white drop-shadow-lg">
               {movie.title}
             </CardTitle>
-
             {/* SÄTT TAGLINE HÄR */}
-
-            <CardDescription className="text-gray-600">
-              Releasedatum:{" "}
-              {movie.releaseDate?.toLocaleDateString() ?? "Okänt datum"}
+            <CardDescription className="text-gray-200 text-base">
+              Release Date: {movie.releaseDate ?? "Okänt datum"}
             </CardDescription>
           </CardHeader>
 
-          <p className="mb-4">{movie.description}</p>
+          <p className="mb-4 text-gray-400 leading-relaxed drop-shadow-sm italic">
+            {movie.tagline}
+          </p>
+          <p className="mb-4 text-gray-100 leading-relaxed drop-shadow-sm">
+            {movie.overview}
+          </p>
 
-          {/* Villkorlig rendering för valfria fält */}
-          <div className="space-y-2 mb-4">
-            {movie.runtime && <p>Runtime: {movie.runtime} minutes</p>}
-            {movie.budget && <p>Budget: ${movie.budget}</p>}
-            {movie.revenue && <p>Revenue: ${movie.revenue}</p>}
+          <div className="space-y-2 mb-4 text-gray-200">
+            <p>{`Runtime: ${
+              movie.runtime ? `${movie.runtime} minutes` : "Unknown"
+            }`}</p>
+            <p>{`Budget: ${movie.budget ? `$${movie.budget}` : "Unknown"}`}</p>
+            <p>{`Revenue: ${movie.revenue ? movie.revenue : "Unknown"}`}</p>
           </div>
 
-          <Separator className="my-4" />
+          <Separator className="my-4 bg-white/20" />
 
-          <div className="flex items-center text-2xl font-semibold mb-4">
-            Price: ${movie.price}
+          <div className="flex items-center text-2xl font-semibold mb-4 text-white">
+            Price: ${100}
           </div>
 
           {/* Antal och Lägg till i varukorgen-knapp */}
           <div className="flex items-center space-x-4">
-            <div className="flex items-center border rounded-md">
+            <div className="flex items-center border border-white/30 rounded-md bg-black/20 backdrop-blur-sm">
               <Button
                 variant="outline"
                 size="icon"
                 onClick={handleDecrease}
                 disabled={quantity <= 1}
+                className="border-0 bg-transparent text-white hover:bg-white/10"
               >
                 -
               </Button>
-              <span className="px-4">{quantity}</span>
+              <span className="px-4 text-white">{quantity}</span>
               <Button
                 variant="outline"
                 size="icon"
                 onClick={handleIncrease}
-                disabled={quantity >= movie.stock}
+                className="border-0 bg-transparent text-white hover:bg-white/10"
               >
                 +
               </Button>
             </div>
-            <Button className="flex-1" disabled={movie.stock === 0}>
-              Lägg till i varukorgen
+            <Button
+              className="flex-[0.5] bg-white text-black hover:bg-gray-200 font-semibold shadow-lg"
+              disabled={movie.stock === 0}
+            >
+              Add to cart
             </Button>
           </div>
 
-          <p className="mt-4 text-sm text-gray-500">
+          <p className="mt-4 text-sm text-gray-300">
             Balance:{" "}
-            {movie.stock > 0 ? `${movie.stock} i lager` : "Slut i lager"}
+            {(movie.stock ?? 0) > 0 ? `${movie.stock} i lager` : "Slut i lager"}
           </p>
         </div>
       </CardContent>

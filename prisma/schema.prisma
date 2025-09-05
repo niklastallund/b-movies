@@ -44,6 +44,7 @@ model Person {
   tmdbId    Int       @unique
   name      String
   birthday  DateTime?
+  deathday  DateTime?
   biography String?
 
   movieCrew MovieCrew[]
@@ -57,9 +58,10 @@ model MovieCrew {
   id        Int     @id @default(autoincrement())
   movieId   Int
   personId  Int
-  role      String
+  role      String //crew or cast
+  job       String? // director, writer, actor, producer, ...
   character String? // unique to actors
-  order     Int? // tmdb ordering of crew (lead actor first etc)
+  order     Int? // tmdb ordering of cast (lead actor first etc)
 
   movie  Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
   person Person @relation(fields: [personId], references: [id], onDelete: Cascade)
@@ -69,7 +71,7 @@ model MovieCrew {
 
 model Genre {
   id          Int     @id @default(autoincrement())
-  name        String
+  name        String  @unique
   description String?
 
   createdAt DateTime @default(now())
