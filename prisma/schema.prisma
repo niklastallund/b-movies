@@ -44,6 +44,7 @@ model Person {
   tmdbId    Int       @unique
   name      String
   birthday  DateTime?
+  deathday  DateTime?
   biography String?
 
   movieCrew MovieCrew[]
@@ -71,6 +72,7 @@ model MovieCrew {
 model Genre {
   id          Int     @id @default(autoincrement())
   name        String  @unique
+  description String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
