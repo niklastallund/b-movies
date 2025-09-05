@@ -120,14 +120,14 @@ export default function MoviesPage() {
 
   const [movies, setMovies] = useState<Movie[]>([]);
 
-  // Fetch movies on mount
-  useEffect(() => {
-    const fetch = async () => {
-      const data = await FindMoviesByDirectors();
-      setMovies(data);
-    };
-    fetch(); //Needed to be able to use async function inside useEffect
-  }, []);
+  // // Fetch movies on mount
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     const data = await FindMoviesByDirectors();
+  //     setMovies(data);
+  //   };
+  //   fetch(); //Needed to be able to use async function inside useEffect
+  // }, []);
 
   // const allGenres = useMemo(() => {
   //   const genres = new Set<string>();

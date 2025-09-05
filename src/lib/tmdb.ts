@@ -27,7 +27,6 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
   // Convert the directorName list to IDs for the most popular director of the query
   for (const name of directorNames) {
     const res = await moviedb.searchPerson({ query: name, page: 1 });
-    console.log(res);
 
     // We have to filter by Writing as well because of how TMDB sometimes filter crew
     // Example: Edward D. Wood Jr. is known for writing but he also directed all his movies.
@@ -100,7 +99,6 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
     }
   }
 
-  console.log(movies); //temporary for testing
   return movies;
 }
 
@@ -155,8 +153,6 @@ export async function FindCrewByMovieId(
       });
     }
   }
-
-  console.log({ crew, cast }); //temporary for testing
 
   return { crew, cast };
 }

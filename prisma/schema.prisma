@@ -70,8 +70,7 @@ model MovieCrew {
 
 model Genre {
   id          Int     @id @default(autoincrement())
-  name        String
-  description String?
+  name        String  @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

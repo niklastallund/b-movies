@@ -13,27 +13,24 @@ export default function MovieDetailsPage() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [crew, setCrew] = useState<{ crew: Person[]; cast: Person[] }>();
 
-  // Fetch movies on mount
-  useEffect(() => {
-    const fetch = async () => {
-      const movies = await FindMoviesByDirectors();
-      setMovies(movies);
-    };
-    fetch(); //Needed to be able to use async function inside useEffect
-  }, []);
+  // // Fetch movies on mount
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     const movies = await FindMoviesByDirectors();
+  //     setMovies(movies);
+  //   };
+  //   fetch(); //Needed to be able to use async function inside useEffect
+  // }, []);
 
-  useEffect(() => {
-    const fetch = async () => {
-      const crew = await FindCrewByMovieId("10513"); //Hardcoded to "Plan 9 from Outer Space"
-      setCrew(crew);
-    };
-    fetch();
-  }, []);
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     const crew = await FindCrewByMovieId("10513"); //Hardcoded to "Plan 9 from Outer Space"
+  //     setCrew(crew);
+  //   };
+  //   fetch();
+  // }, []);
 
-  const movie = movies[4];
-  const tmpCrew = crew;
-
-  console.log(tmpCrew);
+  const movie = movies[0];
 
   if (!movie) {
     return <div>Movie was not found.</div>;
