@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { id } from "zod/v4/locales";
 
 // --- Genre Schemas ---
 export const createGenreSchema = z.object({
@@ -29,7 +30,10 @@ export const createPersonSchema = z.object({
   profilePath: z.string().optional(),
 });
 
+export type CreatePersonInput = z.infer<typeof createPersonSchema>;
+
 export const updatePersonSchema = z.object({
+  id: z.number().int().positive(),
   tmdbId: z.number().int().positive().optional(),
   name: z.string().min(1).optional(),
   birthday: z.iso.date().optional(),
@@ -38,9 +42,13 @@ export const updatePersonSchema = z.object({
   profilePath: z.string().optional(),
 });
 
+export type UpdatePersonInput = z.infer<typeof updatePersonSchema>;
+
 export const deletePersonSchema = z.object({
   id: z.number().int().positive(),
 });
+
+export type DeletePersonInput = z.infer<typeof deletePersonSchema>;
 
 // --- Order Schemas ---
 export const updateOrderStatusSchema = z.object({
