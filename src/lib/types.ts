@@ -1,3 +1,5 @@
+import { Genre } from "moviedb-promise";
+
 export interface Movie {
   id: number;
   title: string;
@@ -8,6 +10,7 @@ export interface Movie {
   revenue?: number;
   overview?: string;
   tagline?: string;
+  genres?: Genre[];
 
   posterPath?: string;
   backdropPath?: string;
@@ -22,7 +25,7 @@ export interface Person {
   biography?: string;
   birthday?: string | null;
   deathday?: string | null;
-  
+
   profilePath?: string;
 
   // Role-specific fields
@@ -30,10 +33,6 @@ export interface Person {
   job?: string; // For crew
 }
 
-// TODO
-export interface Genre {
-  name: string;
-}
 
 export type PosterSize =
   | "w92"
@@ -45,3 +44,5 @@ export type PosterSize =
   | "original";
 
 export type BackdropSize = "w300" | "w780" | "w1280" | "original";
+
+export type ProfileSize = "w45" | "w185" | "h632" | "original";

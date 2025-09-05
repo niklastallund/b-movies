@@ -3,7 +3,7 @@ import { Movie, Person } from "./types";
 
 const moviedb = new MovieDb("c0d3fc45d2f4922af3c27e30726b5daa");
 
-// The number of movies we filter from each director
+//Constants to limit the number of results we get from TMDB
 const NUMBER_OF_MOVIES = 10;
 const NUMBER_OF_CREW = 10;
 const NUMBER_OF_CAST = 10;
@@ -15,8 +15,10 @@ interface PersonResultWithDepartment extends PersonResult {
 }
 
 // Returns a Movie list with all the details that are needed to add
-// a bunch of movies to the database
+// a bunch of movies to the database, it also contains genres for each movie
+// which need to be handed seperatly in the database
 export async function FindMoviesByDirectors(): Promise<Movie[]> {
+  // Hardcoded a list of directors to search for
   const directorNames: string[] = ["Edward D. Wood Jr."];
 
   const directorIds: number[] = [];
@@ -60,8 +62,8 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
         credit.adult === false
     );
 
-    // We take the NUMBER_OF_MOVIES most popular movies by the director
-    // (with at least 10 votes to avoid weird edge cases)
+    // We take the NUMBER_OF_MOVIES most popular movies by the director,
+    // with at least 10 votes to avoid weird edge cases
     if (directedMovies) {
       const topMovies = directedMovies
         .filter((movie) => (movie.vote_count ?? 0) >= 10)
@@ -89,6 +91,7 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
             revenue: movie.revenue,
             overview: movie.overview,
             tagline: movie.tagline,
+            genres: movie.genres,
             posterPath: posterPath,
             backdropPath: backdropPath,
           });
@@ -111,6 +114,10 @@ export async function FindCrewByMovieId(
   const cast: Person[] = [];
   const crew: Person[] = [];
 
+  // There is missing information from the credits endpoint
+  // So we have to make additional requests to get the full person info
+  // This means that we will only get a limited number of crew and cast members
+  // to avoid making too many requests to the API
   const castSlice = credits.cast ? credits.cast.slice(0, NUMBER_OF_CAST) : [];
   for (const castMember of castSlice) {
     if (castMember.id && castMember.name) {
