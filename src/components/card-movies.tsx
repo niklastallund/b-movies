@@ -27,7 +27,7 @@ export function MovieCard({ movieData }: MovieCardProps) {
   const isAvailable = stock > 0;
 
   return (
-    <Card className="max-w-xs overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl">
+    <Card className="max-w-xs overflow-hidden rounded-lg border-stone-800 shadow-lg transition-all duration-300 hover:shadow-xl">
       <CardContent className="p-0">
         {/* Filmens bild */}
         <Image

@@ -34,12 +34,12 @@ const MovieCarousel = ({
 }) => (
   <div className="my-8" id={id}>
     <h2 className="text-3xl font-bold mb-4">{title}</h2>
-    <Carousel className="w-full max-w-7xl mx-auto">
+    <Carousel className="w-full  max-w-7xl mx-auto">
       <CarouselContent className="-ml-1">
         {movies.map((movie) => (
           <CarouselItem
             key={movie.id}
-            className="pl-1 basis-1/2 md:basis-1/3 lg:basis-1/5"
+            className="pl-1  basis-1/2 md:basis-1/3 lg:basis-1/5"
           >
             <div className="p-1">
               <MovieCard movieData={movie} />
@@ -291,13 +291,13 @@ export default function Carousels() {
   }, []);
 
   if (loading) {
-    return <div className="text-center p-4">Laddar filmer...</div>;
+    return <div className="text-center p-4">Loading Movies...</div>;
   }
 
   if (error || !movieData) {
     return (
       <div className="text-center p-4 text-red-500">
-        {error || "Kunde inte ladda data."}
+        {error || "Could not find any data."}
       </div>
     );
   }
@@ -307,22 +307,22 @@ export default function Carousels() {
       <MovieCarousel
         movies={movieData.latest}
         id="latest"
-        title="Senaste filmerna"
+        title="Top 5 Latest movies"
       />
       <MovieCarousel
         movies={movieData.popular}
         id="popular"
-        title="Mest populära filmer"
+        title="Top 5 Popular Movies"
       />
       <MovieCarousel
         movies={movieData.oldest}
         id="oldest"
-        title="Äldsta filmerna"
+        title="Top 5 Olderst Movies"
       />
       <MovieCarousel
         movies={movieData.cheapest}
         id="cheapest"
-        title="Billigast just nu"
+        title="Top 5 Cheepest Movies"
       />
     </div>
   );

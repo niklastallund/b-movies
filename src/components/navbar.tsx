@@ -93,7 +93,6 @@ export function Navbar() {
     "Sci-fi",
     "Thriller",
     "Romance",
-    "Animated",
   ];
   const toplists = [
     { label: "Top 5 Latest Movies", id: "latest" },

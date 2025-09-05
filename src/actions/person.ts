@@ -9,7 +9,7 @@ import {
 } from "@/lib/zod-schemas";
 
 // --- Skapa en ny person (skådespelare/regissör) ---
-export async function createPerson(formData: FormData) {
+export async function createPerson(prevState: any, formData: FormData) {
   const data = Object.fromEntries(formData);
   const validated = createPersonSchema.safeParse(data);
 
@@ -92,5 +92,18 @@ export async function deletePerson(formData: FormData) {
       success: false,
       errors: { _global: "Kunde inte ta bort personen." },
     };
+  }
+}
+
+// --- Funktion för att hämta alla personer ---
+export async function getAllPeople() {
+  try {
+    const people = await prisma.person.findMany({
+      orderBy: { name: "asc" },
+    });
+    return people;
+  } catch (error) {
+    console.error("Kunde inte hämta personer:", error);
+    return [];
   }
 }
