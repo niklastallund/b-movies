@@ -1,6 +1,7 @@
 import { MovieDb, PersonResult } from "moviedb-promise";
 import { Movie, Person } from "./types";
 
+
 const moviedb = new MovieDb("c0d3fc45d2f4922af3c27e30726b5daa");
 
 //Constants to limit the number of results we get from TMDB

@@ -19,22 +19,23 @@ export const deleteGenreSchema = z.object({
   id: z.number().int().positive(),
 });
 
-// --- Person Schemas (för Person/Actor/Director) ---
+// --- Person Schemas ---
 export const createPersonSchema = z.object({
-  tmdbId: z
-    .string()
-    .transform(Number)
-    .refine((val) => !isNaN(val) && val > 0, { message: "Ogiltigt TMDB ID." }),
-  name: z.string().min(1, { message: "Namn är obligatoriskt." }),
-  birthday: z.string().optional(), // Hantera datum som sträng från formulär
+  tmdbId: z.number().int().positive(),
+  name: z.string().min(1),
+  birthday: z.iso.date().optional(),
+  deathday: z.iso.date().optional(),
   biography: z.string().optional(),
+  profilePath: z.string().optional(),
 });
 
 export const updatePersonSchema = z.object({
-  id: z.number().int().positive(),
-  name: z.string().min(1, { message: "Namn är obligatoriskt." }).optional(),
-  birthday: z.string().optional(),
+  tmdbId: z.number().int().positive().optional(),
+  name: z.string().min(1).optional(),
+  birthday: z.iso.date().optional(),
+  deathday: z.iso.date().optional(),
   biography: z.string().optional(),
+  profilePath: z.string().optional(),
 });
 
 export const deletePersonSchema = z.object({

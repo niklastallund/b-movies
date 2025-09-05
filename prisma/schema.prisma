@@ -47,6 +47,8 @@ model Person {
   deathday  DateTime?
   biography String?
 
+  profilePath String? // profile picture
+
   movieCrew MovieCrew[]
 
   createdAt DateTime @default(now())
