@@ -21,10 +21,10 @@ export const deleteGenreSchema = z.object({
 
 // --- Person Schemas ---
 export const createPersonSchema = z.object({
-  tmdbId: z.number().int().positive(),
+  tmdbId: z.string().optional(),
   name: z.string().min(1),
-  birthday: z.iso.date().optional(),
-  deathday: z.iso.date().optional(),
+  birthday: z.date().optional(),
+  deathday: z.date().optional(),
   biography: z.string().optional(),
   profilePath: z.string().optional(),
 });

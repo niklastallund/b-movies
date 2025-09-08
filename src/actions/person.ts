@@ -1,5 +1,11 @@
+"use server";
 import { prisma } from "@/lib/prisma";
-import { createPersonSchema, CreatePersonInput, UpdatePersonInput, updatePersonSchema } from "@/lib/zod-schemas";
+import {
+  createPersonSchema,
+  CreatePersonInput,
+  UpdatePersonInput,
+  updatePersonSchema,
+} from "@/lib/zod-schemas";
 
 export async function createPerson(person: CreatePersonInput) {
   // !!!!!!!!!!!!!!!!!!
@@ -10,7 +16,7 @@ export async function createPerson(person: CreatePersonInput) {
 
   const newPerson = await prisma.person.create({
     data: {
-      tmdbId: data.tmdbId,
+      tmdbId: data.tmdbId !== undefined ? Number(data.tmdbId) : undefined,
       name: data.name,
       birthday: data.birthday,
       deathday: data.deathday,
@@ -25,7 +31,7 @@ export async function createPerson(person: CreatePersonInput) {
 export async function updatePerson(person: UpdatePersonInput) {
   // !!!!!!!!!!!!!!!!!!
   // !TODO auth checks!
-  // !!!!!!!!!!!!!!!!!! 
+  // !!!!!!!!!!!!!!!!!!
 
   const data = await updatePersonSchema.parseAsync(person);
 
@@ -43,5 +49,3 @@ export async function updatePerson(person: UpdatePersonInput) {
 
   return updatedPerson;
 }
-
-

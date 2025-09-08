@@ -32,42 +32,44 @@ export default function AdminPersonForm() {
   const form = useForm<CreatePersonInput>({
     resolver: zodResolver(createPersonSchema),
     defaultValues: {
-      tmdbId: undefined,
+      tmdbId: "",
       name: "",
-      birthday: "",
-      deathday: "",
+      birthday: undefined,
+      deathday: undefined,
       biography: "",
       profilePath: "",
     },
   });
 
-  async function onsubmit(data: CreatePersonInput) {
-    // Convert tmdbId to number if it's a string
-    const payload = {
+  async function onSubmit(data: CreatePersonInput) {
+    const cleanedData = {
       ...data,
-      tmdbId:
-        typeof data.tmdbId === "string" ? Number(data.tmdbId) : data.tmdbId,
+      tmdbId: data.tmdbId,
+      birthday: data.birthday,
+      deathday: data.deathday,
+      biography: data.biography,
+      profilePath: data.profilePath,
     };
-    await createPerson(payload);
+    await createPerson(cleanedData);
   }
 
   return (
-    <Card className="w-full max-w-lg mx-auto bg-black/20 backdrop-blur-xs border-red-900  ">
+    <Card className="w-full max-w-lg mx-auto bg-black/20 backdrop-blur-xs  ">
       <CardHeader>
         <CardTitle>Create Person</CardTitle>
         <CardDescription>Enter details to add a new person </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onsubmit)} className="space-y-3">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
               name="tmdbId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>TMDB ID</FormLabel>
+                  <FormLabel>TMDB ID (optional)</FormLabel>
                   <FormControl>
-                    <Input {...field} type="number" />
+                    <Input {...field} value={field.value?.toString() ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -93,7 +95,19 @@ export default function AdminPersonForm() {
                 <FormItem>
                   <FormLabel>Birthday</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      type="date"
+                      onChange={(e) => {
+                        const tmp = e.target.valueAsDate;
+                        if (tmp) {
+                          field.onChange(tmp);
+                        } else {
+                          field.onChange(undefined);
+                        }
+                      }}
+                      value={field.value?.toISOString().split("T")[0] ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -106,7 +120,19 @@ export default function AdminPersonForm() {
                 <FormItem>
                   <FormLabel>Deathday (optional)</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      type="date"
+                      onChange={(e) => {
+                        const tmp = e.target.valueAsDate;
+                        if (tmp) {
+                          field.onChange(tmp);
+                        } else {
+                          field.onChange(undefined);
+                        }
+                      }}
+                      value={field.value?.toISOString().split("T")[0] ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
