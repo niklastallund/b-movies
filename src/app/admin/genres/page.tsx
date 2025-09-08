@@ -1,3 +1,5 @@
+//src\app\admin\genres\page.tsx
+
 import { deleteGenre, getAllGenres } from "@/actions/genres";
 import { Button } from "@/components/ui/button";
 import GenreForm from "@/components/admin-genre-form"; // OBS! Kontrollera stavning och versaler
