@@ -32,11 +32,11 @@ export const createPersonSchema = z.object({
 export type CreatePersonInput = z.infer<typeof createPersonSchema>;
 
 export const updatePersonSchema = z.object({
-  id: z.number().int().positive(),
-  tmdbId: z.number().int().positive().optional(),
-  name: z.string().min(1).optional(),
-  birthday: z.iso.date().optional(),
-  deathday: z.iso.date().optional(),
+  id: z.number().positive(),
+  tmdbId: z.number().optional(),
+  name: z.string().optional(),
+  birthday: z.date().optional(),
+  deathday: z.date().optional(),
   biography: z.string().optional(),
   profilePath: z.string().optional(),
 });

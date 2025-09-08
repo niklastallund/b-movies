@@ -1,6 +1,6 @@
 "use client";
 
-import { createPerson } from "@/actions/person";
+import { updatePerson } from "@/actions/person";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,32 +18,44 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createPersonSchema, CreatePersonInput } from "@/lib/zod-schemas";
+import { Person } from "@/generated/prisma";
+import { UpdatePersonInput, updatePersonSchema } from "@/lib/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-export default function AdminCreatePersonForm() {
-  const form = useForm<CreatePersonInput>({
-    resolver: zodResolver(createPersonSchema),
+export default function AdminUpdatePersonForm({ person }: { person: Person }) {
+  const form = useForm<UpdatePersonInput>({
+    resolver: zodResolver(updatePersonSchema),
     defaultValues: {
-      tmdbId: "",
-      name: "",
-      birthday: undefined,
-      deathday: undefined,
-      biography: "",
-      profilePath: "",
+      id: person.id,
+      tmdbId: person.tmdbId ?? undefined,
+      name: person.name ?? "",
+      birthday: person.birthday ?? undefined,
+      deathday: person.deathday ?? undefined,
+      biography: person.biography ?? "",
+      profilePath: person.profilePath ?? "",
     },
   });
 
-  async function onSubmit(data: CreatePersonInput) {
-    await createPerson(data);
+  async function onSubmit(data: UpdatePersonInput) {
+    // Convert all the empty strings to undefined so that
+    // they don't overwrite existing values in the database
+    const cleanedData = Object.fromEntries(
+      Object.entries(data).map(([key, value]) =>
+        value === "" ? [key, undefined] : [key, value]
+      )
+    ) as UpdatePersonInput;
+
+    await updatePerson(cleanedData);
   }
 
   return (
     <Card className="w-full max-w-lg mx-auto bg-black/20 backdrop-blur-xs  ">
       <CardHeader>
-        <CardTitle>Create Person</CardTitle>
-        <CardDescription>Enter details to add a new person </CardDescription>
+        <CardTitle>Update Person</CardTitle>
+        <CardDescription>
+          Enter details to update an existing person
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -66,7 +78,7 @@ export default function AdminCreatePersonForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full name</FormLabel>
+                  <FormLabel>Full name (optional)</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -79,15 +91,15 @@ export default function AdminCreatePersonForm() {
               name="birthday"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Birthday</FormLabel>
+                  <FormLabel>Birthday (optional)</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="date"
                       onChange={(e) => {
-                        const val = e.target.valueAsDate;
-                        if (val) {
-                          field.onChange(val);
+                        const tmp = e.target.valueAsDate;
+                        if (tmp) {
+                          field.onChange(tmp);
                         } else {
                           field.onChange(undefined);
                         }
@@ -110,9 +122,9 @@ export default function AdminCreatePersonForm() {
                       {...field}
                       type="date"
                       onChange={(e) => {
-                        const val = e.target.valueAsDate;
-                        if (val) {
-                          field.onChange(val);
+                        const tmp = e.target.valueAsDate;
+                        if (tmp) {
+                          field.onChange(tmp);
                         } else {
                           field.onChange(undefined);
                         }
@@ -129,7 +141,7 @@ export default function AdminCreatePersonForm() {
               name="biography"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Biography</FormLabel>
+                  <FormLabel>Biography (optional)</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -142,7 +154,7 @@ export default function AdminCreatePersonForm() {
               name="profilePath"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Profile path ( /xxxxxxxxxx... )</FormLabel>
+                  <FormLabel>Profile path (optional)</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -150,7 +162,7 @@ export default function AdminCreatePersonForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Create</Button>
+            <Button type="submit">Update</Button>
           </form>
         </Form>
       </CardContent>

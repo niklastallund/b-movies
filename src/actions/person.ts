@@ -38,7 +38,7 @@ export async function updatePerson(person: UpdatePersonInput) {
   const updatedPerson = await prisma.person.update({
     where: { id: data.id },
     data: {
-      tmdbId: data.tmdbId,
+      tmdbId: data.tmdbId !== undefined ? Number(data.tmdbId) : undefined,
       name: data.name,
       birthday: data.birthday,
       deathday: data.deathday,
