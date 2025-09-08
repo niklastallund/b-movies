@@ -1,4 +1,4 @@
-import AdminPersonForm from "./form";
+import AdminPersonForm from "../../../components/create-person-form";
 
 export default function AdminPersonPage() {
   return (
