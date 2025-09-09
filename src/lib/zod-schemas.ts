@@ -21,7 +21,7 @@ export const deleteGenreSchema = z.object({
 
 // --- Person Schemas ---
 export const createPersonSchema = z.object({
-  tmdbId: z.string().optional(),
+  tmdbId: z.coerce.number<number>().positive().optional(),
   name: z.string().min(1),
   birthday: z.date().optional(),
   deathday: z.date().optional(),
@@ -32,8 +32,8 @@ export const createPersonSchema = z.object({
 export type CreatePersonInput = z.infer<typeof createPersonSchema>;
 
 export const updatePersonSchema = z.object({
-  id: z.number().positive(),
-  tmdbId: z.number().optional(),
+  id: z.coerce.number<number>().positive().optional(),
+  tmdbId: z.coerce.number<number>().positive().optional(),
   name: z.string().optional(),
   birthday: z.date().optional(),
   deathday: z.date().optional(),

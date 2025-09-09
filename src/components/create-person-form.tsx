@@ -26,7 +26,7 @@ export default function AdminCreatePersonForm() {
   const form = useForm<CreatePersonInput>({
     resolver: zodResolver(createPersonSchema),
     defaultValues: {
-      tmdbId: "",
+      tmdbId: undefined,
       name: "",
       birthday: undefined,
       deathday: undefined,

@@ -84,7 +84,7 @@ export async function getPersonsByName(name: string) {
   return persons;
 }
 
-export default function getPersonsByBirthday(birthday: Date) {
+export default async function getPersonsByBirthday(birthday: Date) {
   return prisma.person.findMany({
     where: {
       birthday: birthday,
