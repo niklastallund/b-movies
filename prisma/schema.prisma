@@ -41,11 +41,13 @@ model Movie {
 
 model Person {
   id        Int       @id @default(autoincrement())
-  tmdbId    Int       @unique
+  tmdbId    Int?       @unique
   name      String
   birthday  DateTime?
   deathday  DateTime?
   biography String?
+
+  profilePath String? // profile picture
 
   movieCrew MovieCrew[]
 

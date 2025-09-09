@@ -19,27 +19,35 @@ export const deleteGenreSchema = z.object({
   id: z.number().int().positive(),
 });
 
-// --- Person Schemas (för Person/Actor/Director) ---
+// --- Person Schemas ---
 export const createPersonSchema = z.object({
-  tmdbId: z
-    .string()
-    .transform(Number)
-    .refine((val) => !isNaN(val) && val > 0, { message: "Ogiltigt TMDB ID." }),
-  name: z.string().min(1, { message: "Namn är obligatoriskt." }),
-  birthday: z.string().optional(), // Hantera datum som sträng från formulär
+  tmdbId: z.coerce.number<number>().positive().optional(),
+  name: z.string().min(1),
+  birthday: z.date().optional(),
+  deathday: z.date().optional(),
   biography: z.string().optional(),
+  profilePath: z.string().optional(),
 });
 
+export type CreatePersonInput = z.infer<typeof createPersonSchema>;
+
 export const updatePersonSchema = z.object({
-  id: z.number().int().positive(),
-  name: z.string().min(1, { message: "Namn är obligatoriskt." }).optional(),
-  birthday: z.string().optional(),
+  id: z.coerce.number<number>().positive().optional(),
+  tmdbId: z.coerce.number<number>().positive().optional(),
+  name: z.string().optional(),
+  birthday: z.date().optional(),
+  deathday: z.date().optional(),
   biography: z.string().optional(),
+  profilePath: z.string().optional(),
 });
+
+export type UpdatePersonInput = z.infer<typeof updatePersonSchema>;
 
 export const deletePersonSchema = z.object({
   id: z.number().int().positive(),
 });
+
+export type DeletePersonInput = z.infer<typeof deletePersonSchema>;
 
 // --- Order Schemas ---
 export const updateOrderStatusSchema = z.object({
