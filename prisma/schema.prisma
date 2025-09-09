@@ -15,10 +15,10 @@ datasource db {
 }
 
 model Movie {
-  id          Int      @id @default(autoincrement())
-  tmdbId      Int?     @unique
+  id          Int       @id @default(autoincrement())
+  tmdbId      Int?      @unique
   title       String
-  releaseDate DateTime
+  releaseDate DateTime?
   runtime     Int?
   budget      Int?
   revenue     Int?
@@ -41,7 +41,7 @@ model Movie {
 
 model Person {
   id        Int       @id @default(autoincrement())
-  tmdbId    Int?       @unique
+  tmdbId    Int?      @unique
   name      String
   birthday  DateTime?
   deathday  DateTime?
