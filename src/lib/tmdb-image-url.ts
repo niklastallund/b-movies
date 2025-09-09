@@ -7,7 +7,7 @@ import { BackdropSize, PosterSize, ProfileSize } from "./types";
 
 // Example usage: getPosterUrl("/path/to/poster.jpg", "w500");
 export function getPosterUrl(
-  path: string | undefined,
+  path: string | undefined | null,
   size: PosterSize = "w500"
 ): string | undefined {
   if (!path) return undefined;
@@ -15,7 +15,7 @@ export function getPosterUrl(
 }
 
 export function getBackdropUrl(
-  path: string | undefined,
+  path: string | undefined | null,
   size: BackdropSize = "w1280"
 ): string | undefined {
   if (!path) return undefined;
@@ -23,7 +23,7 @@ export function getBackdropUrl(
 }
 
 export function getProfileUrl(
-  path: string | undefined,
+  path: string | undefined | null,
   size: ProfileSize = "w185"
 ): string | undefined {
   if (!path) return undefined;
