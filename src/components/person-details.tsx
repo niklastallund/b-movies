@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator"; // Bra för att skapa avdelare
-import { getPosterUrl, getProfileUrl } from "@/lib/tmdb-image-url";
+import { getProfileUrl } from "@/lib/tmdb-image-url";
 import { Person } from "@/generated/prisma";
 
 // Props som komponenten tar emot
@@ -44,16 +43,15 @@ export default function PersonDetails({ person }: PersonDetailsProps) {
               {person.name}
             </CardTitle>
             <CardDescription className="text-gray-200 text-base">
+              <Separator className="my-4 bg-white/20" />
               <p>
-                Birthday:{" "}
+                Born:{" "}
                 {person.birthday
-                  ? typeof person.birthday === "string"
-                    ? person.birthday
-                    : person.birthday.toLocaleDateString()
+                  ? person.birthday.toLocaleDateString()
                   : "Unknown"}
               </p>
               {person.deathday
-                ? `Deathday: ${person.deathday?.toLocaleDateString()}`
+                ? `Died: ${person.deathday?.toLocaleDateString()}`
                 : ""}
             </CardDescription>
           </CardHeader>
