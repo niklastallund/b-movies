@@ -18,7 +18,7 @@ model Movie {
   id          Int      @id @default(autoincrement())
   tmdbId      Int?     @unique
   title       String
-  releaseDate DateTime
+  releaseDate DateTime?
   runtime     Int?
   budget      Int?
   revenue     Int?
