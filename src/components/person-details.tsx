@@ -5,19 +5,35 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator"; // Bra för att skapa avdelare
+import { Separator } from "@/components/ui/separator";
 import { getProfileUrl } from "@/lib/tmdb-image-url";
 import { Person } from "@/generated/prisma";
 
-// Props som komponenten tar emot
 interface PersonDetailsProps {
   person: Person;
 }
 
-// Huvudkomponenten för persondetaljer
+function getAgeAtDeath(birthday: Date, deathday: Date): number {
+  let age = deathday.getFullYear() - birthday.getFullYear();
+  const deathMonth = deathday.getMonth();
+  const birthMonth = birthday.getMonth();
+  const deathDate = deathday.getDate();
+  const birthDate = birthday.getDate();
+
+  // If deathday is before birthday in the year, subtract one
+  if (
+    deathMonth < birthMonth ||
+    (deathMonth === birthMonth && deathDate < birthDate)
+  ) {
+    age--;
+  }
+  return age;
+}
+
 export default function PersonDetails({ person }: PersonDetailsProps) {
   const handlePoster =
     getProfileUrl(person.profilePath, "h632") || "/default-image.jpg";
@@ -45,20 +61,25 @@ export default function PersonDetails({ person }: PersonDetailsProps) {
             <CardDescription className="text-gray-200 text-base">
               <Separator className="my-4 bg-white/20" />
               <p>
-                Born:{" "}
+                Birthdate:{" "}
                 {person.birthday
                   ? person.birthday.toLocaleDateString()
                   : "Unknown"}
               </p>
               {person.deathday
-                ? `Died: ${person.deathday?.toLocaleDateString()}`
+                ? `Day of death: ${person.deathday?.toLocaleDateString()} (aged ${
+                    person.birthday
+                      ? getAgeAtDeath(person.birthday, person.deathday)
+                      : "unknown"
+                  })`
                 : ""}
             </CardDescription>
           </CardHeader>
-
-          <p className="mb-4 text-gray-100 leading-relaxed drop-shadow-sm">
-            {person.biography || "No biography available."}
-          </p>
+          <CardFooter className="p-0 mb-4">
+            <p className="mb-4 text-gray-100 leading-relaxed drop-shadow-sm">
+              {person.biography || "No biography available."}
+            </p>
+          </CardFooter>
 
           <Separator className="my-4 bg-white/20" />
         </div>
