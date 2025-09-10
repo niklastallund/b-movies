@@ -31,8 +31,8 @@ export interface Person {
   // Role-specific fields
   character?: string; // For cast
   job?: string; // For crew
+  order?: number; // For cast
 }
-
 
 export type PosterSize =
   | "w92"

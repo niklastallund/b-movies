@@ -1,13 +1,12 @@
 import { MovieDb, PersonResult } from "moviedb-promise";
 import { Movie, Person } from "./types";
 
-
 const moviedb = new MovieDb("c0d3fc45d2f4922af3c27e30726b5daa");
 
 //Constants to limit the number of results we get from TMDB
 const NUMBER_OF_MOVIES = 10;
-const NUMBER_OF_CREW = 10;
-const NUMBER_OF_CAST = 10;
+const NUMBER_OF_CREW = 5;
+const NUMBER_OF_CAST = 5;
 
 // Had to expand PersonResult because it is defined
 // in the JSON but not in the original interface
@@ -106,7 +105,7 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
 // Returns the crew and cast for a specific movie
 // with all the details that are needed to add them to the database
 export async function FindCrewByMovieId(
-  movieId: string
+  movieId: number
 ): Promise<{ crew: Person[]; cast: Person[] }> {
   const credits = await moviedb.movieCredits({ id: movieId });
 
