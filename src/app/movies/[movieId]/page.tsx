@@ -1,7 +1,7 @@
 import Image from "next/image";
 import MovieDetails from "@/components/MovieDetails";
 import { getBackdropUrl } from "@/lib/tmdb-image-url";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
 export type Params = {
@@ -21,13 +21,12 @@ export default async function MovieDetailsPage(props: { params: Params }) {
   });
 
   if (!movie) {
-    return redirect("/movies");
+    return notFound();
   }
 
   //We need to get the backdrop image here because it is not drawn in the component
   const backdropUrl =
     getBackdropUrl(movie.backdropPath, "w1280") || "/default-image.jpg";
-
 
   return (
     <main className="relative min-h-screen flex items-center justify-center">

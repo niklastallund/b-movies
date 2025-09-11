@@ -86,7 +86,7 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
           <Separator className="my-4 bg-white/20" />
 
           <div className="flex items-center text-2xl font-semibold mb-4 text-white">
-            Price: ${100}
+            Price: {movie.price} SEK
           </div>
 
           {/* Antal och Lägg till i varukorgen-knapp */}
@@ -120,8 +120,9 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
           </div>
 
           <p className="mt-4 text-sm text-gray-300">
-            Balance:{" "}
-            {(movie.stock ?? 0) > 0 ? `${movie.stock} i lager` : "Slut i lager"}
+            {(movie.stock ?? 0) > 0
+              ? `${movie.stock} in stock`
+              : "Out of stock"}
           </p>
         </div>
       </CardContent>
