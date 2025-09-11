@@ -19,15 +19,15 @@ export async function addMoviesAndCrewFromTmdb() {
     const addedMovie = await prisma.movie.upsert({
       where: { tmdbId: movie.id },
       create: {
-        tmdbId: movie.id,
+        tmdbId: BigInt(movie.id),
         title: movie.title,
         overview: movie.overview,
         releaseDate: movie.releaseDate
           ? new Date(movie.releaseDate)
           : undefined,
         runtime: movie.runtime,
-        budget: movie.budget,
-        revenue: movie.revenue,
+        budget: movie.budget ? BigInt(movie.budget) : undefined,
+        revenue: movie.revenue ? BigInt(movie.revenue) : undefined,
         tagline: movie.tagline,
         posterPath: movie.posterPath,
         backdropPath: movie.backdropPath,
@@ -35,7 +35,7 @@ export async function addMoviesAndCrewFromTmdb() {
         price,
       },
       update: {
-        tmdbId: movie.id,
+        tmdbId: BigInt(movie.id),
         title: movie.title,
         overview: movie.overview,
         releaseDate: movie.releaseDate
@@ -58,7 +58,7 @@ export async function addMoviesAndCrewFromTmdb() {
       const addedCastMember = await prisma.person.upsert({
         where: { tmdbId: actor.id },
         create: {
-          tmdbId: actor.id,
+          tmdbId: BigInt(actor.id),
           name: actor.name,
           profilePath: actor.profilePath,
           biography: actor.biography,
@@ -75,38 +75,23 @@ export async function addMoviesAndCrewFromTmdb() {
       });
 
       // Link cast member to movie with their character
-      const addedMovieCast = await prisma.movieCrew.upsert({
-        where: {
-          movieId_personId_role: {
-            movieId: addedMovie.id,
-            personId: addedCastMember.id,
-            role: "cast",
-          },
-        },
-        update: {
-          character: actor.character,
-          job: "Actor",
-          order: actor.order ?? undefined,
-        },
-        create: {
-          movieId: addedMovie.id,
-          personId: addedCastMember.id,
-          role: "cast",
-          character: actor.character,
-          job: "Actor",
-          order: actor.order ?? undefined,
-        },
+      await addMovieCrewEntry({
+        movieId: addedMovie.id,
+        personId: addedCastMember.id,
+        role: "cast",
+        job: "Actor",
+        character: actor.character,
+        order: actor.order,
       });
 
       console.log("Added to Cast:", { addedPerson: addedCastMember });
-      console.log("Their Movie Cast Role:", { addedMovieCast });
     }
 
     for (const crewMember of crew.crew) {
       const addedCrewMember = await prisma.person.upsert({
         where: { tmdbId: crewMember.id },
         create: {
-          tmdbId: crewMember.id,
+          tmdbId: BigInt(crewMember.id),
           name: crewMember.name,
           profilePath: crewMember.profilePath,
           biography: crewMember.biography,
@@ -131,29 +116,55 @@ export async function addMoviesAndCrewFromTmdb() {
       });
 
       // Link crew member to movie with their job
-      const addedMovieCrew = await prisma.movieCrew.upsert({
-        where: {
-          movieId_personId_role: {
-            movieId: addedMovie.id,
-            personId: addedCrewMember.id,
-            role: "crew",
-          },
-        },
-        update: {
-          job: crewMember.job,
-          order: crewMember.order ?? undefined,
-        },
-        create: {
-          movieId: addedMovie.id,
-          personId: addedCrewMember.id,
-          role: "crew",
-          job: crewMember.job,
-          order: crewMember.order ?? undefined,
-        },
+      await addMovieCrewEntry({
+        movieId: addedMovie.id,
+        personId: addedCrewMember.id,
+        role: "crew",
+        job: crewMember.job,
+        character: crewMember.character,
+        order: crewMember.order,
       });
 
       console.log("Added to Crew:", { addedCrewMember });
-      console.log("Their Movie Crew Role:", { addedMovieCrew });
     }
+  }
+}
+
+async function addMovieCrewEntry({
+  movieId,
+  personId,
+  role,
+  job,
+  character,
+  order,
+}: {
+  movieId: number;
+  personId: number;
+  role: string;
+  job?: string;
+  character?: string;
+  order?: number;
+}) {
+  const existing = await prisma.movieCrew.findUnique({
+    where: {
+      movieId_personId_role_job_character: {
+        movieId,
+        personId,
+        role,
+        job: job ?? "",
+        character: character ?? "",
+      },
+    },
+  });
+
+  if (existing) {
+    return await prisma.movieCrew.update({
+      where: { id: existing.id },
+      data: { order },
+    });
+  } else {
+    return await prisma.movieCrew.create({
+      data: { movieId, personId, role, job, character, order },
+    });
   }
 }

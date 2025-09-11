@@ -86,7 +86,7 @@ export type CreateMovieInput = z.infer<typeof createMovieSchema>;
 export const updateMovieSchema = z.object({
   id: z.number().int().positive(),
   title: z.string().min(1, { message: "Titel är obligatoriskt." }).optional(),
-  ove: z.string().optional(),
+  overview: z.string().optional(),
   releaseDate: z.string().optional(),
   genreIds: z.array(z.number().int().positive()).optional(),
   actorIds: z.array(z.number().int().positive()).optional(),

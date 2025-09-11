@@ -19,7 +19,13 @@ interface PersonResultWithDepartment extends PersonResult {
 // which need to be handed seperatly in the database
 export async function FindMoviesByDirectors(): Promise<MovieApi[]> {
   // Hardcoded a list of directors to search for
-  const directorNames: string[] = ["Edward D. Wood Jr."];
+  const directorNames: string[] = [
+    "Roger Corman",
+    "Edward D. Wood Jr.",
+    "Jack Arnold",
+    "William Castle",
+    "Mario Bava",
+  ];
 
   const directorIds: number[] = [];
   const movies: MovieApi[] = [];
@@ -98,7 +104,11 @@ export async function FindMoviesByDirectors(): Promise<MovieApi[]> {
 }
 
 // Returns the crew and cast for a specific movie
-// with all the details that are needed to add them to the database
+// with all the details that are needed to add them to the database.
+// There is missing information from the credits endpoint,
+// so we have to make additional requests to get the full person info.
+// This means that we will only get a limited number of crew and cast members
+// to avoid making too many requests to the API.
 export async function FindCrewByMovieId(
   movieId: number
 ): Promise<{ crew: PersonApi[]; cast: PersonApi[] }> {
@@ -107,41 +117,59 @@ export async function FindCrewByMovieId(
   const cast: PersonApi[] = [];
   const crew: PersonApi[] = [];
 
-  // There is missing information from the credits endpoint
-  // So we have to make additional requests to get the full person info
-  // This means that we will only get a limited number of crew and cast members
-  // to avoid making too many requests to the API
-  const castSlice = credits.cast ? credits.cast.slice(0, NUMBER_OF_CAST) : [];
+  // We sort the cast by order and take the first NUMBER_OF_CAST members
+  // because order is the field that defines the importance of the cast member
+  // in the movie
+  const castSlice = credits.cast
+    ? credits.cast
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .slice(0, NUMBER_OF_CAST)
+    : [];
   for (const castMember of castSlice) {
     if (castMember.id && castMember.name) {
       const personInfo = await moviedb.personInfo(castMember.id);
 
-      cast.push({
-        id: castMember.id,
-        name: castMember.name,
-        character: castMember.character,
-        biography: personInfo.biography,
-        birthday: personInfo.birthday,
-        deathday: personInfo.deathday,
-        profilePath: castMember.profile_path,
-      });
+      // Let's only add them if they have either a birthday or a profilePath
+      // to avoid adding too many empty entries
+      if (personInfo.birthday || castMember.profile_path) {
+        cast.push({
+          id: castMember.id,
+          name: castMember.name,
+          character: castMember.character,
+          order: castMember.order,
+          biography: personInfo.biography,
+          birthday: personInfo.birthday,
+          deathday: personInfo.deathday,
+          profilePath: castMember.profile_path,
+        });
+      }
     }
   }
 
-  const crewSlice = credits.crew ? credits.crew.slice(0, NUMBER_OF_CREW) : [];
+  // We have to sort the crew by popularity because unlike cast they don't have an order field
+  // So we take the most popular crew members to add to the database
+  const crewSlice = credits.crew
+    ? credits.crew
+        .sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0))
+        .slice(0, NUMBER_OF_CREW)
+    : [];
   for (const crewMember of crewSlice) {
     if (crewMember.id && crewMember.name) {
       const personInfo = await moviedb.personInfo(crewMember.id);
 
-      crew.push({
-        id: crewMember.id,
-        name: crewMember.name,
-        job: crewMember.job,
-        biography: personInfo.biography,
-        birthday: personInfo.birthday,
-        deathday: personInfo.deathday,
-        profilePath: crewMember.profile_path,
-      });
+      // Let's only add them if they have either a birthday or a profilePath
+      // to avoid adding too many empty entries
+      if (personInfo.birthday || crewMember.profile_path) {
+        crew.push({
+          id: crewMember.id,
+          name: crewMember.name,
+          job: crewMember.job,
+          biography: personInfo.biography,
+          birthday: personInfo.birthday,
+          deathday: personInfo.deathday,
+          profilePath: crewMember.profile_path,
+        });
+      }
     }
   }
 
