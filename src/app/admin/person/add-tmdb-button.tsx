@@ -1,20 +1,23 @@
 "use client";
 
-import { addMoviesAndCrewFromTmdb } from "@/actions/api-actions";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export default function AddTmdbButton({
   onAdd,
 }: {
   onAdd: () => Promise<void>;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <Button
       onClick={async () => {
-        await onAdd();
+        setIsLoading(true);
+        await onAdd().finally(() => setIsLoading(false));
       }}
     >
-      Add TMDB to database
+      {isLoading ? "Adding..." : "Add TMDB to database"}
     </Button>
   );
 }

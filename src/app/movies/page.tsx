@@ -12,8 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FindMoviesByDirectors } from "@/lib/tmdb";
-import { Movie } from "@/lib/types";
+import { MovieApi } from "@/lib/types";
 
 // Data matchar movie modell fårn prisma shema
 
@@ -118,7 +117,7 @@ export default function MoviesPage() {
   const [selectedGenre, setSelectedGenre] = useState<string>("all");
   const [sortOrder, setSortOrder] = useState<string>("default");
 
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [movies, setMovies] = useState<MovieApi[]>([]);
 
   // // Fetch movies on mount
   // useEffect(() => {

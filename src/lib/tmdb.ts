@@ -1,5 +1,5 @@
 import { MovieDb, PersonResult } from "moviedb-promise";
-import { Movie, Person } from "./types";
+import { MovieApi, PersonApi } from "./types";
 
 const moviedb = new MovieDb("c0d3fc45d2f4922af3c27e30726b5daa");
 
@@ -17,12 +17,12 @@ interface PersonResultWithDepartment extends PersonResult {
 // Returns a Movie list with all the details that are needed to add
 // a bunch of movies to the database, it also contains genres for each movie
 // which need to be handed seperatly in the database
-export async function FindMoviesByDirectors(): Promise<Movie[]> {
+export async function FindMoviesByDirectors(): Promise<MovieApi[]> {
   // Hardcoded a list of directors to search for
   const directorNames: string[] = ["Edward D. Wood Jr."];
 
   const directorIds: number[] = [];
-  const movies: Movie[] = [];
+  const movies: MovieApi[] = [];
 
   // Convert the directorName list to IDs for the most popular director of the query
   for (const name of directorNames) {
@@ -71,11 +71,6 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
 
       for (const topMovie of topMovies) {
         const movie = await moviedb.movieInfo(topMovie.id as number);
-        const images = await moviedb.movieImages(topMovie.id as number);
-
-        // Picking the first picture from the list of images, maybe not the best approach
-        const posterPath = images.posters?.[0]?.file_path;
-        const backdropPath = images.backdrops?.[0]?.file_path;
 
         // If the movie doesn't have a title for some reason we discard it.
         // Everything else is set as optional in the interface
@@ -91,8 +86,8 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
             overview: movie.overview,
             tagline: movie.tagline,
             genres: movie.genres,
-            posterPath: posterPath,
-            backdropPath: backdropPath,
+            posterPath: movie.poster_path,
+            backdropPath: movie.backdrop_path,
           });
         }
       }
@@ -106,11 +101,11 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
 // with all the details that are needed to add them to the database
 export async function FindCrewByMovieId(
   movieId: number
-): Promise<{ crew: Person[]; cast: Person[] }> {
+): Promise<{ crew: PersonApi[]; cast: PersonApi[] }> {
   const credits = await moviedb.movieCredits({ id: movieId });
 
-  const cast: Person[] = [];
-  const crew: Person[] = [];
+  const cast: PersonApi[] = [];
+  const crew: PersonApi[] = [];
 
   // There is missing information from the credits endpoint
   // So we have to make additional requests to get the full person info
@@ -120,8 +115,6 @@ export async function FindCrewByMovieId(
   for (const castMember of castSlice) {
     if (castMember.id && castMember.name) {
       const personInfo = await moviedb.personInfo(castMember.id);
-      const personImages = await moviedb.personImages(castMember.id);
-      const profilePath = personImages.profiles?.[0]?.file_path;
 
       cast.push({
         id: castMember.id,
@@ -130,7 +123,7 @@ export async function FindCrewByMovieId(
         biography: personInfo.biography,
         birthday: personInfo.birthday,
         deathday: personInfo.deathday,
-        profilePath: profilePath,
+        profilePath: castMember.profile_path,
       });
     }
   }
@@ -139,8 +132,6 @@ export async function FindCrewByMovieId(
   for (const crewMember of crewSlice) {
     if (crewMember.id && crewMember.name) {
       const personInfo = await moviedb.personInfo(crewMember.id);
-      const personImages = await moviedb.personImages(crewMember.id);
-      const profilePath = personImages.profiles?.[0]?.file_path;
 
       crew.push({
         id: crewMember.id,
@@ -149,7 +140,7 @@ export async function FindCrewByMovieId(
         biography: personInfo.biography,
         birthday: personInfo.birthday,
         deathday: personInfo.deathday,
-        profilePath: profilePath,
+        profilePath: crewMember.profile_path,
       });
     }
   }
