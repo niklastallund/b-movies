@@ -5,13 +5,13 @@ import Link from "next/link";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getPosterUrl } from "@/lib/tmdb-image-url";
-import { Movie } from "@/lib/types";
+import { MovieApi } from "@/lib/types";
 
 // Används för att matcha fälten i din Prisma-databas
 
 // Props för komponenten
 interface MovieCardProps {
-  movieData: Movie;
+  movieData: MovieApi;
 }
 
 // Komponenten som visar ett filmkort

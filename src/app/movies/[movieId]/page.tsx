@@ -1,41 +1,30 @@
-"use client";
-
 import Image from "next/image";
 import MovieDetails from "@/components/MovieDetails";
-import { FindCrewByMovieId, FindMoviesByDirectors } from "@/lib/tmdb";
 import { getBackdropUrl } from "@/lib/tmdb-image-url";
-import { Movie } from "@/lib/types";
-import { useEffect, useState } from "react";
-import { Person } from "moviedb-promise";
+import { notFound, redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 
-export default function MovieDetailsPage() {
-  //THIS IS HARDCODED TO ALWAYS SHOW THE 5TH MOVIE, CHANGE LATER
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [crew, setCrew] = useState<{ crew: Person[]; cast: Person[] }>();
+export type Params = {
+  movieId: string;
+};
 
-  // // Fetch movies on mount
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     const movies = await FindMoviesByDirectors();
-  //     setMovies(movies);
-  //   };
-  //   fetch(); //Needed to be able to use async function inside useEffect
-  // }, []);
+export default async function MovieDetailsPage(props: { params: Params }) {
+  const params = props.params;
+  const movieId = parseInt(params.movieId);
 
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     const crew = await FindCrewByMovieId("10513"); //Hardcoded to "Plan 9 from Outer Space"
-  //     setCrew(crew);
-  //   };
-  //   fetch();
-  // }, []);
-
-  const movie = movies[0];
-
-  if (!movie) {
-    return <div>Movie was not found.</div>;
+  if (isNaN(movieId) || movieId <= 0) {
+    return redirect("/movies");
   }
 
+  const movie = await prisma.movie.findUnique({
+    where: { id: movieId },
+  });
+
+  if (!movie) {
+    return notFound();
+  }
+
+  //We need to get the backdrop image here because it is not drawn in the component
   const backdropUrl =
     getBackdropUrl(movie.backdropPath, "w1280") || "/default-image.jpg";
 

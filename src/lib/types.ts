@@ -1,6 +1,6 @@
 import { Genre } from "moviedb-promise";
 
-export interface Movie {
+export interface MovieApi {
   id: number;
   title: string;
   releaseDate?: string;
@@ -19,20 +19,20 @@ export interface Movie {
   price?: number; //tmp
 }
 
-export interface Person {
+export interface PersonApi {
   id: number;
   name: string;
   biography?: string;
   birthday?: string | null;
   deathday?: string | null;
 
-  profilePath?: string;
+  profilePath?: string | null;
 
   // Role-specific fields
   character?: string; // For cast
   job?: string; // For crew
+  order?: number; // For cast
 }
-
 
 export type PosterSize =
   | "w92"

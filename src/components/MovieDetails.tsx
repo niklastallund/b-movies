@@ -11,8 +11,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator"; // Bra för att skapa avdelare
-import { Movie } from "@/lib/types";
+
 import { getPosterUrl } from "@/lib/tmdb-image-url";
+import { Movie } from "@/generated/prisma";
 
 // Props som komponenten tar emot
 interface MovieDetailsProps {
@@ -35,7 +36,7 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
   };
 
   const handlePoster = getPosterUrl(movie.posterPath) || "/default-image.jpg";
-  
+
   return (
     <Card className="w-full mx-auto relative bg-black/20 backdrop-blur-xs border-red-900">
       <CardContent className="relative z-10 flex flex-col md:flex-row p-4 md:p-8">
@@ -60,7 +61,10 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
             </CardTitle>
             {/* SÄTT TAGLINE HÄR */}
             <CardDescription className="text-gray-200 text-base">
-              Release Date: {movie.releaseDate ?? "Okänt datum"}
+              Release Date:{" "}
+              {movie.releaseDate
+                ? movie.releaseDate.toLocaleDateString()
+                : "Unknown"}
             </CardDescription>
           </CardHeader>
 
@@ -82,7 +86,7 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
           <Separator className="my-4 bg-white/20" />
 
           <div className="flex items-center text-2xl font-semibold mb-4 text-white">
-            Price: ${100}
+            Price: {movie.price} SEK
           </div>
 
           {/* Antal och Lägg till i varukorgen-knapp */}
@@ -116,8 +120,9 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
           </div>
 
           <p className="mt-4 text-sm text-gray-300">
-            Balance:{" "}
-            {(movie.stock ?? 0) > 0 ? `${movie.stock} i lager` : "Slut i lager"}
+            {(movie.stock ?? 0) > 0
+              ? `${movie.stock} in stock`
+              : "Out of stock"}
           </p>
         </div>
       </CardContent>
