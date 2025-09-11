@@ -84,7 +84,7 @@ export async function addMoviesAndCrewFromTmdb() {
         order: actor.order,
       });
 
-      console.log("Added to Cast:", { addedPerson: addedCastMember });
+      console.log("Added to Cast:", { addedCastMember });
     }
 
     for (const crewMember of crew.crew) {
