@@ -1,98 +1,95 @@
 "use server";
-
-import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import {
   createPersonSchema,
+  CreatePersonInput,
+  UpdatePersonInput,
   updatePersonSchema,
-  deletePersonSchema,
 } from "@/lib/zod-schemas";
 
-// --- Skapa en ny person (skådespelare/regissör) ---
-export async function createPerson(prevState: any, formData: FormData) {
-  const data = Object.fromEntries(formData);
-  const validated = createPersonSchema.safeParse(data);
+// !!!!!!!!!!!!!!!!!!
+// !TODO auth checks!
+// !!!!!!!!!!!!!!!!!!
+export async function createPerson(person: CreatePersonInput) {
+  const data = await createPersonSchema.parseAsync(person);
 
-  if (!validated.success) {
-    return { success: false, errors: validated.error.flatten().fieldErrors };
-  }
-
-  try {
-    // TMDB-id måste vara unikt, så vi hanterar det
-    await prisma.person.create({
-      data: {
-        tmdbId: validated.data.tmdbId,
-        name: validated.data.name,
-        biography: validated.data.biography,
-        // Konvertera birthday-strängen till ett Date-objekt om den finns
-        birthday: validated.data.birthday
-          ? new Date(validated.data.birthday)
-          : undefined,
-      },
-    });
-    revalidatePath("/admin/people");
-    return { success: true };
-  } catch (error) {
-    return {
-      success: false,
-      errors: {
-        _global:
-          "Kunde inte skapa personen. Kontrollera om TMDB ID redan finns.",
-      },
-    };
-  }
-}
-
-// --- Uppdatera en befintlig person ---
-export async function updatePerson(formData: FormData) {
-  const data = Object.fromEntries(formData);
-  const validated = updatePersonSchema.safeParse({
-    ...data,
-    id: Number(data.id),
+  const newPerson = await prisma.person.create({
+    data: {
+      tmdbId: data.tmdbId !== undefined ? Number(data.tmdbId) : undefined,
+      name: data.name,
+      birthday: data.birthday,
+      deathday: data.deathday,
+      biography: data.biography,
+      profilePath: data.profilePath,
+    },
   });
 
-  if (!validated.success) {
-    return { success: false, errors: validated.error.flatten().fieldErrors };
-  }
-
-  try {
-    const { id, birthday, ...updateData } = validated.data;
-    await prisma.person.update({
-      where: { id },
-      data: {
-        ...updateData,
-        birthday: birthday ? new Date(birthday) : undefined,
-      },
-    });
-    revalidatePath("/admin/people");
-    return { success: true };
-  } catch (error) {
-    return {
-      success: false,
-      errors: { _global: "Kunde inte uppdatera personen." },
-    };
-  }
+  return newPerson;
 }
 
-// --- Ta bort en person ---
-export async function deletePerson(formData: FormData) {
-  const data = Object.fromEntries(formData);
-  const validated = deletePersonSchema.safeParse({ id: Number(data.id) });
+export async function updatePerson(person: UpdatePersonInput) {
+  const data = await updatePersonSchema.parseAsync(person);
 
-  if (!validated.success) {
-    return { success: false, errors: validated.error.flatten().fieldErrors };
-  }
+  const updatedPerson = await prisma.person.update({
+    where: { id: data.id },
+    data: {
+      tmdbId: data.tmdbId !== undefined ? Number(data.tmdbId) : undefined,
+      name: data.name,
+      birthday: data.birthday,
+      deathday: data.deathday,
+      biography: data.biography,
+      profilePath: data.profilePath,
+    },
+  });
 
-  try {
-    await prisma.person.delete({ where: { id: validated.data.id } });
-    revalidatePath("/admin/people");
-    return { success: true };
-  } catch (error) {
-    return {
-      success: false,
-      errors: { _global: "Kunde inte ta bort personen." },
-    };
-  }
+  return updatedPerson;
+}
+
+export async function deletePerson(id: number) {
+  const deletedPerson = await prisma.person.delete({
+    where: { id },
+  });
+
+  return deletedPerson;
+}
+
+export async function getAllPersons() {
+  const persons = await prisma.person.findMany();
+  return persons;
+}
+
+export async function getPersonById(id: number) {
+  const person = await prisma.person.findUnique({
+    where: { id },
+  });
+  return person;
+}
+
+export async function getPersonByTmdbId(tmdbId: number) {
+  const person = await prisma.person.findUnique({
+    where: { tmdbId },
+  });
+  return person;
+}
+
+export async function getPersonsByName(name: string) {
+  const persons = await prisma.person.findMany({
+    where: {
+      name: {
+        contains: name,
+        mode: "insensitive",
+      },
+    },
+  });
+  return persons;
+}
+
+export default async function getPersonsByBirthday(birthday: Date) {
+  return prisma.person.findMany({
+    where: {
+      birthday: birthday,
+    },
+  });
 }
 
 // --- Funktion för att hämta alla personer ---
