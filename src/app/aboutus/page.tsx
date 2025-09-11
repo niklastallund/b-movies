@@ -39,7 +39,8 @@ export default function AboutUs() {
   return (
     <div className="container mx-auto py-12 px-4">
       <h1 className="text-4xl md:text-5xl font-bold text-center mb-12">
-        Om Oss
+        Full i text OM OSS här när vi börjar närma oss slutet av projektet. Lite
+        vem som gjort vad osv
       </h1>
 
       <div className="space-y-16">
