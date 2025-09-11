@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/navbar";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "next-themes";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -21,6 +21,7 @@ export default function RootLayout({
     // SuppressHydrationWarning
     <html lang="sv" suppressHydrationWarning>
       <body className={inter.className}>
+        {/* Använd ThemeProvider direkt från next-themes för globalt tema-stöd */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
