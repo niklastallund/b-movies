@@ -9,9 +9,9 @@ export async function addMoviesAndCrewFromTmdb() {
   // For each movie, create a new movie or update it (if it already exists),
   // then find the crew and cast and add them to the database with the movie
   for (const movie of movies) {
-    //Just generate some random stock and price for the movie
+    // Just generate some random stock and price for the movie
     const stock = Math.floor(Math.random() * 100) + 1;
-    const prices = [89, 99, 109, 119];
+    const prices = [49, 59, 69, 79, 89, 99, 109, 119, 129];
     const price = prices[Math.floor(Math.random() * prices.length)];
 
     const crew = await FindCrewByMovieId(movie.id);
@@ -74,7 +74,7 @@ export async function addMoviesAndCrewFromTmdb() {
         },
       });
 
-      // Add MovieCrew link for cast
+      // Link cast member to movie with their character
       const addedMovieCast = await prisma.movieCrew.upsert({
         where: {
           movieId_personId_role: {
@@ -130,6 +130,7 @@ export async function addMoviesAndCrewFromTmdb() {
         },
       });
 
+      // Link crew member to movie with their job
       const addedMovieCrew = await prisma.movieCrew.upsert({
         where: {
           movieId_personId_role: {
