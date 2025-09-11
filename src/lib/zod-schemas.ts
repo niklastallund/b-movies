@@ -80,6 +80,8 @@ export const createMovieSchema = z.object({
   backdropPath: z.string().optional(),
 });
 
+export type CreateMovieInput = z.infer<typeof createMovieSchema>;
+
 //Update
 export const updateMovieSchema = z.object({
   id: z.number().int().positive(),
