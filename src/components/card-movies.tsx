@@ -13,6 +13,9 @@ interface MovieDetailsProps {
 
 // Component showing a card for a movie
 export function MovieCard({ movie }: MovieDetailsProps) {
+  
+  if (!movie) return "Movie not found";
+
   const { posterPath, title, price, id, stock } = movie;
 
   const handlePoster =

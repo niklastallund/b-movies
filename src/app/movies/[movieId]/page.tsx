@@ -9,7 +9,7 @@ export type Params = {
 };
 
 export default async function MovieDetailsPage(props: { params: Params }) {
-  const params = props.params;
+  const params = await props.params;
   const movieId = parseInt(params.movieId);
 
   if (isNaN(movieId) || movieId <= 0) {

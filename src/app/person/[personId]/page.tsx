@@ -7,7 +7,7 @@ export type Params = {
 };
 
 export default async function PersonPage(props: { params: Params }) {
-  const params = props.params;
+  const params = await props.params;
   const personId = parseInt(params.personId);
 
   if (isNaN(personId) || personId <= 0) {
