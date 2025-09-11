@@ -4,16 +4,13 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { updateOrderStatusSchema } from "@/lib/zod-schemas";
 
+// --- Hämta alla ordrar ---
 export async function getAllOrders() {
   try {
     const orders = await prisma.order.findMany({
+      orderBy: { createdAt: "desc" },
       include: {
         user: true,
-        movies: {
-          include: {
-            movie: true,
-          },
-        },
       },
     });
     return orders;
@@ -21,7 +18,57 @@ export async function getAllOrders() {
     return [];
   }
 }
-// --- Skapa en ny order ---
+
+// --- Hämta en order med ID ---
+export async function getOrderById(orderId: string) {
+  const id = Number(orderId);
+  if (isNaN(id)) return null;
+
+  try {
+    return await prisma.order.findUnique({
+      where: { id },
+      include: {
+        user: true,
+        OrderItem: {
+          include: {
+            movie: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    return null;
+  }
+}
+
+// --- Skapa en ny order (används av kassan, ej admin) ---
+export async function createOrder(formData: FormData) {
+  const data = Object.fromEntries(formData);
+  const userId = data.userId as string;
+
+  if (!userId) {
+    return { success: false, errors: { _global: ["Ogiltigt användar-ID."] } };
+  }
+
+  try {
+    const order = await prisma.order.create({
+      data: {
+        user: { connect: { id: userId } },
+        // Lägg till OrderItem om du vill skapa filmer i ordern direkt
+        // OrderItem: { create: ... }
+      },
+    });
+    revalidatePath("/admin/orders");
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      errors: { _global: ["Kunde inte skapa ordern."] },
+    };
+  }
+}
+
+// --- Ta bort en order ---
 export async function deleteOrder(formData: FormData) {
   const data = Object.fromEntries(formData);
   const orderId = Number(data.id);
@@ -44,7 +91,7 @@ export async function deleteOrder(formData: FormData) {
   }
 }
 
-// --- Uppdatera en orders status (t.ex. från "pending" till "shipped") ---
+// --- Uppdatera en orders status ---
 export async function updateOrderStatus(formData: FormData) {
   const data = Object.fromEntries(formData);
   const validated = updateOrderStatusSchema.safeParse({
@@ -66,37 +113,7 @@ export async function updateOrderStatus(formData: FormData) {
   } catch (error) {
     return {
       success: false,
-      errors: { _global: "Kunde inte uppdatera orderstatus." },
-    };
-  }
-}
-
-// --- Ta bort en order ---
-export async function createOrder(formData: FormData) {
-  const data = Object.fromEntries(formData);
-  const userId = data.userId as string;
-
-  if (!userId) {
-    return { success: false, errors: { _global: ["Ogiltigt användar-ID."] } };
-  }
-
-  try {
-    const order = await prisma.order.create({
-      data: {
-        user: { connect: { id: userId } },
-        movies: {
-          create: data.movies.map((movieId: string) => ({
-            movie: { connect: { id: movieId } },
-          })),
-        },
-      },
-    });
-    revalidatePath("/admin/orders");
-    return { success: true };
-  } catch (error) {
-    return {
-      success: false,
-      errors: { _global: ["Kunde inte skapa ordern."] },
+      errors: { _global: ["Kunde inte uppdatera orderstatus."] },
     };
   }
 }

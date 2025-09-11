@@ -47,6 +47,39 @@ export const updateOrderStatusSchema = z.object({
   status: z.string().min(1, { message: "Status är obligatoriskt." }),
 });
 
-// --- Movies Shemas ---
+// User (endast de fält du använder i admin)
+export const userSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+  emailVerified: z.boolean(),
+  image: z.string().nullable().optional(),
+});
 
-// Aminas Kod för zod shema
+// Movie (endast de fält du visar i orderdetaljer)
+export const movieSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  price: z.number(),
+});
+
+// OrderItem (relation mellan order och film)
+export const orderItemSchema = z.object({
+  id: z.number(),
+  quantity: z.number(),
+  priceAtPurchase: z.number(),
+  movie: movieSchema,
+});
+
+// Order (inklusive relationer)
+export const orderSchema = z.object({
+  id: z.number(),
+  totalAmount: z.number(),
+  status: z.string(),
+  orderDate: z.string(),
+  userId: z.string(),
+  user: userSchema,
+  createdAt: z.string(), // eller z.date()
+  updatedAt: z.string(), // eller z.date()
+  OrderItem: z.array(orderItemSchema),
+});

@@ -29,15 +29,14 @@ export default async function AdminOrdersPage() {
                   {/* Länk till orderspecifikationssidan */}
                   <Link href={`/admin/orders/${order.id}`}>
                     <h3 className="font-medium text-blue-600 hover:underline">
-                      Order-ID: {order.id.substring(0, 8)}...
+                      Order-ID:{" "}
+                      {typeof order.id === "string"
+                        ? order.id.substring(0, 8) + "..."
+                        : order.id}
                     </h3>
                   </Link>
                   <p className="text-sm text-muted-foreground">
                     Användare: {order.user?.email || "Okänd"}
-                  </p>
-                  <p className="text-sm text-muted-foreground italic">
-                    {order.movies.length} filmer, totalt pris:{" "}
-                    {order.totalPrice} kr
                   </p>
                 </div>
 
