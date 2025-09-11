@@ -48,9 +48,6 @@ export const updateOrderStatusSchema = z.object({
 });
 
 // --- Movies Shemas ---
-
-// Aminas Kod för zod shema
-
 export const createMovieSchema = z.object({
   tmdbId: z.coerce.number<number>().positive().optional(),
   title: z.string().min(1, { message: "Titel är obligatoriskt." }),
