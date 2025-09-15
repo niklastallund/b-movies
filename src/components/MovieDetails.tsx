@@ -11,18 +11,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator"; // Bra för att skapa avdelare
-import { Movie } from "@/lib/types";
+import { useCartStore } from "@/store/cookie-cart";
+
 import { getPosterUrl } from "@/lib/tmdb-image-url";
+import { Movie } from "@/generated/prisma";
 
 // Props som komponenten tar emot
 interface MovieDetailsProps {
   movie: Movie;
 }
-
 // Huvudkomponenten för filmdetaljer
 export default function MovieDetails({ movie }: MovieDetailsProps) {
   // Tillstånd för att hålla reda på antalet filmer att lägga till
   const [quantity, setQuantity] = useState(1);
+
+  // Cart store-funktion
+  const addToCart = useCartStore((state) => state.addToCart);
 
   // Funktion för att minska antalet
   const handleDecrease = () => {
@@ -35,7 +39,19 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
   };
 
   const handlePoster = getPosterUrl(movie.posterPath) || "/default-image.jpg";
-  
+
+  // Lägg till i varukorgen
+  const handleAddToCart = () => {
+    addToCart({
+      id: movie.id,
+      name: movie.title,
+      price: movie.price,
+      quantity: quantity,
+      imageUrl: handlePoster,
+      tmdb: !!(movie as any).tmdbId, // Anpassa om du har tmdbId i Movie
+    });
+  };
+
   return (
     <Card className="w-full mx-auto relative bg-black/20 backdrop-blur-xs border-red-900">
       <CardContent className="relative z-10 flex flex-col md:flex-row p-4 md:p-8">
@@ -60,7 +76,10 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
             </CardTitle>
             {/* SÄTT TAGLINE HÄR */}
             <CardDescription className="text-gray-200 text-base">
-              Release Date: {movie.releaseDate ?? "Okänt datum"}
+              Release Date:{" "}
+              {movie.releaseDate
+                ? movie.releaseDate.toLocaleDateString()
+                : "Unknown"}
             </CardDescription>
           </CardHeader>
 
@@ -82,7 +101,7 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
           <Separator className="my-4 bg-white/20" />
 
           <div className="flex items-center text-2xl font-semibold mb-4 text-white">
-            Price: ${100}
+            Price: {movie.price} SEK
           </div>
 
           {/* Antal och Lägg till i varukorgen-knapp */}
@@ -110,14 +129,16 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
             <Button
               className="flex-[0.5] bg-white text-black hover:bg-gray-200 font-semibold shadow-lg"
               disabled={movie.stock === 0}
+              onClick={handleAddToCart}
             >
               Add to cart
             </Button>
           </div>
 
           <p className="mt-4 text-sm text-gray-300">
-            Balance:{" "}
-            {(movie.stock ?? 0) > 0 ? `${movie.stock} i lager` : "Slut i lager"}
+            {(movie.stock ?? 0) > 0
+              ? `${movie.stock} in stock`
+              : "Out of stock"}
           </p>
         </div>
       </CardContent>

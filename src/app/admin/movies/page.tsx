@@ -1,8 +1,6 @@
 // // Amina frontend för att lägga till och ta bort filmer
 
 // src/app/admin/movies/page.tsx
-
-import { Button } from "@/components/ui/button";
 import MovieForm from "@/components/admin-movies-form"; // наша форма для фильмов
 import UpdateMovieForm from "@/components/admin-update-form"; // форма обновления
 import { getAllMovies } from "@/actions/movies";

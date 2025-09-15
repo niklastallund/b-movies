@@ -55,10 +55,16 @@ export const updateOrderStatusSchema = z.object({
   status: z.string().min(1, { message: "Status är obligatoriskt." }),
 });
 
+// User (endast de fält du använder i admin)
+export const userSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+  emailVerified: z.boolean(),
+  image: z.string().nullable().optional(),
+});
+
 // --- Movies Shemas ---
-
-// Aminas Kod för zod shema
-
 export const createMovieSchema = z.object({
   tmdbId: z.coerce.number<number>().positive().optional(),
   title: z.string().min(1, { message: "Titel är obligatoriskt." }),
@@ -99,10 +105,58 @@ export const updateMovieSchema = z.object({
 export type UpdateMovieInput = z.infer<typeof updateMovieSchema>;
 
 //Delete
-// För att ta bort filmen krävs bara id och den numret ska vara positiv
 export const deleteMovieSchema = z.object({
   id: z.number().int().positive(),
 });
+
+// Movie (endast de fält du visar i orderdetaljer)
+export const movieSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  price: z.number(),
+});
+
+// OrderItem (relation mellan order och film)
+export const orderItemSchema = z.object({
+  id: z.number(),
+  quantity: z.number(),
+  priceAtPurchase: z.number(),
+  movie: movieSchema,
+});
+
+// Order (inklusive relationer)
+export const orderSchema = z.object({
+  id: z.number(),
+  totalAmount: z.number(),
+  status: z.string(),
+  orderDate: z.string(),
+  userId: z.string(),
+  user: userSchema,
+  createdAt: z.string(), // eller z.date()
+  updatedAt: z.string(), // eller z.date()
+  OrderItem: z.array(orderItemSchema),
+});
+
+// --- Checkout Order Schema ---
+export const checkoutOrderSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  street: z.string().min(1, { message: "Street is required" }),
+  zipcode: z.string().min(1, { message: "Zip code is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  email: z.string().email({ message: "Valid e-mail is required" }),
+  phone: z.string().min(1, { message: "Phone number is required" }),
+  items: z.array(
+    z.object({
+      movieId: z.number(),
+      quantity: z.number().min(1),
+      price: z.number().min(0),
+    })
+  ),
+  totalAmount: z.number().min(0),
+  // userId: z.string().optional(), // Avkommentera när vi har inloggning
+});
+
+export type CheckoutOrderInput = z.infer<typeof checkoutOrderSchema>;
 
 // export const createMovieSchema = z.object({
 //   tmdbId: z.coerce.number<number>().positive().optional(),

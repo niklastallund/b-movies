@@ -1,3 +1,5 @@
+//src\actions\genres.ts
+
 "use server";
 
 import { revalidatePath } from "next/cache";

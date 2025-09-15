@@ -16,12 +16,12 @@ datasource db {
 
 model Movie {
   id          Int       @id @default(autoincrement())
-  tmdbId      Int?      @unique
+  tmdbId      BigInt?   @unique // Needs to be BigInt or we run into trouble with large IDs
   title       String
   releaseDate DateTime?
   runtime     Int?
-  budget      Int?
-  revenue     Int?
+  budget      BigInt?
+  revenue     BigInt?
   overview    String? //description
   tagline     String?
 
@@ -41,7 +41,7 @@ model Movie {
 
 model Person {
   id        Int       @id @default(autoincrement())
-  tmdbId    Int?      @unique
+  tmdbId    BigInt?   @unique // Needs to be BigInt or we run into trouble with large IDs
   name      String
   birthday  DateTime?
   deathday  DateTime?
@@ -68,7 +68,7 @@ model MovieCrew {
   movie  Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
   person Person @relation(fields: [personId], references: [id], onDelete: Cascade)
 
-  @@unique([movieId, personId, role])
+  @@unique([movieId, personId, role, job, character])
 }
 
 model Genre {

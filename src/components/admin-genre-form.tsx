@@ -1,3 +1,4 @@
+//src\components\admin-genre-form.tsx
 "use client";
 
 import { useFormStatus } from "react-dom";
@@ -30,7 +31,6 @@ const initialState: FormState = {
   success: false,
   errors: {},
 };
-
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
@@ -39,17 +39,16 @@ function SubmitButton() {
     </Button>
   );
 }
-
+// Komponent för att skapa en ny genere
 export default function GenreForm() {
   const [state, formAction] = useActionState(async (prevState, formData) => {
-    // Gör om formData till objekt om det är FormData, annars använd direkt
     let data: any = formData;
     if (typeof FormData !== "undefined" && formData instanceof FormData) {
       data = Object.fromEntries(formData.entries());
     }
     return await createGenre(data);
   }, initialState);
-
+  // IGNORE
   return (
     <Card className="max-w-lg">
       <CardHeader>

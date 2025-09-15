@@ -1,13 +1,12 @@
 import { MovieDb, PersonResult } from "moviedb-promise";
-import { Movie, Person } from "./types";
-
+import { MovieApi, PersonApi } from "./types";
 
 const moviedb = new MovieDb("c0d3fc45d2f4922af3c27e30726b5daa");
 
 //Constants to limit the number of results we get from TMDB
-const NUMBER_OF_MOVIES = 10;
-const NUMBER_OF_CREW = 10;
-const NUMBER_OF_CAST = 10;
+const NUMBER_OF_MOVIES = 6;
+const NUMBER_OF_CREW = 5;
+const NUMBER_OF_CAST = 5;
 
 // Had to expand PersonResult because it is defined
 // in the JSON but not in the original interface
@@ -18,12 +17,19 @@ interface PersonResultWithDepartment extends PersonResult {
 // Returns a Movie list with all the details that are needed to add
 // a bunch of movies to the database, it also contains genres for each movie
 // which need to be handed seperatly in the database
-export async function FindMoviesByDirectors(): Promise<Movie[]> {
+export async function FindMoviesByDirectors(): Promise<MovieApi[]> {
   // Hardcoded a list of directors to search for
-  const directorNames: string[] = ["Edward D. Wood Jr."];
+  const directorNames: string[] = [
+    "Roger Corman",
+    "Edward D. Wood Jr.",
+    "Jack Arnold",
+    "William Castle",
+    "Mario Bava",
+    "Lloyd Kaufman",
+  ];
 
   const directorIds: number[] = [];
-  const movies: Movie[] = [];
+  const movies: MovieApi[] = [];
 
   // Convert the directorName list to IDs for the most popular director of the query
   for (const name of directorNames) {
@@ -63,20 +69,15 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
     );
 
     // We take the NUMBER_OF_MOVIES most popular movies by the director,
-    // with at least 10 votes to avoid weird edge cases
+    // with at least 60 votes to avoid weird edge cases
     if (directedMovies) {
       const topMovies = directedMovies
-        .filter((movie) => (movie.vote_count ?? 0) >= 10)
+        .filter((movie) => (movie.vote_count ?? 0) >= 100)
         .sort((a, b) => (b.vote_average ?? 0) - (a.vote_average ?? 0))
         .slice(0, NUMBER_OF_MOVIES);
 
       for (const topMovie of topMovies) {
         const movie = await moviedb.movieInfo(topMovie.id as number);
-        const images = await moviedb.movieImages(topMovie.id as number);
-
-        // Picking the first picture from the list of images, maybe not the best approach
-        const posterPath = images.posters?.[0]?.file_path;
-        const backdropPath = images.backdrops?.[0]?.file_path;
 
         // If the movie doesn't have a title for some reason we discard it.
         // Everything else is set as optional in the interface
@@ -92,8 +93,8 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
             overview: movie.overview,
             tagline: movie.tagline,
             genres: movie.genres,
-            posterPath: posterPath,
-            backdropPath: backdropPath,
+            posterPath: movie.poster_path,
+            backdropPath: movie.backdrop_path,
           });
         }
       }
@@ -104,54 +105,72 @@ export async function FindMoviesByDirectors(): Promise<Movie[]> {
 }
 
 // Returns the crew and cast for a specific movie
-// with all the details that are needed to add them to the database
+// with all the details that are needed to add them to the database.
+// There is missing information from the credits endpoint,
+// so we have to make additional requests to get the full person info.
+// This means that we will only get a limited number of crew and cast members
+// to avoid making too many requests to the API.
 export async function FindCrewByMovieId(
-  movieId: string
-): Promise<{ crew: Person[]; cast: Person[] }> {
+  movieId: number
+): Promise<{ crew: PersonApi[]; cast: PersonApi[] }> {
   const credits = await moviedb.movieCredits({ id: movieId });
 
-  const cast: Person[] = [];
-  const crew: Person[] = [];
+  const cast: PersonApi[] = [];
+  const crew: PersonApi[] = [];
 
-  // There is missing information from the credits endpoint
-  // So we have to make additional requests to get the full person info
-  // This means that we will only get a limited number of crew and cast members
-  // to avoid making too many requests to the API
-  const castSlice = credits.cast ? credits.cast.slice(0, NUMBER_OF_CAST) : [];
+  // We sort the cast by order and take the first NUMBER_OF_CAST members
+  // because order is the field that defines the importance of the cast member
+  // in the movie
+  const castSlice = credits.cast
+    ? credits.cast
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .slice(0, NUMBER_OF_CAST)
+    : [];
   for (const castMember of castSlice) {
     if (castMember.id && castMember.name) {
       const personInfo = await moviedb.personInfo(castMember.id);
-      const personImages = await moviedb.personImages(castMember.id);
-      const profilePath = personImages.profiles?.[0]?.file_path;
 
-      cast.push({
-        id: castMember.id,
-        name: castMember.name,
-        character: castMember.character,
-        biography: personInfo.biography,
-        birthday: personInfo.birthday,
-        deathday: personInfo.deathday,
-        profilePath: profilePath,
-      });
+      // Let's only add them if they have either a birthday or a profilePath
+      // to avoid adding too many empty entries
+      if (personInfo.birthday || castMember.profile_path) {
+        cast.push({
+          id: castMember.id,
+          name: castMember.name,
+          character: castMember.character,
+          order: castMember.order,
+          biography: personInfo.biography,
+          birthday: personInfo.birthday,
+          deathday: personInfo.deathday,
+          profilePath: castMember.profile_path,
+        });
+      }
     }
   }
 
-  const crewSlice = credits.crew ? credits.crew.slice(0, NUMBER_OF_CREW) : [];
+  // We have to sort the crew by popularity because unlike cast they don't have an order field
+  // So we take the most popular crew members to add to the database
+  const crewSlice = credits.crew
+    ? credits.crew
+        .sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0))
+        .slice(0, NUMBER_OF_CREW)
+    : [];
   for (const crewMember of crewSlice) {
     if (crewMember.id && crewMember.name) {
       const personInfo = await moviedb.personInfo(crewMember.id);
-      const personImages = await moviedb.personImages(crewMember.id);
-      const profilePath = personImages.profiles?.[0]?.file_path;
 
-      crew.push({
-        id: crewMember.id,
-        name: crewMember.name,
-        job: crewMember.job,
-        biography: personInfo.biography,
-        birthday: personInfo.birthday,
-        deathday: personInfo.deathday,
-        profilePath: profilePath,
-      });
+      // Let's only add them if they have either a birthday or a profilePath
+      // to avoid adding too many empty entries
+      if (personInfo.birthday || crewMember.profile_path) {
+        crew.push({
+          id: crewMember.id,
+          name: crewMember.name,
+          job: crewMember.job,
+          biography: personInfo.biography,
+          birthday: personInfo.birthday,
+          deathday: personInfo.deathday,
+          profilePath: crewMember.profile_path,
+        });
+      }
     }
   }
 

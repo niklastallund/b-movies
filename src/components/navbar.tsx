@@ -114,7 +114,7 @@ export function Navbar() {
             alt="B-Movies logo"
             width={600}
             height={600}
-            className="h-26 w-auto"
+            className="h-18 w-auto"
           />
         </Link>
 
