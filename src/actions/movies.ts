@@ -5,19 +5,20 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+//import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import {
   createMovieSchema,
   updateMovieSchema,
   deleteMovieSchema,
   CreateMovieInput,
+  UpdateMovieInput,
 } from "@/lib/zod-schemas";
 
 // --- Skapa ny film ---
 export async function createMovie(formData: CreateMovieInput) {
   const validated = await createMovieSchema.parseAsync(formData);
-  console.log(validated.releaseDate);
+  //console.log(validated.releaseDate);
 
   const newMovie = await prisma.movie.create({
     data: {
@@ -34,6 +35,43 @@ export async function createMovie(formData: CreateMovieInput) {
       stock: validated.stock || 0,
       price: validated.price || 0,
     },
+  });
+
+  revalidatePath("/admin/movies");
+  return newMovie;
+}
+
+// update movie
+export async function updateMovie(formData: UpdateMovieInput) {
+  const validated = await updateMovieSchema.parseAsync(formData);
+  const updateMovie = await prisma.movie.update({
+    where: { id: validated.id },
+    data: {
+      tmdbId: validated.tmdbId,
+      title: validated.title,
+      releaseDate: validated.releaseDate,
+      runtime: validated.runtime,
+      tagline: validated.tagline,
+      overview: validated.overview,
+      budget: validated.budget,
+      revenue: validated.revenue,
+      posterPath: validated.posterPath,
+      backdropPath: validated.backdropPath,
+      stock: validated.stock || 0,
+      price: validated.price || 0,
+    },
+  });
+  revalidatePath("/admin/movies");
+  return updateMovie;
+}
+
+export async function deleteMovie(formData: FormData) {
+  const validated = await deleteMovieSchema.parseAsync({
+    id: Number(formData.get("id")),
+  });
+
+  await prisma.movie.delete({
+    where: { id: validated.id },
   });
 
   revalidatePath("/admin/movies");

@@ -69,27 +69,72 @@ export const createMovieSchema = z.object({
   revenue: z.coerce.number<number>().positive().optional(),
   runtime: z.coerce.number<number>().positive().optional(),
   price: z.coerce.number<number>().positive().optional(),
-  stock: z.coerce.number<number>().int().optional(),
+  stock: z.coerce.number<number>().int().min(0).optional(),
   posterPath: z.string().optional(),
   backdropPath: z.string().optional(),
 });
 
 export type CreateMovieInput = z.infer<typeof createMovieSchema>;
+
 //Update
 export const updateMovieSchema = z.object({
+  tmdbId: z.coerce.number<number>().positive().optional(),
   id: z.number().int().positive(),
   title: z.string().min(1, { message: "Titel är obligatoriskt." }).optional(),
-  ove: z.string().optional(),
-  releaseDate: z.string().optional(),
-  genreIds: z.array(z.number().int().positive()).optional(),
-  actorIds: z.array(z.number().int().positive()).optional(),
-  directorIds: z.array(z.number().int().positive()).optional(),
-  price: z.number().positive().optional(),
-  stock: z.number().int().min(0).optional(),
+  overview: z.string().optional(),
+  tagline: z.string().optional(),
+  releaseDate: z.date().optional(),
+  // genreIds: z.array(z.number().int().positive()).optional(),
+  //actorIds: z.array(z.number().int().positive()).optional(),
+  //directorIds: z.array(z.number().int().positive()).optional(),
+  budget: z.coerce.number<number>().positive().optional(),
+  revenue: z.coerce.number<number>().positive().optional(),
+  runtime: z.coerce.number<number>().positive().optional(),
+  price: z.coerce.number<number>().positive().optional(),
+  stock: z.coerce.number<number>().int().min(0).optional(),
+  posterPath: z.string().optional(),
+  backdropPath: z.string().optional(),
 });
+
+export type UpdateMovieInput = z.infer<typeof updateMovieSchema>;
 
 //Delete
 // För att ta bort filmen krävs bara id och den numret ska vara positiv
 export const deleteMovieSchema = z.object({
   id: z.number().int().positive(),
 });
+
+// export const createMovieSchema = z.object({
+//   tmdbId: z.coerce.number<number>().positive().optional(),
+//   title: z.string().min(1, { message: "Titel är obligatoriskt." }),
+//   overview: z.string().optional(),
+//   tagline: z.string().optional(),
+//   releaseDate: z.date().optional(),
+//   budget: z.coerce.number<number>().positive().optional(),
+//   revenue: z.coerce.number<number>().positive().optional(),
+//   runtime: z.coerce.number<number>().positive().optional(),
+//   price: z.coerce.number<number>().positive().optional(),
+//   stock: z.coerce.number<number>().int().optional(),
+//   posterPath: z.string().optional(),
+//   backdropPath: z.string().optional(),
+// });
+
+// export type CreateMovieInput = z.infer<typeof createMovieSchema>;
+// //Update
+// export const updateMovieSchema = z.object({
+//   id: z.number().int().positive(),
+//   title: z.string().min(1, { message: "Titel är obligatoriskt." }).optional(),
+//   ove: z.string().optional(),
+//   releaseDate: z.string().optional(),
+//   genreIds: z.array(z.number().int().positive()).optional(),
+//   actorIds: z.array(z.number().int().positive()).optional(),
+//   directorIds: z.array(z.number().int().positive()).optional(),
+//   price: z.number().positive().optional(),
+//   stock: z.number().int().min(0).optional(),
+// });
+
+// //Delete
+// // För att ta bort filmen krävs bara id och den numret ska vara positiv
+// export const deleteMovieSchema = z.object({
+//   id: z.number().int().positive(),
+// });
