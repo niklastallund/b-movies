@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export function Footer() {
   return (
-    <footer className="bg-background/95 border-t border-red-900 backdrop-blur supports-[backdrop-filter]:bg-background/60 mt-auto">
+    <footer className="bg-background/95 border-t border-primery backdrop-blur supports-[backdrop-filter]:bg-background/60 mt-auto">
       <div className="mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
         {/* LOGGA */}
         <div className="flex items-center justify-center md:justify-start">
@@ -42,14 +42,14 @@ export function Footer() {
         {/* LÄNKAR */}
         <div className="flex flex-col items-center space-y-2 md:items-end">
           <Link
-            href="#"
-            className="text-sm  text-sky-600 font-medium text-foreground hover:text-primary transition-colors"
+            href="/aboutus"
+            className="text-sm  text-primery font-medium text-foreground hover:text-primary transition-colors"
           >
             About Us
           </Link>
           <Link
-            href="#"
-            className="text-sm  text-sky-600 font-medium text-foreground hover:text-primary transition-colors"
+            href="/aboutus"
+            className="text-sm  text-primery font-medium text-foreground hover:text-primary transition-colors"
           >
             Back to top
           </Link>
@@ -57,7 +57,7 @@ export function Footer() {
       </div>
 
       {/* COPYRIGHT */}
-      <div className="border-t border-red-900 py-4 text-center">
+      <div className="border-t border-primery py-4 text-center">
         <p className="text-sm text-foreground">
           ©2025 Provided by Niklas, Josefine, Aminat
         </p>
