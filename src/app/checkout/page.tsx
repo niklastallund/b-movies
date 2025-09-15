@@ -16,18 +16,21 @@ interface CheckoutForm {
 }
 
 export default function CheckoutPage() {
+  // Alla hooks måste alltid köras, oavsett tidig return!
   const cartItems = useCartStore((state) => state.cartItems);
   const clearCart = useCartStore((state) => state.clearCart);
   const [paid, setPaid] = useState(false);
   const [isClient, setIsClient] = useState(false);
-
-  // REACT HOOK FORM
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm<CheckoutForm>();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // kalkylerar totalbeloppet
   const total = cartItems.reduce(
@@ -56,10 +59,6 @@ export default function CheckoutPage() {
       </div>
     );
   }
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   // Visa inget checkout-innehåll förrän vi är på klientsidan (för att undvika hydration error)
   if (!isClient) return null;
