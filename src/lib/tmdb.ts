@@ -69,7 +69,7 @@ export async function FindMoviesByDirectors(): Promise<MovieApi[]> {
     );
 
     // We take the NUMBER_OF_MOVIES most popular movies by the director,
-    // with at least 60 votes to avoid weird edge cases
+    // with at least 100 votes to avoid weird edge cases
     if (directedMovies) {
       const topMovies = directedMovies
         .filter((movie) => (movie.vote_count ?? 0) >= 100)

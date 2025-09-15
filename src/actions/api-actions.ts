@@ -1,7 +1,8 @@
 // These are API actions meant to be used with tmdb.ts, a wrapper for The Movie Database API.
-
 import { prisma } from "@/lib/prisma";
 import { FindCrewByMovieId, FindMoviesByDirectors } from "@/lib/tmdb";
+import { MovieApi } from "@/lib/types";
+import { Genre } from "moviedb-promise";
 
 export async function addMoviesAndCrewFromTmdb() {
   const movies = await FindMoviesByDirectors();
@@ -51,6 +52,11 @@ export async function addMoviesAndCrewFromTmdb() {
         price,
       },
     });
+
+    // If the movie has genres, add them to the movie
+    if (movie.genres) {
+      await addGenresToMovie(addedMovie.id, movie.genres);
+    }
 
     console.log("Added Movie:", { addedMovie });
 
@@ -130,6 +136,8 @@ export async function addMoviesAndCrewFromTmdb() {
   }
 }
 
+// Helper function to create or update a person
+// and add them to a movie's crew or cast
 async function addMovieCrewEntry({
   movieId,
   personId,
@@ -167,4 +175,32 @@ async function addMovieCrewEntry({
       data: { movieId, personId, role, job, character, order },
     });
   }
+}
+
+// Helper function to add genres to a movie. Note that this does
+// not handle genre descriptions because it is not provided by the API
+async function addGenresToMovie(movieId: number, genres: Genre[]) {
+  if (!genres || genres.length === 0) return;
+
+  // Filter out genres with empty or invalid names
+  const validGenres = genres.filter(
+    (genre): genre is Genre & { name: string } =>
+      typeof genre.name === "string" && genre.name.trim() !== ""
+  );
+
+  if (validGenres.length === 0) return;
+
+  await prisma.movie.update({
+    where: { id: movieId },
+    data: {
+      genres: {
+        connectOrCreate: validGenres.map((genre) => ({
+          where: { name: genre.name },
+          create: { name: genre.name },
+        })),
+      },
+    },
+  });
+
+  return;
 }
