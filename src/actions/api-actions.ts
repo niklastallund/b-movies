@@ -1,7 +1,8 @@
+"use server";
+
 // These are API actions meant to be used with tmdb.ts, a wrapper for The Movie Database API.
 import { prisma } from "@/lib/prisma";
 import { FindCrewByMovieId, FindMoviesByDirectors } from "@/lib/tmdb";
-import { MovieApi } from "@/lib/types";
 import { Genre } from "moviedb-promise";
 
 export async function addMoviesAndCrewFromTmdb() {
