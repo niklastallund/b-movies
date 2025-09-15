@@ -17,6 +17,8 @@ import {
 
 // --- Skapa ny film ---
 export async function createMovie(formData: CreateMovieInput) {
+  
+
   const validated = await createMovieSchema.parseAsync(formData);
   //console.log(validated.releaseDate);
 

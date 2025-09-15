@@ -33,7 +33,7 @@ export default function UpdateMovieForm({ movie }: UpdateMovieFormProps) {
       id: movie.id,
       tmdbId: movie.tmdbId ?? undefined,
       title: movie.title ?? "",
-      releaseDate: movie.releaseDate ? new Date(movie.releaseDate) : undefined,
+      releaseDate: movie.releaseDate ?? undefined,
       tagline: movie.tagline ?? "",
       overview: movie.overview ?? "",
       budget: movie.budget ?? undefined,

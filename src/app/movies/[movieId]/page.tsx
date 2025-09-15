@@ -3,6 +3,7 @@ import MovieDetails from "@/components/MovieDetails";
 import { getBackdropUrl } from "@/lib/tmdb-image-url";
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import UpdateMovieForm from "@/components/admin-update-form";
 
 export type Params = {
   movieId: string;
@@ -43,6 +44,20 @@ export default async function MovieDetailsPage(props: { params: Params }) {
       </div>
       {/* Transparent Card */}
       <MovieDetails movie={movie} />
+      {/* <UpdateMovieForm
+        movie={{
+          ...movie,
+          tmdbId: movie.tmdbId === null ? undefined : movie.tmdbId,
+          overview: movie.overview === null ? undefined : movie.overview,
+          tagline: movie.tagline === null ? undefined : movie.tagline,
+          releaseDate: movie.releaseDate === null ? undefined : movie.releaseDate,
+          budget: movie.budget === null ? undefined : movie.budget,
+          revenue: movie.revenue === null ? undefined : movie.revenue,
+          runtime: movie.runtime === null ? undefined : movie.runtime,
+          posterPath: movie.posterPath === null ? undefined : movie.posterPath,
+          backdropPath: movie.backdropPath === null ? undefined : movie.backdropPath,
+        }}
+      /> */}
     </main>
   );
 }
