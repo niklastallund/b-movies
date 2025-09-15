@@ -5,9 +5,11 @@ import { prisma } from "@/lib/prisma";
 export default async function PersonPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }) {
-  const query = searchParams.q || "";
+  const params = await searchParams;
+  const query = params.q || "";
+
   const persons = await prisma.person.findMany({
     orderBy: { name: "asc" },
     where: {

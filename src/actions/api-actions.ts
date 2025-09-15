@@ -202,6 +202,4 @@ async function addGenresToMovie(movieId: number, genres: Genre[]) {
       },
     },
   });
-
-  return;
 }

@@ -6,10 +6,11 @@ import { prisma } from "@/lib/prisma";
 export default async function MoviesPage({
   searchParams,
 }: {
-  searchParams: { q?: string; genre?: string };
+  searchParams: Promise<{ q?: string; genre?: string }>;
 }) {
-  const query = searchParams.q || "";
-  const selectedGenre = searchParams.genre || "";
+  const params = await searchParams;
+  const query = params.q || "";
+  const selectedGenre = params.genre || "";
 
   const genres = await prisma.genre.findMany({
     orderBy: { name: "asc" },

@@ -48,7 +48,7 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
       price: movie.price,
       quantity: quantity,
       imageUrl: handlePoster,
-      tmdb: !!(movie as any).tmdbId, // Anpassa om du har tmdbId i Movie
+      tmdb: !!(movie as Movie).tmdbId, // Anpassa om du har tmdbId i Movie
     });
   };
 
@@ -74,7 +74,6 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
             <CardTitle className="text-4xl font-bold mb-2 text-white drop-shadow-lg">
               {movie.title}
             </CardTitle>
-            {/* SÄTT TAGLINE HÄR */}
             <CardDescription className="text-gray-200 text-base">
               Release Date:{" "}
               {movie.releaseDate
