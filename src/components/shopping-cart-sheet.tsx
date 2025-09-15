@@ -1,6 +1,6 @@
 "use client";
-
-import { useState } from "react";
+import Image from "next/image";
+import { useCartStore } from "@/store/cookie-cart";
 import Link from "next/link";
 import {
   Sheet,
@@ -13,39 +13,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Minus, Plus, XCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 export function ShoppingCartSheet() {
-  // EXEMPEL TILLS VI HAR API
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    { id: 1, name: "Snow Sharks", price: 99, quantity: 1 },
-    { id: 2, name: "Apes on Mars", price: 129, quantity: 2 },
-  ]);
+  const cartItems = useCartStore((state) => state.cartItems);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const setCartItems = useCartStore.setState;
 
-  const handleUpdateQuantity = (id: number, delta: number) => {
-    setCartItems(
-      cartItems.map((item) => {
-        if (item.id === id) {
-          const newQuantity = item.quantity + delta;
-          return {
-            ...item,
-            quantity: newQuantity > 0 ? newQuantity : 1,
-          };
-        }
-        return item;
-      })
-    );
-  };
+  // Synka cookies till Zustand-store vid varje sidladdning/render
+  useEffect(() => {
+    const cookie = Cookies.get("cartItems");
+    if (cookie) {
+      setCartItems({ cartItems: JSON.parse(cookie) });
+    }
+  }, []);
 
-  const handleRemoveItem = (id: number) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
+  // För att undvika hydration error: Rendera badge först när vi är på klientsidan
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const totalAmount = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -62,7 +51,8 @@ export function ShoppingCartSheet() {
         >
           <ShoppingCart className="w-6 h-6" />
           <span className="sr-only">Shopping Cart</span>
-          {cartItems.length > 0 && (
+          {/* Visa badge först när vi är på klientsidan för att undvika SSR/CSR mismatch */}
+          {isClient && cartItems.length > 0 && (
             <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-sky-700 rounded-full">
               {cartItems.length}
             </span>
@@ -77,20 +67,33 @@ export function ShoppingCartSheet() {
           {cartItems.length > 0 ? (
             cartItems.map((item) => (
               <div
-                key={item.id}
+                key={item.id + (item.tmdb ? "-tmdb" : "")}
                 className="flex m-6 items-center justify-between"
               >
+                {item.imageUrl && (
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.name}
+                    width={48}
+                    height={64}
+                    className="w-12 h-16 object-cover mr-2 rounded"
+                    unoptimized
+                  />
+                )}
                 <div className="flex-1">
                   <p className="font-medium">{item.name}</p>
                   <p className="text-sm text-muted-foreground">
                     {item.price} kr
                   </p>
+                  {item.tmdb && (
+                    <span className="text-xs text-blue-500">TMDB-film</span>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleUpdateQuantity(item.id, -1)}
+                    onClick={() => updateQuantity(item.id, -1)}
                   >
                     <Minus className="h-4 w-4" />
                   </Button>
@@ -98,7 +101,7 @@ export function ShoppingCartSheet() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleUpdateQuantity(item.id, 1)}
+                    onClick={() => updateQuantity(item.id, 1)}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
@@ -106,7 +109,7 @@ export function ShoppingCartSheet() {
                     variant="ghost"
                     size="icon"
                     className="ml-2"
-                    onClick={() => handleRemoveItem(item.id)}
+                    onClick={() => removeFromCart(item.id)}
                   >
                     <XCircle className="h-4 w-4" />
                   </Button>
@@ -126,7 +129,7 @@ export function ShoppingCartSheet() {
             <span>{totalAmount} kr</span>
           </div>
         )}
-        <SheetFooter className="mt-4">
+        <SheetFooter className="mt-4 flex flex-col gap-2">
           <Link href="/checkout" className="w-full">
             <Button className="w-full text-white">Go to Checkout</Button>
           </Link>

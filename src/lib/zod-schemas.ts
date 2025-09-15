@@ -127,3 +127,24 @@ export const orderSchema = z.object({
   updatedAt: z.string(), // eller z.date()
   OrderItem: z.array(orderItemSchema),
 });
+
+// --- Checkout Order Schema ---
+export const checkoutOrderSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  street: z.string().min(1, { message: "Street is required" }),
+  zipcode: z.string().min(1, { message: "Zip code is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  email: z.string().email({ message: "Valid e-mail is required" }),
+  phone: z.string().min(1, { message: "Phone number is required" }),
+  items: z.array(
+    z.object({
+      movieId: z.number(),
+      quantity: z.number().min(1),
+      price: z.number().min(0),
+    })
+  ),
+  totalAmount: z.number().min(0),
+  // userId: z.string().optional(), // Avkommentera när vi har inloggning
+});
+
+export type CheckoutOrderInput = z.infer<typeof checkoutOrderSchema>;
