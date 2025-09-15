@@ -77,6 +77,13 @@ export async function deleteMovie(formData: FormData) {
   revalidatePath("/admin/movies");
 }
 
+// --- Hämta alla filmer ---
+export async function getAllMovies() {
+  return await prisma.movie.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+}
+
 // // --- Uppdatera befintlig film ---
 // export async function updateMovie(
 //   prevState: FormState,

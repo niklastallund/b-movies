@@ -1,10 +1,10 @@
 "use client";
 
-import { createMovie } from "@/actions/movies";
+import { updateMovie } from "@/actions/movies";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent, 
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -18,37 +18,42 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { CreateMovieInput, createMovieSchema } from "@/lib/zod-schemas";
+import { UpdateMovieInput, updateMovieSchema } from "@/lib/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-export default function MovieForm() {
-  const form = useForm<CreateMovieInput>({
-    resolver: zodResolver(createMovieSchema),
+interface UpdateMovieFormProps {
+  movie: UpdateMovieInput;
+}
+
+export default function UpdateMovieForm({ movie }: UpdateMovieFormProps) {
+  const form = useForm<UpdateMovieInput>({
+    resolver: zodResolver(updateMovieSchema),
     defaultValues: {
-      tmdbId: undefined,
-      title: "",
-      releaseDate: undefined,
-      tagline: "",
-      overview: "",
-      budget: undefined,
-      revenue: undefined,
-      runtime: undefined,
-      backdropPath: "",
-      posterPath: "",
-      price: undefined,
-      stock: undefined,
+      id: movie.id,
+      tmdbId: movie.tmdbId ?? undefined,
+      title: movie.title ?? "",
+      releaseDate: movie.releaseDate ? new Date(movie.releaseDate) : undefined,
+      tagline: movie.tagline ?? "",
+      overview: movie.overview ?? "",
+      budget: movie.budget ?? undefined,
+      revenue: movie.revenue ?? undefined,
+      runtime: movie.runtime ?? undefined,
+      backdropPath: movie.backdropPath ?? "",
+      posterPath: movie.posterPath ?? "",
+      price: movie.price ?? undefined,
+      stock: movie.stock ?? undefined,
     },
   });
 
-  async function onSubmit(data: CreateMovieInput) {
-    await createMovie(data);
+  async function onSubmit(data: UpdateMovieInput) {
+    await updateMovie(data);
   }
 
   return (
     <Card className="w-full max-w-lg mx-auto bg-black/20 backdrop-blur-xs  ">
       <CardHeader>
-        <CardTitle>Create Movie</CardTitle>
+        <CardTitle>Update Movie</CardTitle>
         <CardDescription>Enter details to add a new movie</CardDescription>
       </CardHeader>
       <CardContent>
@@ -223,7 +228,7 @@ export default function MovieForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Create</Button>
+            <Button type="submit">Update</Button>
           </form>
         </Form>
       </CardContent>
