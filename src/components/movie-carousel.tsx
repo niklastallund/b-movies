@@ -1,3 +1,4 @@
+"use client";
 import { Movie } from "@/generated/prisma";
 import {
   Carousel,
@@ -27,7 +28,9 @@ export default function MovieCarousel({
               key={movie.id}
               className="pl-1  basis-1/2 md:basis-1/3 lg:basis-1/5"
             >
-              <div className="p-1">{/*<MovieCard movieData={movie} />*/}</div>
+              <div className="p-1">
+                <MovieCard movie={movie} />
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
