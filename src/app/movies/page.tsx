@@ -1,16 +1,35 @@
 import { MovieCard } from "@/components/card-movies";
 import GenreFilter from "@/components/genre-filter";
 import SearchBar from "@/components/search-bar";
+import SortPicker from "@/components/sort-picker";
 import { prisma } from "@/lib/prisma";
+
+// These are used to map the sort query parameter for prisma
+const SORT_MAP = {
+  title: "title",
+  releaseDate: "releaseDate",
+  rating: "rating",
+  votes: "votes",
+};
 
 export default async function MoviesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; genre?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    genre?: string;
+    sort?: string;
+    order?: string;
+  }>;
 }) {
   const params = await searchParams;
   const query = params.q || "";
   const selectedGenre = params.genre || "";
+  const sort = (params.sort as keyof typeof SORT_MAP) || "title";
+  const order = params.order === "desc" ? "desc" : "asc";
+
+  const sortField = SORT_MAP[sort] || "title";
+  const sortOrder = order;
 
   const genres = await prisma.genre.findMany({
     orderBy: { name: "asc" },
@@ -18,8 +37,10 @@ export default async function MoviesPage({
 
   // Fetch movies from the database, optionally filtering by search query and genre
   // The selectedGenre filter is only applied if a genre is selected (not an empty string)
+  // The order and sorting is handles by the SortPicker component, which updates the URL parameters
+  // and this component reads them and applies them to the query
   const movies = await prisma.movie.findMany({
-    orderBy: { title: "asc" },
+    orderBy: { [sortField]: sortOrder },
     where: {
       title: {
         contains: query,
@@ -38,15 +59,19 @@ export default async function MoviesPage({
   return (
     <main className="container mx-auto py-8 px-4">
       <h1 className="text-4xl font-bold mb-8 text-sky-800 ">Our Movies</h1>
-      <div className="mb-8 mt-8 grid text-gray-50  grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
-        <div className="w-full">
-          <SearchBar />
-        </div>
-        <div className="w-1/2">
-          <GenreFilter genres={genres} selectedGenre={selectedGenre} />
+      <div className="mb-8 mt-8 flex flex-col md:flex-row gap-4 items-end">
+        <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+          <div className="flex-1 min-w-[300px]">
+            <SearchBar />
+          </div>
+          <div>
+            <GenreFilter genres={genres} selectedGenre={selectedGenre} />
+          </div>
+          <div>
+            <SortPicker />
+          </div>
         </div>
       </div>
-
       {/* film grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6  gap-6">
         {movies.length > 0 ? (

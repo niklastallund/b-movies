@@ -10,26 +10,18 @@ export default async function Carousels() {
     Movie[],
     Movie[]
   ] = await Promise.all([
-    prisma.movie.findMany({ orderBy: { releaseDate: "desc" }, take: 5 }),
-    prisma.movie.findMany({ orderBy: { votes: "desc" }, take: 5 }),
-    prisma.movie.findMany({ orderBy: { releaseDate: "asc" }, take: 5 }),
-    prisma.movie.findMany({ orderBy: { price: "asc" }, take: 5 }),
+    prisma.movie.findMany({ orderBy: { releaseDate: "desc" }, take: 10 }),
+    prisma.movie.findMany({ orderBy: { votes: "desc" }, take: 10 }),
+    prisma.movie.findMany({ orderBy: { releaseDate: "asc" }, take: 10 }),
+    prisma.movie.findMany({ orderBy: { price: "asc" }, take: 10 }),
   ]);
 
   return (
     <div className="space-y-12">
-      <MovieCarousel movies={latest} id="latest" title="Top 5 Latest movies" />
-      <MovieCarousel
-        movies={popular}
-        id="popular"
-        title="Top 5 Popular Movies"
-      />
-      <MovieCarousel movies={oldest} id="oldest" title="Top 5 Oldest Movies" />
-      <MovieCarousel
-        movies={cheapest}
-        id="cheapest"
-        title="Top 5 Cheapest Movies"
-      />
+      <MovieCarousel movies={popular} id="popular" title="Popular Movies" />
+      <MovieCarousel movies={latest} id="latest" title="Latest Movies" />
+      <MovieCarousel movies={oldest} id="oldest" title="Oldest Movies" />
+      <MovieCarousel movies={cheapest} id="cheapest" title="Cheapest Movies" />
     </div>
   );
 }
