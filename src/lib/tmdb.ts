@@ -92,6 +92,8 @@ export async function FindMoviesByDirectors(): Promise<MovieApi[]> {
             revenue: movie.revenue,
             overview: movie.overview,
             tagline: movie.tagline,
+            votes: movie.vote_count,
+            rating: movie.vote_average,
             genres: movie.genres,
             posterPath: movie.poster_path,
             backdropPath: movie.backdrop_path,

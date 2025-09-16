@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
-import Carousels from "@/components/carousel";
+import Carousels from "@/components/home-carousels";
 
 export default function Home() {
   useEffect(() => {

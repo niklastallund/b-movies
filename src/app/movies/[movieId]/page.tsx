@@ -1,5 +1,5 @@
 import Image from "next/image";
-import MovieDetails from "@/components/MovieDetails";
+import MovieDetails from "@/components/movie-details";
 import { getBackdropUrl } from "@/lib/tmdb-image-url";
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
