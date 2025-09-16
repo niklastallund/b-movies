@@ -5,9 +5,11 @@ import { prisma } from "@/lib/prisma";
 export default async function PersonPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }) {
-  const query = searchParams.q || "";
+  const params = await searchParams;
+  const query = params.q || "";
+
   const persons = await prisma.person.findMany({
     orderBy: { name: "asc" },
     where: {
@@ -20,7 +22,7 @@ export default async function PersonPage({
 
   return (
     <main className="container mx-auto py-8 px-4">
-      <h1 className="text-4xl font-bold mb-8 text-sky-800 ">Persons</h1>
+      <h1 className="text-4xl font-bold mb-8 text-sky-800 ">People</h1>
       <div className="mb-8 mt-8 grid text-gray-50  grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
         <div className="w-full">
           <SearchBar />

@@ -15,22 +15,23 @@ interface PersonDetailsProps {
 export function PersonCard({ person }: PersonDetailsProps) {
   const { profilePath, name, id } = person;
 
-  const profile = getProfileUrl(profilePath, "h632") || "/default-image.jpg";
+  const profile =
+    getProfileUrl(profilePath, "h632") || "/images/default-profile.png";
 
   return (
-    <Card className="max-w-xs overflow-hidden rounded-lg border-stone-800 shadow-lg transition-all duration-300 hover:shadow-xl">
+    <Card className="max-w-xs overflow-hidden rounded-lg border-stone-800 shadow-lg transition-all duration-300 hover:shadow-xl py-3">
       <CardContent className="p-0">
         {/* Profile Picture */}
         <Image
           src={profile}
           alt={name}
-          width={400}
-          height={620}
+          width={421}
+          height={632}
           style={{ objectFit: "cover" }}
-          className="rounded-xl pr-2 pl-2"
+          className="rounded-xl px-3"
         />
       </CardContent>
-      <CardFooter className="flex-col items-start p-4 pt-0">
+      <CardFooter className="flex-col items-start p-4 py-0">
         <h3 className="mb-2 text-md font-semibold leading-tight">{name}</h3>
         {/* "Read more" link to the dynamic page */}
         <Link href={`/person/${id}`} className="mt-4 w-full">

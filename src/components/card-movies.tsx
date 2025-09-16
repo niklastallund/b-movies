@@ -13,7 +13,6 @@ interface MovieDetailsProps {
 
 // Component showing a card for a movie
 export function MovieCard({ movie }: MovieDetailsProps) {
-  
   if (!movie) return "Movie not found";
 
   const { posterPath, title, price, id, stock } = movie;
@@ -24,7 +23,7 @@ export function MovieCard({ movie }: MovieDetailsProps) {
   const isAvailable = (stock ?? 0) > 0;
 
   return (
-    <Card className="max-w-xs overflow-hidden rounded-lg border-stone-800 shadow-lg transition-all duration-300 hover:shadow-xl">
+    <Card className="max-w-xs overflow-hidden rounded-lg border-stone-800 shadow-lg transition-all duration-300 hover:shadow-xl py-3">
       <CardContent className="p-0">
         {/* Movie image */}
         <Image
@@ -33,12 +32,14 @@ export function MovieCard({ movie }: MovieDetailsProps) {
           width={400}
           height={620}
           style={{ objectFit: "cover" }}
-          className="rounded-xl pr-2 pl-2"
+          className="rounded-xl px-3"
         />
       </CardContent>
-      <CardFooter className="flex-col items-start p-4 pt-0">
+      <CardFooter className="flex-col items-start p-4 pt-0 pb-0">
         {/* Movie title */}
-        <h3 className="mb-2 text-md font-semibold leading-tight">{title}</h3>
+        <h3 className="mb-2 text-md font-semibold leading-tight truncate w-full">
+          {title}
+        </h3>
         <div className="flex w-full items-center justify-between">
           {/* Price */}
           <span className="text-md font-bold text-primary">{price} SEK</span>

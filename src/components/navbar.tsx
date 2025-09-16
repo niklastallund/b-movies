@@ -10,7 +10,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Menu } from "lucide-react";
@@ -29,23 +34,12 @@ const MobileLinks = ({
     <Link href="/" className="font-semibold text-primary text-lg">
       Home
     </Link>
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="justify-start px-0 text-foreground text-lg"
-        >
-          Movies
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent side="right">
-        {movies.map((link) => (
-          <DropdownMenuItem key={link} asChild>
-            <Link href="#">{link}</Link>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Link href="/movies" className="font-semibold text-primary text-lg">
+      Movies
+    </Link>
+    <Link href="/person" className="font-semibold text-primary text-lg">
+      People
+    </Link>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
@@ -81,7 +75,14 @@ export function Navbar() {
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchTerm.trim() !== "") {
-      router.push(`/movies?search=${encodeURIComponent(searchTerm.trim())}`);
+      // Split by spaces, encode each word, and join with '+'
+      const query = searchTerm
+        .trim()
+        .split(/\s+/)
+        .map(encodeURIComponent)
+        .join("+");
+      router.push(`/movies?q=${query}`);
+      setSearchTerm("");
     }
   };
 
@@ -124,7 +125,7 @@ export function Navbar() {
           <div className="flex items-center space-x-2">
             <Input
               type="search"
-              placeholder="Search for movie or actor..."
+              placeholder="Search for movies..."
               className="w-full md:w-64"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -153,6 +154,7 @@ export function Navbar() {
               {/* Mobilmeny Länkar */}
               <MobileLinks movies={movies} toplists={toplists} />
             </SheetContent>
+            <SheetTitle className="sr-only">menu</SheetTitle>
           </Sheet>
         </div>
 
@@ -168,23 +170,20 @@ export function Navbar() {
               </Link>
             </li>
             <li className="relative">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="link"
-                    className="p-0 h-auto  text-md font-medium text-sky-600  hover:text-primary"
-                  >
-                    Movies
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {movies.map((link) => (
-                    <DropdownMenuItem key={link} asChild>
-                      <Link href="#">{link}</Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Link
+                href="/movies"
+                className="block text-md font-medium transition-colors hover:text-primary"
+              >
+                Movies
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/person"
+                className="block text-md font-medium transition-colors hover:text-primary"
+              >
+                People
+              </Link>
             </li>
             <li className="relative">
               <DropdownMenu>
@@ -200,7 +199,7 @@ export function Navbar() {
                   {toplists.map((link) => (
                     <DropdownMenuItem key={link.id} asChild>
                       {/* Länk till karusellen med dess unika ID */}
-                      <Link href={`#${link.id}`}>{link.label}</Link>
+                      <Link href={`/#${link.id}`}>{link.label}</Link>
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>

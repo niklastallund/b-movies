@@ -1,5 +1,5 @@
 import Image from "next/image";
-import MovieDetails from "@/components/MovieDetails";
+import MovieDetails from "@/components/movie-details";
 import { getBackdropUrl } from "@/lib/tmdb-image-url";
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -17,13 +17,26 @@ export default async function MovieDetailsPage(props: { params: Params }) {
     return redirect("/movies");
   }
 
+  // Fetch the movie and include the genres and crew
   const movie = await prisma.movie.findUnique({
     where: { id: movieId },
+    include: {
+      genres: true,
+      MovieCrew: {
+        include: {
+          person: true,
+        },
+      },
+    },
   });
 
   if (!movie) {
     return notFound();
   }
+
+  // Separate cast and crew members
+  const cast = movie.MovieCrew.filter((member) => member.role === "cast");
+  const crew = movie.MovieCrew.filter((member) => member.role === "crew");
 
   //We need to get the backdrop image here because it is not drawn in the component
   const backdropUrl =
@@ -43,21 +56,12 @@ export default async function MovieDetailsPage(props: { params: Params }) {
         <div className="absolute inset-0 bg-black/80" />
       </div>
       {/* Transparent Card */}
-      <MovieDetails movie={movie} />
-      {/* <UpdateMovieForm
-        movie={{
-          ...movie,
-          tmdbId: movie.tmdbId === null ? undefined : movie.tmdbId,
-          overview: movie.overview === null ? undefined : movie.overview,
-          tagline: movie.tagline === null ? undefined : movie.tagline,
-          releaseDate: movie.releaseDate === null ? undefined : movie.releaseDate,
-          budget: movie.budget === null ? undefined : movie.budget,
-          revenue: movie.revenue === null ? undefined : movie.revenue,
-          runtime: movie.runtime === null ? undefined : movie.runtime,
-          posterPath: movie.posterPath === null ? undefined : movie.posterPath,
-          backdropPath: movie.backdropPath === null ? undefined : movie.backdropPath,
-        }}
-      /> */}
+      <MovieDetails
+        movie={movie}
+        genres={movie.genres}
+        cast={cast}
+        crew={crew}
+      />
     </main>
   );
 }

@@ -14,14 +14,22 @@ import { Separator } from "@/components/ui/separator"; // Bra för att skapa avd
 import { useCartStore } from "@/store/cookie-cart";
 
 import { getPosterUrl } from "@/lib/tmdb-image-url";
-import { Movie } from "@/generated/prisma";
+import { Genre, Movie, MovieCrew } from "@/generated/prisma";
 
 // Props som komponenten tar emot
 interface MovieDetailsProps {
   movie: Movie;
+  genres: Genre[];
+  cast: MovieCrew[];
+  crew: MovieCrew[];
 }
 // Huvudkomponenten för filmdetaljer
-export default function MovieDetails({ movie }: MovieDetailsProps) {
+export default function MovieDetails({
+  movie,
+  genres,
+  cast,
+  crew,
+}: MovieDetailsProps) {
   // Tillstånd för att hålla reda på antalet filmer att lägga till
   const [quantity, setQuantity] = useState(1);
 
@@ -38,7 +46,8 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
     setQuantity((prev) => prev + 1);
   };
 
-  const handlePoster = getPosterUrl(movie.posterPath) || "/default-image.jpg";
+  const handlePoster =
+    getPosterUrl(movie.posterPath, "w500") || "/default-image.jpg";
 
   // Lägg till i varukorgen
   const handleAddToCart = () => {
@@ -48,7 +57,6 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
       price: movie.price,
       quantity: quantity,
       imageUrl: handlePoster,
-      tmdb: !!(movie as any).tmdbId, // Anpassa om du har tmdbId i Movie
     });
   };
 
@@ -74,15 +82,12 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
             <CardTitle className="text-4xl font-bold mb-2 text-white drop-shadow-lg">
               {movie.title}
             </CardTitle>
-            {/* SÄTT TAGLINE HÄR */}
-            <CardDescription className="text-gray-200 text-base">
-              Release Date:{" "}
-              {movie.releaseDate
-                ? movie.releaseDate.toLocaleDateString()
-                : "Unknown"}
+            <CardDescription className="text-gray-200 text-base italic drop-shadow-sm">
+              {genres.map((genre) => genre.name).join(", ")}
             </CardDescription>
           </CardHeader>
 
+          <Separator className="mb-3 mt-0 bg-white/20" />
           <p className="mb-4 text-gray-400 leading-relaxed drop-shadow-sm italic">
             {movie.tagline}
           </p>
@@ -91,6 +96,12 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
           </p>
 
           <div className="space-y-2 mb-4 text-gray-200">
+            <p>
+              Release Date:{" "}
+              {movie.releaseDate
+                ? movie.releaseDate.toLocaleDateString()
+                : "Unknown"}
+            </p>
             <p>{`Runtime: ${
               movie.runtime ? `${movie.runtime} minutes` : "Unknown"
             }`}</p>
@@ -98,7 +109,7 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
             <p>{`Revenue: ${movie.revenue ? movie.revenue : "Unknown"}`}</p>
           </div>
 
-          <Separator className="my-4 bg-white/20" />
+          <Separator className="mb-4 mt-0 bg-white/20" />
 
           <div className="flex items-center text-2xl font-semibold mb-4 text-white">
             Price: {movie.price} SEK

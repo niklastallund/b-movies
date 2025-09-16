@@ -24,6 +24,8 @@ model Movie {
   revenue     BigInt?
   overview    String? //description
   tagline     String?
+  votes       Int?
+  rating      Float?
 
   posterPath   String?
   backdropPath String?

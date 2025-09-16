@@ -10,6 +10,9 @@ export interface MovieApi {
   revenue?: number;
   overview?: string;
   tagline?: string;
+  votes?: number;
+  rating?: number;
+
   genres?: Genre[];
 
   posterPath?: string;
