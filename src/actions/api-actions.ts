@@ -23,6 +23,7 @@ export async function addMoviesAndCrewFromTmdb() {
       create: {
         tmdbId: BigInt(movie.id),
         title: movie.title,
+        tagline: movie.tagline,
         overview: movie.overview,
         releaseDate: movie.releaseDate
           ? new Date(movie.releaseDate)
@@ -30,7 +31,8 @@ export async function addMoviesAndCrewFromTmdb() {
         runtime: movie.runtime,
         budget: movie.budget ? BigInt(movie.budget) : undefined,
         revenue: movie.revenue ? BigInt(movie.revenue) : undefined,
-        tagline: movie.tagline,
+        votes: movie.votes,
+        rating: movie.rating,
         posterPath: movie.posterPath,
         backdropPath: movie.backdropPath,
         stock,
@@ -39,6 +41,7 @@ export async function addMoviesAndCrewFromTmdb() {
       update: {
         tmdbId: BigInt(movie.id),
         title: movie.title,
+        tagline: movie.tagline,
         overview: movie.overview,
         releaseDate: movie.releaseDate
           ? new Date(movie.releaseDate)
@@ -46,7 +49,8 @@ export async function addMoviesAndCrewFromTmdb() {
         runtime: movie.runtime,
         budget: movie.budget,
         revenue: movie.revenue,
-        tagline: movie.tagline,
+        votes: movie.votes,
+        rating: movie.rating,
         posterPath: movie.posterPath,
         backdropPath: movie.backdropPath,
         stock,
