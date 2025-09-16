@@ -10,7 +10,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Menu } from "lucide-react";
@@ -149,6 +154,7 @@ export function Navbar() {
               {/* Mobilmeny Länkar */}
               <MobileLinks movies={movies} toplists={toplists} />
             </SheetContent>
+            <SheetTitle className="sr-only">menu</SheetTitle>
           </Sheet>
         </div>
 

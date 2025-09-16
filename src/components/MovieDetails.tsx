@@ -14,14 +14,22 @@ import { Separator } from "@/components/ui/separator"; // Bra för att skapa avd
 import { useCartStore } from "@/store/cookie-cart";
 
 import { getPosterUrl } from "@/lib/tmdb-image-url";
-import { Movie } from "@/generated/prisma";
+import { Genre, Movie, MovieCrew } from "@/generated/prisma";
 
 // Props som komponenten tar emot
 interface MovieDetailsProps {
   movie: Movie;
+  genres: Genre[];
+  cast: MovieCrew[];
+  crew: MovieCrew[];
 }
 // Huvudkomponenten för filmdetaljer
-export default function MovieDetails({ movie }: MovieDetailsProps) {
+export default function MovieDetails({
+  movie,
+  genres,
+  cast,
+  crew,
+}: MovieDetailsProps) {
   // Tillstånd för att hålla reda på antalet filmer att lägga till
   const [quantity, setQuantity] = useState(1);
 
@@ -48,7 +56,6 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
       price: movie.price,
       quantity: quantity,
       imageUrl: handlePoster,
-      tmdb: !!(movie as Movie).tmdbId, // Anpassa om du har tmdbId i Movie
     });
   };
 
@@ -74,11 +81,8 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
             <CardTitle className="text-4xl font-bold mb-2 text-white drop-shadow-lg">
               {movie.title}
             </CardTitle>
-            <CardDescription className="text-gray-200 text-base">
-              Release Date:{" "}
-              {movie.releaseDate
-                ? movie.releaseDate.toLocaleDateString()
-                : "Unknown"}
+            <CardDescription className="text-gray-200 text-base italic drop-shadow-sm">
+              {genres.map((genre) => genre.name).join(", ")}
             </CardDescription>
           </CardHeader>
 
@@ -90,6 +94,12 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
           </p>
 
           <div className="space-y-2 mb-4 text-gray-200">
+            <p>
+              Release Date:{" "}
+              {movie.releaseDate
+                ? movie.releaseDate.toLocaleDateString()
+                : "Unknown"}
+            </p>
             <p>{`Runtime: ${
               movie.runtime ? `${movie.runtime} minutes` : "Unknown"
             }`}</p>

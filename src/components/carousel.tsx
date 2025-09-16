@@ -11,6 +11,14 @@ import {
 } from "@/components/ui/carousel";
 import { MovieCard } from "@/components/card-movies";
 
+
+//TODO
+// Does not need to be a client component
+// Change so that it fetches data from an API instead of hardcoded data
+// Import the interface Movie from the prisma generated file
+// Get movie data from prisma database instead
+// 
+
 // Datastruktur för att matcha MovieCard-props
 interface Movie {
   id: number;

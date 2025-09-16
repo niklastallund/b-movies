@@ -16,13 +16,26 @@ export default async function MovieDetailsPage(props: { params: Params }) {
     return redirect("/movies");
   }
 
+  // Fetch the movie and include the genres and crew
   const movie = await prisma.movie.findUnique({
     where: { id: movieId },
+    include: {
+      genres: true,
+      MovieCrew: {
+        include: {
+          person: true,
+        },
+      },
+    },
   });
 
   if (!movie) {
     return notFound();
   }
+
+  // Separate cast and crew members
+  const cast = movie.MovieCrew.filter((member) => member.role === "cast");
+  const crew = movie.MovieCrew.filter((member) => member.role === "crew");
 
   //We need to get the backdrop image here because it is not drawn in the component
   const backdropUrl =
@@ -42,7 +55,12 @@ export default async function MovieDetailsPage(props: { params: Params }) {
         <div className="absolute inset-0 bg-black/80" />
       </div>
       {/* Transparent Card */}
-      <MovieDetails movie={movie} />
+      <MovieDetails
+        movie={movie}
+        genres={movie.genres}
+        cast={cast}
+        crew={crew}
+      />
     </main>
   );
 }
