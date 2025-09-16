@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import {
   Card,
@@ -36,7 +34,7 @@ function getAgeAtDeath(birthday: Date, deathday: Date): number {
 
 export default function PersonDetails({ person }: PersonDetailsProps) {
   const handlePoster =
-    getProfileUrl(person.profilePath, "h632") || "/default-image.jpg";
+    getProfileUrl(person.profilePath, "h632") || "/images/default-profile.png";
 
   return (
     <Card className="w-full mx-auto relative bg-black/20 backdrop-blur-xs border-red-900">

@@ -46,7 +46,8 @@ export default function MovieDetails({
     setQuantity((prev) => prev + 1);
   };
 
-  const handlePoster = getPosterUrl(movie.posterPath) || "/default-image.jpg";
+  const handlePoster =
+    getPosterUrl(movie.posterPath, "w500") || "/default-image.jpg";
 
   // Lägg till i varukorgen
   const handleAddToCart = () => {
@@ -86,6 +87,7 @@ export default function MovieDetails({
             </CardDescription>
           </CardHeader>
 
+          <Separator className="mb-3 mt-0 bg-white/20" />
           <p className="mb-4 text-gray-400 leading-relaxed drop-shadow-sm italic">
             {movie.tagline}
           </p>
@@ -107,7 +109,7 @@ export default function MovieDetails({
             <p>{`Revenue: ${movie.revenue ? movie.revenue : "Unknown"}`}</p>
           </div>
 
-          <Separator className="my-4 bg-white/20" />
+          <Separator className="mb-4 mt-0 bg-white/20" />
 
           <div className="flex items-center text-2xl font-semibold mb-4 text-white">
             Price: {movie.price} SEK
