@@ -25,8 +25,10 @@ export default function UpdateMovieForm({ movie }: UpdateMovieFormProps) {
     resolver: zodResolver(updateMovieSchema),
     defaultValues: {
       id: movie.id,
-      title: movie.title,
       tmdbId: movie.tmdbId ? Number(movie.tmdbId) : undefined,
+      title: movie.title,
+      tagline: movie.tagline ?? "",
+      overview: movie.overview ?? "",
       releaseDate: movie.releaseDate ?? undefined,
       budget: movie.budget ? Number(movie.budget) : undefined,
       revenue: movie.revenue ? Number(movie.revenue) : undefined,
