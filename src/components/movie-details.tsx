@@ -15,6 +15,7 @@ import { useCartStore } from "@/store/cookie-cart";
 
 import { getPosterUrl } from "@/lib/tmdb-image-url";
 import { Genre, Movie, MovieCrew } from "@/generated/prisma";
+import { EditMoviePopup } from "./edit-movie-popup";
 
 // Props som komponenten tar emot
 interface MovieDetailsProps {
@@ -22,13 +23,19 @@ interface MovieDetailsProps {
   genres: Genre[];
   cast: MovieCrew[];
   crew: MovieCrew[];
+  allGenres?: { id: number; name: string }[]; // NEW
 }
+
+// Tmp admin flag for testing
+const admin = true;
+
 // Huvudkomponenten för filmdetaljer
 export default function MovieDetails({
   movie,
   genres,
   cast,
   crew,
+  allGenres,
 }: MovieDetailsProps) {
   // Tillstånd för att hålla reda på antalet filmer att lägga till
   const [quantity, setQuantity] = useState(1);
@@ -151,6 +158,15 @@ export default function MovieDetails({
               ? `${movie.stock} in stock`
               : "Out of stock"}
           </p>
+          {admin && (
+            <div className="absolute bottom-4 right-10 z-20">
+              <EditMoviePopup
+                movie={movie}
+                allGenres={allGenres ?? []}
+                initialSelectedIds={genres.map((g) => g.id)}
+              />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -1,14 +1,8 @@
 "use client";
 
+import type { Movie } from "@/generated/prisma";
 import { updateMovie } from "@/actions/movies";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -23,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 interface UpdateMovieFormProps {
-  movie: UpdateMovieInput;
+  movie: Movie;
 }
 
 export default function UpdateMovieForm({ movie }: UpdateMovieFormProps) {
@@ -31,16 +25,14 @@ export default function UpdateMovieForm({ movie }: UpdateMovieFormProps) {
     resolver: zodResolver(updateMovieSchema),
     defaultValues: {
       id: movie.id,
-      tmdbId: movie.tmdbId ?? undefined,
-      title: movie.title ?? "",
+      title: movie.title,
+      tmdbId: movie.tmdbId ? Number(movie.tmdbId) : undefined,
       releaseDate: movie.releaseDate ?? undefined,
-      tagline: movie.tagline ?? "",
-      overview: movie.overview ?? "",
-      budget: movie.budget ?? undefined,
-      revenue: movie.revenue ?? undefined,
+      budget: movie.budget ? Number(movie.budget) : undefined,
+      revenue: movie.revenue ? Number(movie.revenue) : undefined,
       runtime: movie.runtime ?? undefined,
-      backdropPath: movie.backdropPath ?? "",
       posterPath: movie.posterPath ?? "",
+      backdropPath: movie.backdropPath ?? "",
       price: movie.price ?? undefined,
       stock: movie.stock ?? undefined,
     },
@@ -51,187 +43,179 @@ export default function UpdateMovieForm({ movie }: UpdateMovieFormProps) {
   }
 
   return (
-    <Card className="w-full max-w-lg mx-auto bg-black/20 backdrop-blur-xs  ">
-      <CardHeader>
-        <CardTitle>Update Movie</CardTitle>
-        <CardDescription>Enter details to add a new movie</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            <FormField
-              control={form.control}
-              name="tmdbId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>TMDB ID (optional)</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value?.toString() ?? ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="releaseDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Release Date</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="date"
-                      onChange={(e) => {
-                        const val = e.target.valueAsDate;
-                        if (val) {
-                          field.onChange(val);
-                        } else {
-                          field.onChange(undefined);
-                        }
-                      }}
-                      value={field.value?.toISOString().split("T")[0] ?? ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="tagline"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tagline</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="overview"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Overview</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="runtime"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Runtime (optional)</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value?.toString() ?? ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="budget"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Budget (optional)</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value?.toString() ?? ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="revenue"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Revenue (optional)</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value?.toString() ?? ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price (optional)</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value?.toString() ?? ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="stock"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Stock (optional)</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value?.toString() ?? ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="posterPath"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Poster Path ( /xxxxxxxxxx... )</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+        <FormField
+          control={form.control}
+          name="tmdbId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>TMDB ID (optional)</FormLabel>
+              <FormControl>
+                <Input {...field} value={field.value?.toString() ?? ""} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="releaseDate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Release Date</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="date"
+                  onChange={(e) => {
+                    const val = e.target.valueAsDate;
+                    if (val) {
+                      field.onChange(val);
+                    } else {
+                      field.onChange(undefined);
+                    }
+                  }}
+                  value={field.value?.toISOString().split("T")[0] ?? ""}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="tagline"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tagline</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="overview"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Overview</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="runtime"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Runtime (optional)</FormLabel>
+              <FormControl>
+                <Input {...field} value={field.value?.toString() ?? ""} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="budget"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Budget (optional)</FormLabel>
+              <FormControl>
+                <Input {...field} value={field.value?.toString() ?? ""} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="revenue"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Revenue (optional)</FormLabel>
+              <FormControl>
+                <Input {...field} value={field.value?.toString() ?? ""} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="price"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Price (optional)</FormLabel>
+              <FormControl>
+                <Input {...field} value={field.value?.toString() ?? ""} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="stock"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Stock (optional)</FormLabel>
+              <FormControl>
+                <Input {...field} value={field.value?.toString() ?? ""} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="posterPath"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Poster Path ( /xxxxxxxxxx... )</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="backdropPath"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Backdrop Path ( /xxxxxxxxxx... )</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit">Update</Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+        <FormField
+          control={form.control}
+          name="backdropPath"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Backdrop Path ( /xxxxxxxxxx... )</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Update</Button>
+      </form>
+    </Form>
   );
 }
