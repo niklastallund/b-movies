@@ -22,7 +22,7 @@ import { CreateMovieInput, createMovieSchema } from "@/lib/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-export default function MovieForm() {
+export default function CreateMovieForm() {
   const form = useForm<CreateMovieInput>({
     resolver: zodResolver(createMovieSchema),
     defaultValues: {

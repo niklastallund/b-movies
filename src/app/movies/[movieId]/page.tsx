@@ -3,7 +3,6 @@ import MovieDetails from "@/components/movie-details";
 import { getBackdropUrl } from "@/lib/tmdb-image-url";
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import UpdateMovieForm from "@/components/admin-update-form";
 
 export type Params = {
   movieId: string;

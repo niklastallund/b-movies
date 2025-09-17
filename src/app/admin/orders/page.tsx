@@ -1,6 +1,6 @@
 import { getAllOrders, deleteOrder } from "@/actions/orders";
 import { Button } from "@/components/ui/button";
-import AdminOrderForm from "@/components/admin-orders-form";
+import CreateOrderForm from "@/components/forms/create-order-form";
 import Link from "next/link";
 
 export default async function AdminOrdersPage() {
@@ -11,7 +11,7 @@ export default async function AdminOrdersPage() {
       <h1 className="text-4xl text-sky-600 font-bold">Admin: Ordrar</h1>
 
       {/* Komponent för att skapa en ny order */}
-      <AdminOrderForm />
+      <CreateOrderForm />
 
       {/* Lista med befintliga ordrar */}
       <div className="space-y-4">

@@ -1,8 +1,8 @@
 //src\app\admin\genres\page.tsx
 
 import { deleteGenre, getAllGenres } from "@/actions/genres";
+import CreateGenreForm from "@/components/forms/create-genre-form";
 import { Button } from "@/components/ui/button";
-import GenreForm from "@/components/admin-genre-form"; // OBS! Kontrollera stavning och versaler
 
 export default async function AdminGenresPage() {
   const genres = await getAllGenres();
@@ -12,7 +12,7 @@ export default async function AdminGenresPage() {
       <h1 className="text-4xl text-sky-600 font-bold ">Admin: Genrer</h1>
 
       {/* Form för att skapa ny genre */}
-      <GenreForm />
+      <CreateGenreForm />
 
       {/* Lista med befintliga genrer */}
       <div className="space-y-4">
