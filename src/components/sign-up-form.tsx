@@ -134,7 +134,7 @@ export default function SignUpForm() {
 
             <Button
               type="submit"
-              className="w-auto text-white bg-red-800"
+              className="w-auto bg-primary text-primary-foreground hover:bg-primary/90"
               disabled={form.formState.isSubmitting}
             >
               Create Account

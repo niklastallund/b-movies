@@ -41,23 +41,23 @@ export default function HeroSection() {
         className="relative h-screen w-screen hidden md:flex flex-col justify-center items-center text-center px-4 bg-cover bg-center"
         style={{ backgroundImage: 'url("/images/hero1.png")' }}
       >
-        <div className="absolute inset-0 bg-black opacity-60"></div>
+        <div className="absolute inset-0 bg-background opacity-60"></div>
         <div className="z-10 relative">
           <h1
             id="main-heading"
-            className="text-5xl md:text-7xl font-extrabold mb-4 mt-2 text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-sky-700 transform translate-y-full opacity-0 transition-all duration-1000 ease-out"
+            className="text-5xl md:text-7xl font-extrabold mb-4 mt-2 text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70 transform translate-y-full opacity-0 transition-all duration-1000 ease-out"
           >
             Discover the Best B-Movies
           </h1>
           <p
             id="sub-heading"
-            className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-8 transform translate-y-full opacity-0 transition-all duration-1000 ease-out"
+            className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 transform translate-y-full opacity-0 transition-all duration-1000 ease-out"
           >
             Dive into a world of weird, scary, and fantastically entertaining
             films that never made it to the A-list.
           </p>
           <Link href="#section3" className="inline-block">
-            <Button className="px-8 py-4 rounded-lg font-bold text-lg bg-red-800 hover:bg-red-900 text-white transform transition-transform duration-300 hover:scale-105">
+            <Button className="px-8 py-4 rounded-lg font-bold text-lg bg-primary hover:bg-primary/90 text-primary-foreground transform transition-transform duration-300 hover:scale-105">
               Top 5 Movies
             </Button>
           </Link>
@@ -72,13 +72,13 @@ export default function HeroSection() {
         <div className="w-full flex flex-col justify-center items-center p-2 text-center">
           <h1
             id="main-heading-mobile"
-            className="text-5xl font-extrabold mb-4  text-sky-800 transform translate-y-full opacity-0 transition-all duration-1000 ease-out"
+            className="text-5xl font-extrabold mb-4 text-primary transform translate-y-full opacity-0 transition-all duration-1000 ease-out"
           >
             Discover the Best B-Movies
           </h1>
           <p
             id="sub-heading-mobile"
-            className="text-lg max-w-3xl mx-auto mb-8 transform translate-y-full opacity-0 transition-all duration-1000 ease-out"
+            className="text-lg max-w-3xl mx-auto mb-8 text-foreground transform translate-y-full opacity-0 transition-all duration-1000 ease-out"
           >
             Dive into a world of weird, scary, and fantastically entertaining
             films that never made it to the A-list.
