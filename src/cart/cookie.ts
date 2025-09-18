@@ -42,12 +42,12 @@ export async function clearCartCookie() {
   const cookieStore = await cookies();
   // Använd delete istället för att sätta tom sträng
   cookieStore.delete(CART_COOKIE_NAME);
-  
+
   // Backup: sätt även tom sträng med omedelbar expiration
-  cookieStore.set(CART_COOKIE_NAME, "", { 
-    ...COOKIE_OPTIONS, 
+  cookieStore.set(CART_COOKIE_NAME, "", {
+    ...COOKIE_OPTIONS,
     maxAge: 0,
-    expires: new Date(0) // Explicit expiration datum
+    expires: new Date(0), // Explicit expiration datum
   });
 }
 
