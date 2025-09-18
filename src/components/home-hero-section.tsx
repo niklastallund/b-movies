@@ -57,7 +57,7 @@ export default function HeroSection() {
             films that never made it to the A-list.
           </p>
           <Link href="#section3" className="inline-block">
-            <Button className="px-8 py-4 rounded-lg font-bold text-lg bg-primary hover:bg-primary/90 text-primary-foreground transform transition-transform duration-300 hover:scale-105">
+            <Button className="px-8 py-4 rounded-lg font-bold text-lg bg-primary hover:bg-primary/90 transform transition-transform duration-300 hover:scale-105">
               Top 5 Movies
             </Button>
           </Link>

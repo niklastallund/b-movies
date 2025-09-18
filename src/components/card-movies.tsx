@@ -37,30 +37,12 @@ export function MovieCard({ movie }: MovieDetailsProps) {
       </CardContent>
       <CardFooter className="flex-col items-start p-4 pt-0 pb-0">
         {/* Movie title */}
-        <h3 className="mb-2 text-md font-semibold leading-tight truncate w-full">
+        <h3 className="mb-2 text-md mt-2 font-semibold leading-tight truncate w-full">
           {title}
         </h3>
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center text-secondary justify-between">
           {/* Price */}
-          <span className="text-md font-bold text-secondary">{price} SEK</span>
-          {/* +/- buttons for quantity */}
-          <div className="flex space-x-2">
-            <Button
-              size="icon"
-              variant="outline"
-              className="h-8 w-8 text-lg"
-              disabled={!isAvailable}
-            >
-              -
-            </Button>
-            <Button
-              size="icon"
-              className="h-8 w-8 text-lg"
-              disabled={!isAvailable}
-            >
-              +
-            </Button>
-          </div>
+          <span className="text-md font-bold text-primary">{price} SEK</span>
         </div>
         {/* "Read more" link to the dynamic page */}
         <Link href={`/movies/${id}`} className="mt-4 w-full">
