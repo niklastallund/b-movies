@@ -78,19 +78,116 @@ A modern movie e-commerce platform built with Next.js, featuring user authentica
 
 ## 📁 Project Structure
 
-Skriv in filstrukture
-src/
-├── app/                    # Next.js app directory
-├── components/            # React components
-│   ├── ui/               # Reusable UI components
-│   ├── navbar.tsx        # Navigation component
-│   ├── sign-in-form.tsx  # Sign in form
-│   ├── sign-up-form.tsx  # Sign up form
-│   └── button-signin-signout.tsx  # Profile dropdown
-├── lib/                  # Utility functions and configurations
-└── public/              # Static assets
-    └── images/          # Logo and image assets
-
+movieshop-beta/
+├── .next/ # Next.js build output (auto-genererad)
+├── .vscode/ # VS Code workspace inställningar
+├── node_modules/ # NPM dependencies (auto-installerad)
+├── prisma/ # Databas schema och migrationer
+│ ├── dev.db # SQLite databas fil
+│ ├── schema.prisma # Prisma schema definition
+│ └── migrations/ # Databas migrationer
+│ ├── migration_lock.toml # Migration lock fil
+│ ├── 20250918215617_init_sqlite/
+│ └── 20250918222825_add_customer_fields/
+├── public/ # Statiska filer (bilder, ikoner)
+│ └── images/ # App bilder och placeholders
+├── src/ # Applikationens källkod
+│ ├── actions/ # Server Actions för datahantering
+│ │ ├── api-actions.ts # Allmänna API operationer
+│ │ ├── cookie-cart.ts # Legacy cart actions (ersatt av /cart/)
+│ │ ├── genres.ts # Genre CRUD operationer
+│ │ ├── movies.ts # Film CRUD operationer
+│ │ ├── orders.ts # Order hantering
+│ │ └── person.ts # Person/skådespelare operationer
+│ ├── app/ # Next.js App Router struktur
+│ │ ├── aboutus/ # Om oss sida
+│ │ ├── admin/ # Admin panel för CRUD
+│ │ │ ├── genres/ # Genre administration
+│ │ │ ├── movies/ # Film administration
+│ │ │ ├── orders/ # Order administration
+│ │ │ └── person/ # Person administration
+│ │ ├── api/ # API routes
+│ │ │ ├── auth/ # Autentisering endpoints
+│ │ │ └── cart/ # Legacy cart API (ersatt av server actions)
+│ │ │ └── route.ts # REST endpoint för cart
+│ │ ├── checkout/ # Checkout flöde
+│ │ │ ├── success/[orderId]/ # Order framgångssida
+│ │ │ │ └── page.tsx # Tackmeddelande med orderdetaljer
+│ │ │ └── page.tsx # Checkout formulär
+│ │ ├── movies/ # Film browsing
+│ │ │ ├── page.tsx # Film listing med filter/sökning
+│ │ │ └── [movieId]/ # Individuell film sida
+│ │ ├── person/ # Person/skådespelare sidor
+│ │ │ ├── page.tsx # Person listing
+│ │ │ └── [personId]/ # Individuell person sida
+│ │ ├── sign-in/ # Inloggning
+│ │ ├── sign-up/ # Registrering
+│ │ ├── user/ # Användarprofil och orderhistorik
+│ │ ├── favicon.ico # Webbplats ikon
+│ │ ├── globals.css # Globala CSS stilar
+│ │ ├── layout.tsx # Root layout med navbar/footer
+│ │ └── page.tsx # Startsida med hero och carousels
+│ ├── cart/ # Cookie-baserad cart system (NY)
+│ │ ├── actions.ts # Server actions för cart operationer
+│ │ ├── constants.ts # Cart konstanter och typer
+│ │ ├── cookie.ts # Cookie hantering för cart
+│ │ └── math.ts # Cart beräkningar (totaler etc)
+│ ├── checkout/ # Checkout logik (NY)
+│ │ └── actions.ts # Order submission med gäst/user support
+│ ├── components/ # Återanvändbara React komponenter
+│ │ ├── forms/ # Formulär komponenter
+│ │ │ ├── create-genre-form.tsx # Admin genre formulär
+│ │ │ ├── create-movies-form.tsx # Admin film formulär
+│ │ │ ├── create-order-form.tsx # Admin order formulär
+│ │ │ ├── create-person-form.tsx # Admin person formulär
+│ │ │ ├── sign-in-form.tsx # Inloggnings formulär
+│ │ │ ├── sign-up-form.tsx # Registrerings formulär
+│ │ │ ├── update-movie-form.tsx # Film uppdatering
+│ │ │ └── update-person-form.tsx # Person uppdatering
+│ │ ├── ui/ # Grundläggande UI komponenter (shadcn/ui)
+│ │ ├── button-signin-signout.tsx # Auth status button
+│ │ ├── card-movies.tsx # Film kort för listings
+│ │ ├── card-person.tsx # Person kort för listings
+│ │ ├── cart-quantity-buttons.tsx # Kvantitet +/- knappar
+│ │ ├── cart-remove-button.tsx # Ta bort från cart knapp
+│ │ ├── edit-movie-popup.tsx # Quick edit popup för filmer
+│ │ ├── footer.tsx # Sidfot
+│ │ ├── genre-filter.tsx # Genre filtering
+│ │ ├── home-carousels.tsx # Startsidans film karuseller
+│ │ ├── home-hero-section.tsx # Hero sektion på startsida
+│ │ ├── movie-carousel.tsx # Film karusell komponent
+│ │ ├── movie-details.tsx # Film detaljer vy
+│ │ ├── navbar.tsx # Navigations bar
+│ │ ├── person-carousel.tsx # Person karusell
+│ │ ├── person-details.tsx # Person detaljer vy
+│ │ ├── search-bar.tsx # Sök funktionalitet
+│ │ ├── shopping-cart-sheet.tsx # Slide-out cart panel
+│ │ ├── sort-picker.tsx # Sortering controls
+│ │ ├── theme-provider.tsx # Dark/light mode provider
+│ │ └── toggle-theme-button.tsx # Theme växlings knapp
+│ ├── generated/ # Auto-genererad kod
+│ │ └── prisma/ # Prisma client kod
+│ └── lib/ # Hjälpfunktioner och konfiguration
+│ ├── auth-client.ts # Better Auth client config
+│ ├── auth.ts # Better Auth server config
+│ ├── prisma.ts # Prisma client instans
+│ ├── tmdb-image-url.ts # TMDB bild URL helpers
+│ ├── tmdb.ts # TMDB API integration
+│ ├── types.ts # TypeScript type definitions
+│ ├── utils.ts # Allmänna utility funktioner
+│ └── zod-schemas.ts # Zod validation schemas
+├── .env # Miljövariabler (databas URL, API nycklar)
+├── .gitignore # Git ignore regler
+├── components.json # shadcn/ui konfiguration
+├── eslint.config.mjs # ESLint regler
+├── LICENSE # Licens fil
+├── next-env.d.ts # Next.js TypeScript definitions
+├── next.config.ts # Next.js konfiguration
+├── package-lock.json # NPM dependency lock
+├── package.json # NPM dependencies och scripts
+├── postcss.config.mjs # PostCSS konfiguration
+├── README.md # Projekt dokumentation
+└── tsconfig.json # TypeScript konfiguration
 
 ## 🧩 Components
 

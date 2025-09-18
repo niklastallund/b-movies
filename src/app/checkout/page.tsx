@@ -74,7 +74,7 @@ export default async function CheckoutPage() {
                   name="firstName"
                   type="text"
                   required
-                  placeholder="Ada"
+                  placeholder="Firstname"
                 />
               </div>
               <div className="space-y-2">
@@ -86,7 +86,7 @@ export default async function CheckoutPage() {
                   name="lastName"
                   type="text"
                   required
-                  placeholder="Lovelace"
+                  placeholder="Lastname"
                 />
               </div>
             </div>
@@ -99,20 +99,20 @@ export default async function CheckoutPage() {
                 name="address"
                 type="text"
                 required
-                placeholder="123 Main St"
+                placeholder="Streetname"
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="postalCode" className="text-lg">
-                  Postal code
+                  Zip code
                 </Label>
                 <Input
                   id="postalCode"
                   name="postalCode"
                   type="text"
                   required
-                  placeholder="123 45"
+                  placeholder="Zip code"
                 />
               </div>
               <div className="space-y-2">
@@ -124,7 +124,7 @@ export default async function CheckoutPage() {
                   name="city"
                   type="text"
                   required
-                  placeholder="Stockholm"
+                  placeholder="City"
                 />
               </div>
             </div>
@@ -137,7 +137,7 @@ export default async function CheckoutPage() {
                 name="email"
                 type="email"
                 required
-                placeholder="you@example.com"
+                placeholder="email"
               />
             </div>
           </div>
@@ -146,7 +146,7 @@ export default async function CheckoutPage() {
             type="submit"
             className="w-full py-3 rounded-md font-semibold shadow-sm transition-colors duration-200 ease-in-out bg-primary text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           >
-            Pay
+            Pay FAKE!
           </button>
         </form>
       )}

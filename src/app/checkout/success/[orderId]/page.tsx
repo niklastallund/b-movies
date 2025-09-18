@@ -49,9 +49,9 @@ export default async function CheckoutSuccessPage({
       {/* Tackmeddelande */}
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
-          <CheckCircle className="h-16 w-16 text-green-500" />
+          <CheckCircle className="h-16 w-16 text-primary" />
         </div>
-        <h1 className="text-3xl font-bold text-green-600 mb-2">
+        <h1 className="text-3xl font-bold text-primary mb-2">
           Thanks for your order!
         </h1>
         <p className="text-lg text-muted-foreground">
@@ -65,7 +65,7 @@ export default async function CheckoutSuccessPage({
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Package className="h-5 w-5" />
+              <Package className="h-5 w-5 text-muted-foreground" />
               Order Details
             </CardTitle>
           </CardHeader>
@@ -95,7 +95,7 @@ export default async function CheckoutSuccessPage({
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5" />
+              <CreditCard className="h-5 w-5 text-muted-foreground" />
               Shipping Details
             </CardTitle>
           </CardHeader>
@@ -172,14 +172,14 @@ export default async function CheckoutSuccessPage({
       <Card className="mt-6">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
+            <Calendar className="h-5 w-5 text-muted-foreground" />
             Vad händer nu?
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             <div className="flex items-start gap-3">
-              <div className="w-6 h-6 rounded-full bg-blue-500 text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-sm flex items-center justify-center flex-shrink-0 mt-0.5">
                 1
               </div>
               <div>
@@ -190,7 +190,7 @@ export default async function CheckoutSuccessPage({
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-6 h-6 rounded-full bg-blue-500 text-white text-sm flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-sm flex items-center justify-center flex-shrink-0 mt-0.5">
                 2
               </div>
               <div>
@@ -201,7 +201,7 @@ export default async function CheckoutSuccessPage({
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-6 h-6 rounded-full bg-gray-300 text-gray-600 text-sm flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-6 h-6 rounded-full bg-secondary text-secondary-foreground text-sm flex items-center justify-center flex-shrink-0 mt-0.5">
                 3
               </div>
               <div>
