@@ -23,7 +23,7 @@ export function MovieCard({ movie }: MovieDetailsProps) {
   const isAvailable = (stock ?? 0) > 0;
 
   return (
-    <Card className="max-w-xs overflow-hidden rounded-lg border-stone-800 shadow-lg transition-all duration-300 hover:shadow-xl py-3">
+    <Card className="max-w-xs overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl py-3">
       <CardContent className="p-0">
         {/* Movie image */}
         <Image
@@ -42,7 +42,7 @@ export function MovieCard({ movie }: MovieDetailsProps) {
         </h3>
         <div className="flex w-full items-center justify-between">
           {/* Price */}
-          <span className="text-md font-bold text-primary">{price} SEK</span>
+          <span className="text-md font-bold text-secondary">{price} SEK</span>
           {/* +/- buttons for quantity */}
           <div className="flex space-x-2">
             <Button

@@ -18,7 +18,7 @@ export function ProfileDropdown() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex items-center gap-2 bg-red-800 text-white hover:text-primary transition transform hover:scale-110"
+          className="flex items-center gap-2 bg-primary text-primary-foreground hover:text-primary-foreground hover:bg-primary/90 transition transform hover:scale-110"
         >
           <User className="h-4 w-4" />
           Profile

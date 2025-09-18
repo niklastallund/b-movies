@@ -19,7 +19,7 @@ export function PersonCard({ person }: PersonDetailsProps) {
     getProfileUrl(profilePath, "h632") || "/images/default-profile.png";
 
   return (
-    <Card className="max-w-xs overflow-hidden rounded-lg border-stone-800 shadow-lg transition-all duration-300 hover:shadow-xl py-3">
+    <Card className="max-w-xs overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl py-3">
       <CardContent className="p-0">
         {/* Profile Picture */}
         <Image

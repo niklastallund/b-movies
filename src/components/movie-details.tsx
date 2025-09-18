@@ -61,7 +61,7 @@ export default function MovieDetails({
   };
 
   return (
-    <Card className="w-full mx-auto relative bg-black/20 backdrop-blur-xs border-red-900">
+    <Card className="w-full mx-auto relative bg-background/20 backdrop-blur-xs border-border">
       <CardContent className="relative z-10 flex flex-col md:flex-row p-4 md:p-8">
         {/* Vänster Sektion: Bild */}
         <div className="w-full md:w-1/2 flex items-center justify-center mb-4 md:mb-0 md:pr-4">
@@ -71,7 +71,7 @@ export default function MovieDetails({
               alt={movie.title}
               width={400}
               height={600}
-              className="rounded-lg shadow-2xl ring-1 ring-white/20"
+              className="rounded-lg shadow-2xl ring-1 ring-border"
             />
           </div>
         </div>
@@ -79,23 +79,23 @@ export default function MovieDetails({
         {/* Höger Sektion: Text och "Lägg i varukorgen" */}
         <div className="w-full md:w-1/2 flex flex-col md:pl-4">
           <CardHeader className="p-0 mb-4">
-            <CardTitle className="text-4xl font-bold mb-2 text-white drop-shadow-lg">
+            <CardTitle className="text-4xl font-bold mb-2 text-foreground drop-shadow-lg">
               {movie.title}
             </CardTitle>
-            <CardDescription className="text-gray-200 text-base italic drop-shadow-sm">
+            <CardDescription className="text-muted-foreground text-base italic drop-shadow-sm">
               {genres.map((genre) => genre.name).join(", ")}
             </CardDescription>
           </CardHeader>
 
-          <Separator className="mb-3 mt-0 bg-white/20" />
-          <p className="mb-4 text-gray-400 leading-relaxed drop-shadow-sm italic">
+          <Separator className="mb-3 mt-0 bg-border" />
+          <p className="mb-4 text-muted-foreground leading-relaxed drop-shadow-sm italic">
             {movie.tagline}
           </p>
-          <p className="mb-4 text-gray-100 leading-relaxed drop-shadow-sm">
+          <p className="mb-4 text-foreground leading-relaxed drop-shadow-sm">
             {movie.overview}
           </p>
 
-          <div className="space-y-2 mb-4 text-gray-200">
+          <div className="space-y-2 mb-4 text-foreground">
             <p>
               Release Date:{" "}
               {movie.releaseDate
@@ -109,36 +109,36 @@ export default function MovieDetails({
             <p>{`Revenue: ${movie.revenue ? movie.revenue : "Unknown"}`}</p>
           </div>
 
-          <Separator className="mb-4 mt-0 bg-white/20" />
+          <Separator className="mb-4 mt-0 bg-border" />
 
-          <div className="flex items-center text-2xl font-semibold mb-4 text-white">
+          <div className="flex items-center text-2xl font-semibold mb-4 text-foreground">
             Price: {movie.price} SEK
           </div>
 
           {/* Antal och Lägg till i varukorgen-knapp */}
           <div className="flex items-center space-x-4">
-            <div className="flex items-center border border-white/30 rounded-md bg-black/20 backdrop-blur-sm">
+            <div className="flex items-center border border-border rounded-md bg-background/20 backdrop-blur-sm">
               <Button
                 variant="outline"
                 size="icon"
                 onClick={handleDecrease}
                 disabled={quantity <= 1}
-                className="border-0 bg-transparent text-white hover:bg-white/10"
+                className="border-0 bg-transparent text-foreground hover:bg-muted/10"
               >
                 -
               </Button>
-              <span className="px-4 text-white">{quantity}</span>
+              <span className="px-4 text-foreground">{quantity}</span>
               <Button
                 variant="outline"
                 size="icon"
                 onClick={handleIncrease}
-                className="border-0 bg-transparent text-white hover:bg-white/10"
+                className="border-0 bg-transparent text-foreground hover:bg-muted/10"
               >
                 +
               </Button>
             </div>
             <Button
-              className="flex-[0.5] bg-white text-black hover:bg-gray-200 font-semibold shadow-lg"
+              className="flex-[0.5] bg-primary text-primary-foreground hover:bg-primary/90 font-semibold shadow-lg"
               disabled={movie.stock === 0}
               onClick={handleAddToCart}
             >
@@ -146,7 +146,7 @@ export default function MovieDetails({
             </Button>
           </div>
 
-          <p className="mt-4 text-sm text-gray-300">
+          <p className="mt-4 text-sm text-muted-foreground">
             {(movie.stock ?? 0) > 0
               ? `${movie.stock} in stock`
               : "Out of stock"}

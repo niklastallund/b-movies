@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation"; // Importera useRouter
+import { useTheme } from "next-themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -71,7 +72,13 @@ const MobileLinks = ({
 
 export function Navbar() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchTerm.trim() !== "") {
@@ -103,19 +110,24 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-background/95 border-b border-red-900 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 bg-background/95 border-b border-border backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {/* LOGO */}
         <Link
           href="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
+          {/* Byt logga baserat på tema */}
           <Image
-            src="/images/bmovies.png"
+            src={
+              mounted && theme === "light"
+                ? "/images/bmovies-blue.png"
+                : "/images/bmovies.png"
+            }
             alt="B-Movies logo"
             width={600}
             height={600}
-            className="h-18 w-auto"
+            className="h-12 w-auto"
           />
         </Link>
 
@@ -159,7 +171,7 @@ export function Navbar() {
         </div>
 
         {/* NAVIGATION FOR DESKTOP */}
-        <div className="hidden w-full md:flex md:w-auto md:order-1 text-sky-600  items-center justify-between">
+        <div className="hidden w-full md:flex md:w-auto md:order-1 text-foreground items-center justify-between">
           <ul className="flex items-center  font-medium space-x-8">
             <li>
               <Link
@@ -190,7 +202,7 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="link"
-                    className="p-0 h-auto text-md  font-medium text-sky-600  hover:text-primary"
+                    className="p-0 h-auto text-md  font-medium text-foreground hover:text-primary"
                   >
                     Top Lists
                   </Button>

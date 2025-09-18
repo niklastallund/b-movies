@@ -53,7 +53,7 @@ export default async function MovieDetailsPage(props: { params: Params }) {
           className="object-cover object-top"
           priority
         />
-        <div className="absolute inset-0 bg-black/80" />
+        <div className="absolute inset-0 bg-background/80" />
       </div>
       {/* Transparent Card */}
       <MovieDetails
