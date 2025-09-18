@@ -1,7 +1,7 @@
-import AdminUpdatePersonForm from "@/components/update-person-form";
-import AdminPersonForm from "../../../components/create-person-form";
+import UpdatePersonForm from "@/components/forms/update-person-form";
 import AddTmdbButton from "./add-tmdb-button";
 import { addMoviesAndCrewFromTmdb } from "@/actions/api-actions";
+import CreatePersonForm from "@/components/forms/create-person-form";
 
 export default async function AdminPersonPage() {
   //TMP PERSON FOR TESTING
@@ -19,8 +19,8 @@ export default async function AdminPersonPage() {
 
   return (
     <div className="flex justify-between gap-5">
-      <AdminPersonForm />
-      <AdminUpdatePersonForm person={person} />
+      <CreatePersonForm />
+      <UpdatePersonForm person={person} />
       <AddTmdbButton
         onAdd={async () => {
           "use server";

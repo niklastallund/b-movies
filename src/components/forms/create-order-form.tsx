@@ -39,7 +39,7 @@ function SubmitButton() {
   );
 }
 // Komponent för att skapa en ny order
-export default function AdminOrderForm() {
+export default function CreateOrderForm() {
   const [state, formAction] = useActionState(createOrder as any, initialState);
 
   return (

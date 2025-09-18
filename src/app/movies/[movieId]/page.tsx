@@ -3,7 +3,6 @@ import MovieDetails from "@/components/movie-details";
 import { getBackdropUrl } from "@/lib/tmdb-image-url";
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import UpdateMovieForm from "@/components/admin-update-form";
 
 export type Params = {
   movieId: string;
@@ -22,11 +21,7 @@ export default async function MovieDetailsPage(props: { params: Params }) {
     where: { id: movieId },
     include: {
       genres: true,
-      MovieCrew: {
-        include: {
-          person: true,
-        },
-      },
+      MovieCrew: { include: { person: true } },
     },
   });
 
@@ -34,9 +29,15 @@ export default async function MovieDetailsPage(props: { params: Params }) {
     return notFound();
   }
 
+  // Fetch all genres for the EditMovieGenres component
+  const allGenres = await prisma.genre.findMany({
+    select: { id: true, name: true },
+    orderBy: { name: "asc" },
+  });
+
   // Separate cast and crew members
-  const cast = movie.MovieCrew.filter((member) => member.role === "cast");
-  const crew = movie.MovieCrew.filter((member) => member.role === "crew");
+  const cast = movie.MovieCrew.filter((m) => m.role === "cast");
+  const crew = movie.MovieCrew.filter((m) => m.role === "crew");
 
   //We need to get the backdrop image here because it is not drawn in the component
   const backdropUrl =
@@ -61,6 +62,8 @@ export default async function MovieDetailsPage(props: { params: Params }) {
         genres={movie.genres}
         cast={cast}
         crew={crew}
+        // pass all genres to the details (used by the dialog)
+        allGenres={allGenres}
       />
     </main>
   );
