@@ -40,7 +40,15 @@ export async function setCartCookie(cart: Cart) {
 
 export async function clearCartCookie() {
   const cookieStore = await cookies();
-  cookieStore.set(CART_COOKIE_NAME, "", { ...COOKIE_OPTIONS, maxAge: 0 });
+  // Använd delete istället för att sätta tom sträng
+  cookieStore.delete(CART_COOKIE_NAME);
+  
+  // Backup: sätt även tom sträng med omedelbar expiration
+  cookieStore.set(CART_COOKIE_NAME, "", { 
+    ...COOKIE_OPTIONS, 
+    maxAge: 0,
+    expires: new Date(0) // Explicit expiration datum
+  });
 }
 
 export function cartTotal(items: CartItem[]) {

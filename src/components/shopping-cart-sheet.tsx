@@ -17,6 +17,7 @@ import { CartQuantityButtons } from "@/components/cart-quantity-buttons";
 import { CartRemoveButton } from "@/components/cart-remove-button";
 import { getCart } from "@/cart/actions";
 import { useEffect, useState, useCallback } from "react";
+import { usePathname } from "next/navigation";
 
 export function ShoppingCartSheet() {
   const [items, setItems] = useState<
@@ -31,13 +32,23 @@ export function ShoppingCartSheet() {
   >([]);
 
   const refreshCart = useCallback(async () => {
+    console.log("🔄 Refreshing cart data...");
     const cart = await getCart();
+    console.log("🛒 Current cart items:", cart.items.length);
     setItems(cart.items);
   }, []);
+
+  const pathname = usePathname();
 
   useEffect(() => {
     refreshCart();
   }, [refreshCart]);
+
+  // Uppdatera cart när URL ändras (efter redirect från checkout)
+  useEffect(() => {
+    console.log("📍 Route changed to:", pathname);
+    refreshCart();
+  }, [pathname, refreshCart]);
 
   const totalAmount = cartTotal(items);
 

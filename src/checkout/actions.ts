@@ -86,7 +86,17 @@ export async function submitOrder(
     select: { id: true },
   });
 
+  // Explicit cookie clearing med verifiering
+  console.log("🛒 Clearing cart cookie after order creation...");
   await clearCartCookie();
+  
+  // Vänta lite för att säkerställa att cookien hinner sparas
+  await new Promise(resolve => setTimeout(resolve, 100));
+  
+  // Verifiera att cookien är tömd
+  const clearedCart = await getCartFromCookie();
+  console.log("✅ Cart after clearing:", clearedCart);
+  
   revalidatePath("/", "layout");
   revalidatePath("/checkout");
 
