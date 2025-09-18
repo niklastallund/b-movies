@@ -78,7 +78,7 @@ A modern movie e-commerce platform built with Next.js, featuring user authentica
 
 ## 📁 Project Structure
 
-```
+Skriv in filstrukture
 src/
 ├── app/                    # Next.js app directory
 ├── components/            # React components
@@ -90,7 +90,7 @@ src/
 ├── lib/                  # Utility functions and configurations
 └── public/              # Static assets
     └── images/          # Logo and image assets
-```
+
 
 ## 🧩 Components
 

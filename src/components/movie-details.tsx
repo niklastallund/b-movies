@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,7 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator"; // Bra för att skapa avdelare
-import { useCartStore } from "@/store/cookie-cart";
+import { addToCart } from "@/cart/actions";
+import { useRouter } from "next/navigation";
 
 import { getPosterUrl } from "@/lib/tmdb-image-url";
 import { Genre, Movie, MovieCrew } from "@/generated/prisma";
@@ -33,15 +34,13 @@ const admin = true;
 export default function MovieDetails({
   movie,
   genres,
-  cast,
-  crew,
   allGenres,
 }: MovieDetailsProps) {
   // Tillstånd för att hålla reda på antalet filmer att lägga till
   const [quantity, setQuantity] = useState(1);
 
-  // Cart store-funktion
-  const addToCart = useCartStore((state) => state.addToCart);
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   // Funktion för att minska antalet
   const handleDecrease = () => {
@@ -58,12 +57,15 @@ export default function MovieDetails({
 
   // Lägg till i varukorgen
   const handleAddToCart = () => {
-    addToCart({
-      id: movie.id,
-      name: movie.title,
-      price: movie.price,
-      quantity: quantity,
-      imageUrl: handlePoster,
+    startTransition(async () => {
+      await addToCart({
+        id: movie.id,
+        name: movie.title,
+        price: movie.price,
+        quantity: quantity,
+        imageUrl: handlePoster,
+      });
+      router.refresh();
     });
   };
 
@@ -146,7 +148,7 @@ export default function MovieDetails({
             </div>
             <Button
               className="flex-[0.5] bg-primary text-primary-foreground hover:bg-primary/90 font-semibold shadow-lg"
-              disabled={movie.stock === 0}
+              disabled={movie.stock === 0 || isPending}
               onClick={handleAddToCart}
             >
               Add to cart

@@ -77,7 +77,6 @@ export async function getPersonsByName(name: string) {
     where: {
       name: {
         contains: name,
-        mode: "insensitive",
       },
     },
   });
