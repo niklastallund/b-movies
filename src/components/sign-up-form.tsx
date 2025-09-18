@@ -37,7 +37,7 @@ const FormSchema = z
 
 type FormValues = z.infer<typeof FormSchema>;
 
-export default function SignUpForm() {
+export default function SignUpForm({ onSuccess }: { onSuccess?: () => void }) {
   const router = useRouter();
 
   const form = useForm<FormValues>({
@@ -60,6 +60,7 @@ export default function SignUpForm() {
     if (error) {
       alert(error.message);
     } else {
+      onSuccess?.(); // Stäng dialogen
       router.replace("/");
       router.refresh();
     }
@@ -137,7 +138,7 @@ export default function SignUpForm() {
               className="w-auto bg-primary text-primary-foreground hover:bg-primary/90"
               disabled={form.formState.isSubmitting}
             >
-              Create Account
+              {form.formState.isSubmitting ? "Loading..." : "Create Account"}
             </Button>
           </form>
         </Form>

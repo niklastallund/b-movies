@@ -30,7 +30,7 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>;
 
-export default function SignInForm() {
+export default function SignInForm({ onSuccess }: { onSuccess?: () => void }) {
   const router = useRouter();
 
   const form = useForm<FormValues>({
@@ -50,6 +50,7 @@ export default function SignInForm() {
     if (error) {
       alert(error.message);
     } else {
+      onSuccess?.(); // Stäng dialogen
       router.replace("/");
       router.refresh();
     }

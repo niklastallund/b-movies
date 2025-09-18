@@ -8,7 +8,7 @@ import {
   CarouselPrevious,
 } from "./ui/carousel";
 import { MovieCard } from "./card-movies";
-
+// Component for displaying a carousel of movies
 export default function MovieCarousel({
   movies,
   title,
