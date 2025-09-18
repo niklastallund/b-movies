@@ -169,9 +169,9 @@ The application uses a custom authentication system with:
 
 This project was collaboratively developed by:
 
-- **Josefine** - Frontend Development & UI/UX Design
-- **Niklas** - Backend Integration & Authentication
-- **Amina** - Component Architecture & Responsive Design
+- **Josefine** - Frontend Development, backend & UI/UX Design, Loggodesign
+- **Niklas** - Frontend Development, Backend, API, Integration & Authentication
+- **Amina** - Backend Authentication
 
 ## 🎨 Design & Mockups
 
