@@ -31,8 +31,8 @@ import { Menu } from "lucide-react";
 import { ModeToggle } from "@/components/toggle-theme-button";
 import { ShoppingCartSheet } from "./shopping-cart-sheet";
 import { ProfileDropdown } from "./button-signin-signout";
-import SignUpForm from "@/components/sign-up-form";
-import SignInForm from "@/components/sign-in-form";
+import SignUpForm from "@/components/forms/sign-up-form";
+import SignInForm from "@/components/forms/sign-in-form";
 
 const MobileLinks = ({
   toplists,

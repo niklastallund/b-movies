@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { User, LogIn, LogOut } from "lucide-react";
-import SignInForm from "@/components/sign-in-form";
+import SignInForm from "@/components/forms/sign-in-form";
 
 export function ProfileDropdown() {
   const userIsLoggedIn = false;
