@@ -4,14 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { submitOrder, type CheckoutFormValues } from "@/checkout/actions";
 import { redirect } from "next/navigation";
-
+// Checkout page, server component
 export const runtime = "nodejs";
 
 export default async function CheckoutPage() {
   const cart = await getCartFromCookie();
   const cartItems = cart.items;
   const total = cartTotal(cartItems);
-
+  // Server action to handle form submission
   async function placeOrder(formData: FormData) {
     "use server";
     const values: CheckoutFormValues = {
@@ -23,13 +23,14 @@ export default async function CheckoutPage() {
       postalCode: String(formData.get("postalCode") || ""),
       country: "se",
     };
-    const orderId = await submitOrder(values);
+    const orderId = await submitOrder(values); // Returns order ID or null
     if (orderId) {
-      redirect(`/checkout/success/${orderId}`);
+      redirect(`/checkout/success/${orderId}`); // Redirect to success page with order ID
     }
-    redirect("/checkout");
+    redirect("/checkout"); // If order failed, stay on checkout page
   }
-
+  //
+  // Checkout page Frontend
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 rounded-lg shadow-lg bg-background dark:bg-zinc-900 transition-colors duration-300 ease-in-out">
       <div className="flex justify-between items-center mb-6">

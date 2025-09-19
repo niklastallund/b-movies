@@ -17,10 +17,11 @@ interface CartState {
   clearCart: () => void;
 }
 
-// Minimal in-memory store (no external libs, no cookies)
+// minimal state management utan externa bibliotek
+// https://react.dev/learn/persisting-react-state-in-the-url#sharing-state-between-components-without-prop-drilling
 type Listener = () => void;
 const listeners = new Set<Listener>();
-
+// InTitial State
 let state: CartState = {
   cartItems: [],
   addToCart: (item: CartItem) => {
@@ -56,7 +57,7 @@ let state: CartState = {
 function emitChange() {
   listeners.forEach((l) => l());
 }
-
+// Uppdatera state och notify listeners
 function setState(
   partial: Partial<CartState> | ((prev: CartState) => Partial<CartState>)
 ): void {
@@ -64,19 +65,20 @@ function setState(
   state = { ...state, ...next };
   emitChange();
 }
-
+// Prenumerera på state förändringar
 function subscribe(listener: Listener) {
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
   };
 }
-
+// Typ för useCartStore hook
 type UseCartStore = (<T>(selector: (s: CartState) => T) => T) & {
   setState: typeof setState;
   getState: () => CartState;
 };
-
+// Hook för att använda cart state i komponenter
+// Exempel: const cartItems = useCartStore(s => s.cartItems)
 export const useCartStore: UseCartStore = ((selector) => {
   return useSyncExternalStore(
     subscribe,
