@@ -92,7 +92,6 @@ export default async function getPersonsByBirthday(birthday: Date) {
   });
 }
 
-// --- Funktion för att hämta alla personer ---
 export async function getAllPeople() {
   try {
     const people = await prisma.person.findMany({
@@ -103,4 +102,12 @@ export async function getAllPeople() {
     console.error("Kunde inte hämta personer:", error);
     return [];
   }
+}
+
+export async function listMoviesForPerson(personId: number) {
+  return prisma.movieCrew.findMany({
+    where: { personId },
+    include: { movie: true },
+    orderBy: [{ role: "asc" }, { order: "asc" }, { id: "asc" }],
+  });
 }

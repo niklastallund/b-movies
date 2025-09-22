@@ -11,48 +11,36 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import type { Movie } from "@/generated/prisma";
-import UpdateMovieForm from "@/components/forms/update-movie-form";
-import { EditMovieGenres } from "./forms/edit-movie-genres";
+import type { Person } from "@/generated/prisma";
+import UpdatePersonForm from "@/components/forms/update-person-form";
+import { LinkPersonToMovieForm } from "@/components/forms/link-person-to-movie-form";
 import { Separator } from "@/components/ui/separator";
 
-export function EditMoviePopup({
-  movie,
-  allGenres,
-  initialSelectedIds,
-}: {
-  movie: Movie;
-  allGenres: { id: number; name: string }[];
-  initialSelectedIds: number[];
-}) {
+export function EditPersonPopup({ person }: { person: Person }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive">Edit Movie</Button>
+        <Button variant="destructive">Edit Person</Button>
       </DialogTrigger>
 
       <DialogContent className="w-3/4 sm:max-w-6xl max-h-[95vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit movie</DialogTitle>
+          <DialogTitle>Edit person</DialogTitle>
           <DialogDescription>
-            Update details and save changes.
+            Update details or link this person to a movie.
           </DialogDescription>
         </DialogHeader>
 
         {/* 1 column on mobile; on lg use 3 tracks: left | thin separator | right */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-8">
           <div className="min-w-0">
-            <UpdateMovieForm movie={movie} />
+            <UpdatePersonForm person={person} />
           </div>
 
           <Separator orientation="vertical" className="hidden lg:block" />
 
           <div className="min-w-0">
-            <EditMovieGenres
-              movieId={movie.id}
-              allGenres={allGenres}
-              initialSelectedIds={initialSelectedIds}
-            />
+            <LinkPersonToMovieForm personId={person.id} />
           </div>
         </div>
 

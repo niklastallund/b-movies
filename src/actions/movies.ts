@@ -123,3 +123,22 @@ export async function updateMovieGenresAction(formData: FormData) {
   revalidatePath("/movies");
   revalidatePath("/admin/movies");
 }
+
+// --- Search movies by title (for client-side pickers) ---
+export async function searchMoviesByTitle(query: string, limit = 10) {
+  const q = query.trim();
+  if (!q) return [] as { id: number; title: string; subtitle?: number }[];
+
+  const movies = await prisma.movie.findMany({
+    where: { title: { contains: q, mode: "insensitive" } },
+    orderBy: { title: "asc" },
+    select: { id: true, title: true, releaseDate: true },
+    take: Math.min(20, Math.max(1, limit)),
+  });
+
+  return movies.map((m) => ({
+    id: m.id,
+    title: m.title,
+    subtitle: m.releaseDate ? new Date(m.releaseDate).getFullYear() : undefined,
+  }));
+}

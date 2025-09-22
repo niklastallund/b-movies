@@ -21,7 +21,7 @@ export default async function MovieDetailsPage(props: { params: Params }) {
     where: { id: movieId },
     include: {
       genres: true,
-      MovieCrew: { include: { person: true } },
+      movieCrew: { include: { person: true } },
     },
   });
 
@@ -36,8 +36,8 @@ export default async function MovieDetailsPage(props: { params: Params }) {
   });
 
   // Separate cast and crew members
-  const cast = movie.MovieCrew.filter((m) => m.role === "cast");
-  const crew = movie.MovieCrew.filter((m) => m.role === "crew");
+  const cast = movie.movieCrew.filter((m) => m.role === "CAST");
+  const crew = movie.movieCrew.filter((m) => m.role === "CREW");
 
   //We need to get the backdrop image here because it is not drawn in the component
   const backdropUrl =
