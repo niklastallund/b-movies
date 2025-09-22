@@ -54,28 +54,34 @@ export default function PersonDetails({ person }: PersonDetailsProps) {
 
         <div className="w-full md:w-1/2 flex flex-col md:pl-4">
           <CardHeader className="p-0 mb-4">
-            <CardTitle className="text-4xl font-bold mb-2 drop-shadow-lg">
+            <CardTitle className="text-4xl font-bold mb-2 text-foreground drop-shadow-lg">
               {person.name}
             </CardTitle>
           </CardHeader>
-          <div className="mb-2 text-gray-100 leading-relaxed drop-shadow-sm">
-            Birthdate:{" "}
-            {person.birthday ? person.birthday.toLocaleDateString() : "Unknown"}
+          <div className="space-y-2 mb-4 text-foreground">
+            <p>
+              Birthdate:{" "}
+              <span className="text-muted-foreground">
+                {person.birthday
+                  ? person.birthday.toLocaleDateString()
+                  : "Unknown"}
+              </span>
+            </p>
+            {person.deathday && (
+              <p>
+                Day of death:{" "}
+                <span className="text-muted-foreground">
+                  {person.deathday.toLocaleDateString()}{" "}
+                  {person.birthday &&
+                    `(aged ${getAgeAtDeath(person.birthday, person.deathday)})`}
+                </span>
+              </p>
+            )}
           </div>
-          <div className="mb-2 text-gray-100 leading-relaxed drop-shadow-sm">
-            {person.deathday
-              ? `Day of death: ${person.deathday?.toLocaleDateString()} (aged ${
-                  person.birthday
-                    ? getAgeAtDeath(person.birthday, person.deathday)
-                    : "unknown"
-                })`
-              : ""}
-          </div>
-          <p className="mb-4 text-gray-100 leading-relaxed drop-shadow-sm">
+          <p className="mb-4 text-muted-foreground leading-relaxed drop-shadow-sm italic">
             {person.biography || "No biography available."}
           </p>
-
-          <Separator className="my-4 bg-white/20" />
+          <Separator className="my-4 bg-border" />
         </div>
         <div className="absolute bottom-4 right-10 z-20">
           <EditPersonPopup person={person} />
