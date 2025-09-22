@@ -159,15 +159,16 @@ async function addMovieCrewEntry({
   character?: string;
   order?: number;
 }) {
-  const existing = await prisma.movieCrew.findUnique({
+  const jobNorm = job?.trim() || null;
+  const charNorm = character?.trim() || null;
+
+  const existing = await prisma.movieCrew.findFirst({
     where: {
-      movieId_personId_role_job_character: {
-        movieId,
-        personId,
-        role,
-        job: job ?? "",
-        character: character ?? "",
-      },
+      movieId,
+      personId,
+      role,
+      job: jobNorm,
+      character: charNorm,
     },
   });
 
@@ -178,7 +179,14 @@ async function addMovieCrewEntry({
     });
   } else {
     return await prisma.movieCrew.create({
-      data: { movieId, personId, role, job, character, order },
+      data: {
+        movieId,
+        personId,
+        role,
+        job: jobNorm,
+        character: charNorm,
+        order: order ?? null,
+      },
     });
   }
 }
