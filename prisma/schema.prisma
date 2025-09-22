@@ -84,6 +84,14 @@ model Genre {
   movies Movie[]
 }
 
+// enum OrderStatus {
+//   PENDING
+//   COMPLETED
+//   CANCELLED
+//   REFUNDED
+//   FAILED
+// }
+
 model Order {
   id          Int      @id @default(autoincrement())
   totalAmount Int
