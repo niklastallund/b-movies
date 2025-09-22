@@ -30,7 +30,7 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>;
 
-export default function SignInForm() {
+export default function SignInForm({ onSuccess }: { onSuccess?: () => void }) {
   const router = useRouter();
 
   const form = useForm<FormValues>({
@@ -50,6 +50,7 @@ export default function SignInForm() {
     if (error) {
       alert(error.message);
     } else {
+      onSuccess?.(); // Stäng dialogen
       router.replace("/");
       router.refresh();
     }
@@ -96,7 +97,7 @@ export default function SignInForm() {
             />
 
             <Button
-              className="w-auto bg-red-800 text-white"
+              className="w-auto bg-primary text-primary-foreground hover:bg-primary/90"
               type="submit"
               disabled={form.formState.isSubmitting}
             >

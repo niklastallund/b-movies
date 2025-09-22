@@ -84,11 +84,28 @@ model Genre {
   movies Movie[]
 }
 
+// enum OrderStatus {
+//   PENDING
+//   COMPLETED
+//   CANCELLED
+//   REFUNDED
+//   FAILED
+// }
+
 model Order {
   id          Int      @id @default(autoincrement())
   totalAmount Int
   status      String
   orderDate   DateTime
+
+  // Kunduppgifter
+  customerEmail String?
+  customerFirstName String?
+  customerLastName String?
+  customerAddress String?
+  customerCity String?
+  customerPostalCode String?
+  customerCountry String?
 
   userId String
   user   User   @relation(fields: [userId], references: [id])

@@ -17,7 +17,7 @@ export default async function Carousels() {
   ]);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 ">
       <MovieCarousel movies={popular} id="popular" title="Popular Movies" />
       <MovieCarousel movies={latest} id="latest" title="Latest Movies" />
       <MovieCarousel movies={oldest} id="oldest" title="Oldest Movies" />

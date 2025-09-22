@@ -8,7 +8,7 @@ import {
   CarouselPrevious,
 } from "./ui/carousel";
 import { MovieCard } from "./card-movies";
-
+// Component for displaying a carousel of movies
 export default function MovieCarousel({
   movies,
   title,
@@ -20,7 +20,7 @@ export default function MovieCarousel({
 }) {
   return (
     <div className="my-8" id={id}>
-      <h2 className="text-3xl font-bold mb-4">{title}</h2>
+      <h2 className="text-3xl font-bold mb-4 text-foreground">{title}</h2>
       <Carousel className="w-full  max-w-7xl mx-auto">
         <CarouselContent className="-ml-1">
           {movies.map((movie) => (

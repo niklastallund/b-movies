@@ -58,7 +58,7 @@ export default async function MoviesPage({
 
   return (
     <main className="container mx-auto py-8 px-4">
-      <h1 className="text-4xl font-bold mb-8 text-sky-800 ">Our Movies</h1>
+      <h1 className="text-4xl font-bold mb-8 text-primary">Our Movies</h1>
       <div className="mb-8 mt-8 flex flex-col md:flex-row gap-4 items-end">
         <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
           <div className="flex-1 min-w-[300px]">
@@ -77,7 +77,7 @@ export default async function MoviesPage({
         {movies.length > 0 ? (
           movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
         ) : (
-          <p className="col-span-full text-center text-gray-500">
+          <p className="col-span-full text-center text-muted-foreground">
             No movies match your search.
           </p>
         )}

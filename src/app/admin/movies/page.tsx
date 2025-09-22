@@ -1,4 +1,4 @@
-// // Amina frontend för att lägga till och ta bort filmer
+import CreateMovieForm from "@/components/forms/create-movies-form";
 
 // src/app/admin/movies/page.tsx
 import MovieForm from "@/components/admin-movies-form"; // наша форма для фильмов
@@ -25,7 +25,7 @@ if (!session) {
   return (
     <div className="container mx-auto p-8 space-y-10">
       <h1 className="text-4xl text-sky-600 font-bold">Admin: Filmer</h1>
-      <MovieForm />
+      <CreateMovieForm />
     </div>
   );
 };

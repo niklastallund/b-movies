@@ -40,7 +40,7 @@ function SubmitButton() {
   );
 }
 // Komponent för att skapa en ny genere
-export default function GenreForm() {
+export default function CreateGenreForm() {
   const [state, formAction] = useActionState(async (prevState, formData) => {
     let data: any = formData;
     if (typeof FormData !== "undefined" && formData instanceof FormData) {

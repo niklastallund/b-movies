@@ -1,15 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation"; // Importera useRouter
+import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { UserPlus, LogIn } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -18,19 +27,19 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { ModeToggle } from "@/components/toggle-theme-button";
 import { ShoppingCartSheet } from "./shopping-cart-sheet";
-import { ProfileDropdown } from "./profile-dropdown";
+import { ProfileDropdown } from "./button-signin-signout";
+import SignUpForm from "@/components/forms/sign-up-form";
+import SignInForm from "@/components/forms/sign-in-form";
 
 const MobileLinks = ({
-  movies,
   toplists,
 }: {
-  movies: string[];
   toplists: { label: string; id: string }[];
 }) => (
-  <div className="mt-4 flex flex-col space-y-2">
+  <div className="mt-4 p-6 flex flex-col space-y-2">
     <Link href="/" className="font-semibold text-primary text-lg">
       Home
     </Link>
@@ -59,23 +68,59 @@ const MobileLinks = ({
     </DropdownMenu>
 
     <div className="flex flex-col space-y-2 pt-4 border-t border-border mt-4">
-      <Link href="/sign-up" className="font-semibold text-foreground text-lg">
-        Sign Up
-      </Link>
-      <Link href="/sign-in" className="font-semibold text-foreground text-lg">
-        Log In
-      </Link>
+      {/* SIGN UP BUTTON FOR MOBILE */}
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            className="justify-start font-semibold text-lg gap-2"
+          >
+            <UserPlus className="h-4 w-4" />
+            Sign Up
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="sr-only">Sign Up</DialogTitle>
+          </DialogHeader>
+          <SignUpForm />
+        </DialogContent>
+      </Dialog>
+
+      {/* SIGN IN BUTTON FOR MOBILE */}
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            className="justify-start font-semibold text-lg gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            <LogIn className="h-4 w-4" />
+            Sign In
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="sr-only">Sign In</DialogTitle>
+          </DialogHeader>
+          <SignInForm />
+        </DialogContent>
+      </Dialog>
     </div>
   </div>
 );
 
 export function Navbar() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchTerm.trim() !== "") {
-      // Split by spaces, encode each word, and join with '+'
       const query = searchTerm
         .trim()
         .split(/\s+/)
@@ -86,15 +131,6 @@ export function Navbar() {
     }
   };
 
-  const movies = [
-    "Action",
-    "Drama",
-    "Comedy",
-    "Horror",
-    "Sci-fi",
-    "Thriller",
-    "Romance",
-  ];
   const toplists = [
     { label: "Top 5 Latest Movies", id: "latest" },
     { label: "Top 5 Most Popular Movies", id: "popular" },
@@ -103,7 +139,7 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-background/95 border-b border-red-900 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 bg-background/95 border-b border-border backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {/* LOGO */}
         <Link
@@ -111,11 +147,15 @@ export function Navbar() {
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <Image
-            src="/images/bmovies.png"
+            src={
+              mounted && theme === "light"
+                ? "/images/bmovies-blue.png"
+                : "/images/bmovies.png"
+            }
             alt="B-Movies logo"
             width={600}
             height={600}
-            className="h-18 w-auto"
+            className="h-12 w-auto"
           />
         </Link>
 
@@ -136,11 +176,34 @@ export function Navbar() {
           {/* THEME BUTTON */}
           <ModeToggle />
 
-          {/* Kundvagnkomponent */}
+          {/* SHOPPING CART */}
           <ShoppingCartSheet />
 
-          {/* Profil komponenten */}
-          <ProfileDropdown />
+          {/* PROFILE DROPDOWN - ENDAST DESKTOP */}
+          <div className="hidden md:block">
+            <ProfileDropdown />
+          </div>
+
+          {/* SIGN UP BUTTON - ENDAST DESKTOP */}
+          <div className="hidden md:block">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition transform hover:scale-110"
+                >
+                  <UserPlus className="h-4 w-4" />
+                  Sign Up
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="sr-only">Sign Up</DialogTitle>
+                </DialogHeader>
+                <SignUpForm />
+              </DialogContent>
+            </Dialog>
+          </div>
 
           {/* MOBILE MENU */}
           <Sheet>
@@ -151,20 +214,19 @@ export function Navbar() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-full sm:max-w-xs">
-              {/* Mobilmeny Länkar */}
-              <MobileLinks movies={movies} toplists={toplists} />
+              <MobileLinks toplists={toplists} />
             </SheetContent>
             <SheetTitle className="sr-only">menu</SheetTitle>
           </Sheet>
         </div>
 
         {/* NAVIGATION FOR DESKTOP */}
-        <div className="hidden w-full md:flex md:w-auto md:order-1 text-sky-600  items-center justify-between">
-          <ul className="flex items-center  font-medium space-x-8">
+        <div className="hidden w-full md:flex md:w-auto md:order-1 text-foreground items-center justify-between">
+          <ul className="flex items-center font-medium space-x-8">
             <li>
               <Link
                 href="/"
-                className="block  text-md font-medium transition-colors hover:text-primary"
+                className="block text-md font-medium transition-colors hover:text-primary"
               >
                 Home
               </Link>
@@ -190,7 +252,7 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="link"
-                    className="p-0 h-auto text-md  font-medium text-sky-600  hover:text-primary"
+                    className="p-0 h-auto text-md font-medium text-foreground hover:text-primary"
                   >
                     Top Lists
                   </Button>
@@ -198,7 +260,6 @@ export function Navbar() {
                 <DropdownMenuContent>
                   {toplists.map((link) => (
                     <DropdownMenuItem key={link.id} asChild>
-                      {/* Länk till karusellen med dess unika ID */}
                       <Link href={`/#${link.id}`}>{link.label}</Link>
                     </DropdownMenuItem>
                   ))}

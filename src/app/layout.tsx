@@ -30,8 +30,8 @@ export default function RootLayout({
         >
           <Navbar />
           <main className="container mx-auto p-4">{children}</main>
+          <Footer />
         </ThemeProvider>
-        <Footer />
       </body>
     </html>
   );

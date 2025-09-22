@@ -1,6 +1,6 @@
 "use client";
 
-import { updateMovie } from "@/actions/movies";
+import { createMovie } from "@/actions/movies";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,42 +18,37 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { UpdateMovieInput, updateMovieSchema } from "@/lib/zod-schemas";
+import { CreateMovieInput, createMovieSchema } from "@/lib/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-interface UpdateMovieFormProps {
-  movie: UpdateMovieInput;
-}
-
-export default function UpdateMovieForm({ movie }: UpdateMovieFormProps) {
-  const form = useForm<UpdateMovieInput>({
-    resolver: zodResolver(updateMovieSchema),
+export default function CreateMovieForm() {
+  const form = useForm<CreateMovieInput>({
+    resolver: zodResolver(createMovieSchema),
     defaultValues: {
-      id: movie.id,
-      tmdbId: movie.tmdbId ?? undefined,
-      title: movie.title ?? "",
-      releaseDate: movie.releaseDate ?? undefined,
-      tagline: movie.tagline ?? "",
-      overview: movie.overview ?? "",
-      budget: movie.budget ?? undefined,
-      revenue: movie.revenue ?? undefined,
-      runtime: movie.runtime ?? undefined,
-      backdropPath: movie.backdropPath ?? "",
-      posterPath: movie.posterPath ?? "",
-      price: movie.price ?? undefined,
-      stock: movie.stock ?? undefined,
+      tmdbId: undefined,
+      title: "",
+      releaseDate: undefined,
+      tagline: "",
+      overview: "",
+      budget: undefined,
+      revenue: undefined,
+      runtime: undefined,
+      backdropPath: "",
+      posterPath: "",
+      price: undefined,
+      stock: undefined,
     },
   });
 
-  async function onSubmit(data: UpdateMovieInput) {
-    await updateMovie(data);
+  async function onSubmit(data: CreateMovieInput) {
+    await createMovie(data);
   }
 
   return (
     <Card className="w-full max-w-lg mx-auto bg-black/20 backdrop-blur-xs  ">
       <CardHeader>
-        <CardTitle>Update Movie</CardTitle>
+        <CardTitle>Create Movie</CardTitle>
         <CardDescription>Enter details to add a new movie</CardDescription>
       </CardHeader>
       <CardContent>
@@ -228,7 +223,7 @@ export default function UpdateMovieForm({ movie }: UpdateMovieFormProps) {
                 </FormItem>
               )}
             />
-            <Button type="submit">Update</Button>
+            <Button type="submit">Create</Button>
           </form>
         </Form>
       </CardContent>
