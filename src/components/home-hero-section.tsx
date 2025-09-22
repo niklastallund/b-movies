@@ -67,7 +67,7 @@ export default function HeroSection() {
       {/* HERO för MOBIL */}
       <section
         id="mobile-hero"
-        className="flex flex-col md:hidden w-screen items-center text-center"
+        className="flex flex-col p-4 md:hidden w-screen items-center text-center"
       >
         <div className="w-full flex flex-col justify-center items-center p-2 text-center">
           <h1
