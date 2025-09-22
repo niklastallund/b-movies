@@ -15,6 +15,7 @@ export default async function PersonPage({
     where: {
       name: {
         contains: query,
+        mode: "insensitive",
       },
     },
   });

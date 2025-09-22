@@ -44,6 +44,7 @@ export default async function MoviesPage({
     where: {
       title: {
         contains: query,
+        mode: "insensitive",
       },
       ...(selectedGenre
         ? {
