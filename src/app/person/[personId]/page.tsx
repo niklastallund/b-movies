@@ -16,6 +16,7 @@ export default async function PersonPage(props: { params: Params }) {
 
   const person = await prisma.person.findUnique({
     where: { id: personId },
+    include: { movieCrew: { include: { movie: true } } },
   });
 
   if (!person) {

@@ -2,6 +2,7 @@
 
 // These are API actions meant to be used with tmdb.ts, a wrapper for The Movie Database API.
 import { prisma } from "@/lib/prisma";
+import { Role } from "@/generated/prisma";
 import { FindCrewByMovieId, FindMoviesByDirectors } from "@/lib/tmdb";
 import { Genre } from "moviedb-promise";
 
@@ -89,7 +90,7 @@ export async function addMoviesAndCrewFromTmdb() {
       await addMovieCrewEntry({
         movieId: addedMovie.id,
         personId: addedCastMember.id,
-        role: "cast",
+        role: Role.CAST,
         job: "Actor",
         character: actor.character,
         order: actor.order,
@@ -130,7 +131,7 @@ export async function addMoviesAndCrewFromTmdb() {
       await addMovieCrewEntry({
         movieId: addedMovie.id,
         personId: addedCrewMember.id,
-        role: "crew",
+        role: Role.CREW,
         job: crewMember.job,
         character: crewMember.character,
         order: crewMember.order,
@@ -153,7 +154,7 @@ async function addMovieCrewEntry({
 }: {
   movieId: number;
   personId: number;
-  role: string;
+  role: Role;
   job?: string;
   character?: string;
   order?: number;

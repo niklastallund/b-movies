@@ -23,7 +23,11 @@ import { UpdatePersonInput, updatePersonSchema } from "@/lib/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-export default function UpdatePersonForm({ person }: { person: Person }) {
+interface UpdatePersonFormProps {
+  person: Person;
+}
+
+export default function UpdatePersonForm({ person }: UpdatePersonFormProps) {
   const form = useForm<UpdatePersonInput>({
     resolver: zodResolver(updatePersonSchema),
     defaultValues: {
