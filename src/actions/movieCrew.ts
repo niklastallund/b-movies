@@ -5,9 +5,6 @@ import { revalidatePath } from "next/cache";
 import { linkPersonToMovieSchema } from "@/lib/zod-schemas";
 import type { Role } from "@/generated/prisma";
 
-/**
- * Link a person to a movie through MovieCrew. Idempotent: updates `order` if link exists.
- */
 export async function linkPersonToMovieAction(formData: FormData) {
   const data = await linkPersonToMovieSchema.parseAsync({
     personId: formData.get("personId"),
@@ -22,7 +19,7 @@ export async function linkPersonToMovieAction(formData: FormData) {
   const job = data.job?.trim() || null;
   const character = data.character?.trim() || null;
 
-  // We cannot use findUnique with a composite including nullable fields reliably; use findFirst
+  // Using findFirst because we cannot use findUnique with a composite including nullable fields
   const existing = await prisma.movieCrew.findFirst({
     where: {
       movieId: data.movieId,
@@ -90,12 +87,4 @@ export async function unlinkPersonFromMovieAction(formData: FormData) {
   revalidatePath(`/movies/${parsed.movieId}`);
   revalidatePath(`/person/${parsed.personId}`);
   revalidatePath(`/admin/person`);
-}
-
-export async function listMoviesForPerson(personId: number) {
-  return prisma.movieCrew.findMany({
-    where: { personId },
-    include: { movie: true },
-    orderBy: [{ role: "asc" }, { order: "asc" }, { id: "asc" }],
-  });
 }
