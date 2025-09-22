@@ -5,8 +5,22 @@ import MovieForm from "@/components/admin-movies-form"; // наша форма �
 import UpdateMovieForm from "@/components/admin-update-form"; // форма обновления
 import { getAllMovies } from "@/actions/movies";
 import { get } from "http";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
+
+//Authorization
 export default async function AdminMoviesPage() {
+
+const session = await auth.api.getSession({
+headers: await headers(),
+ });
+
+if (!session) {
+  redirect("/sign-in"); 
+}
+
 
   return (
     <div className="container mx-auto p-8 space-y-10">
@@ -14,7 +28,13 @@ export default async function AdminMoviesPage() {
       <MovieForm />
     </div>
   );
-}
+};
+
+
+
+
+
+
 //const movies = await getAllMovies(); // забираем все фильмы из базы
 
 // return (

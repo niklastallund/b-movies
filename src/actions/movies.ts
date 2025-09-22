@@ -5,7 +5,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-//import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import {
   createMovieSchema,
@@ -15,9 +14,20 @@ import {
   UpdateMovieInput,
 } from "@/lib/zod-schemas";
 
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+
 // --- Skapa ny film ---
 export async function createMovie(formData: CreateMovieInput) {
-  
+  //Authorization
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/sign-in");
+  }
 
   const validated = await createMovieSchema.parseAsync(formData);
   //console.log(validated.releaseDate);
