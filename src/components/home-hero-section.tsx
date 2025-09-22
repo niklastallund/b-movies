@@ -72,13 +72,13 @@ export default function HeroSection() {
         <div className="w-full flex flex-col justify-center items-center p-2 text-center">
           <h1
             id="main-heading-mobile"
-            className="text-5xl font-extrabold mb-4 text-primary transform translate-y-full opacity-0 transition-all duration-1000 ease-out"
+            className="text-5xl font-extrabold p-4 mb-4 text-primary transform translate-y-full opacity-0 transition-all duration-1000 ease-out"
           >
             Discover the Best B-Movies
           </h1>
           <p
             id="sub-heading-mobile"
-            className="text-lg max-w-3xl mx-auto mb-8 text-foreground transform translate-y-full opacity-0 transition-all duration-1000 ease-out"
+            className="text-lg max-w-3xl mx-auto p-4 mb-8 text-foreground transform translate-y-full opacity-0 transition-all duration-1000 ease-out"
           >
             Dive into a world of weird, scary, and fantastically entertaining
             films that never made it to the A-list.
