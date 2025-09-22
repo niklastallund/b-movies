@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import type { Movie } from "@/generated/prisma";
 import UpdateMovieForm from "@/components/forms/update-movie-form";
-import { EditMovieGenres } from "./ui/edit-movie-genres";
+import { EditMovieGenres } from "./forms/edit-movie-genres";
 import { Separator } from "@/components/ui/separator";
 
 export function EditMoviePopup({
