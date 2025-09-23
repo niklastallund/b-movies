@@ -20,9 +20,9 @@ export function PersonDetailsMovieCard({
   const movieUrl = `/movies/${workedOn.movie.id}`;
 
   return (
-    <Link href={movieUrl} className="block">
-      <Card className="max-w-[200px] overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl py-3">
-        <CardContent className="p-0 flex justify-center">
+    <Card className="max-w-[220px] overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl py-3">
+      <Link href={movieUrl} className="block">
+        <CardContent className="p-0 flex justify-center cursor-pointer">
           {/* Movie image */}
           <Image
             src={handlePoster}
@@ -33,22 +33,24 @@ export function PersonDetailsMovieCard({
             className="rounded-xl px-2"
           />
         </CardContent>
-        <CardFooter className="flex-col items-start px-4 py-0">
-          {/* Movie title */}
-          <h3 className="mb-2 text-md mt-2 font-semibold leading-tight truncate w-full">
-            {workedOn.movie.title}
-          </h3>
-          {/* Role-dependent field */}
-          {workedOn.role === "CREW" && workedOn.job && (
-            <p className="text-sm text-muted-foreground">{workedOn.job}</p>
-          )}
-          {workedOn.role === "CAST" && workedOn.character && (
-            <p className="text-sm text-muted-foreground">
-              {workedOn.character}
-            </p>
-          )}
-        </CardFooter>
-      </Card>
-    </Link>
+      </Link>
+      <CardFooter className="flex-col items-start px-4 py-0">
+        {/* Movie title */}
+        <h3 className="mb-2 text-md mt-2 font-semibold leading-tight truncate w-full">
+          {workedOn.movie.title}
+        </h3>
+        {/* Role-dependent field */}
+        {workedOn.role === "CREW" && workedOn.job && (
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {workedOn.job}
+          </p>
+        )}
+        {workedOn.role === "CAST" && workedOn.character && (
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {workedOn.character}
+          </p>
+        )}
+      </CardFooter>
+    </Card>
   );
 }

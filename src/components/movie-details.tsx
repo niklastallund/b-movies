@@ -1,4 +1,5 @@
 "use client";
+// If someone really wants to this can be rewritten to a server component
 
 import Image from "next/image";
 import { useState, useTransition } from "react";
@@ -10,44 +11,46 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator"; // Bra för att skapa avdelare
+import { Separator } from "@/components/ui/separator";
 import { addToCart } from "@/cart/actions";
 import { useRouter } from "next/navigation";
 
 import { getPosterUrl } from "@/lib/tmdb-image-url";
-import { Genre, Movie, MovieCrew } from "@/generated/prisma";
+import { Genre, Movie, MovieCrew, Person } from "@/generated/prisma";
 import { EditMoviePopup } from "./edit-movie-popup";
+import MovieDetailsCarousel from "./movie-details-carousel";
 
-// Props som komponenten tar emot
+// Extended type so we can include person details
+export type MovieCrewWithPerson = MovieCrew & { person: Person };
+
 interface MovieDetailsProps {
   movie: Movie;
+  movieCrew: MovieCrewWithPerson[];
   genres: Genre[];
-  cast: MovieCrew[];
-  crew: MovieCrew[];
-  allGenres?: { id: number; name: string }[]; // NEW
+  allGenres: Genre[];
 }
 
 // Tmp admin flag for testing
 const admin = true;
 
-// Huvudkomponenten för filmdetaljer
+// Main component for movie details
 export default function MovieDetails({
   movie,
+  movieCrew,
   genres,
   allGenres,
 }: MovieDetailsProps) {
-  // Tillstånd för att hålla reda på antalet filmer att lägga till
+  // State to keep track of the number of movies to add
   const [quantity, setQuantity] = useState(1);
-
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  // Funktion för att minska antalet
+  // Function to decrease the quantity
   const handleDecrease = () => {
     setQuantity((prev) => Math.max(1, prev - 1));
   };
 
-  // Funktion för att öka antalet
+  // Function to increase the quantity
   const handleIncrease = () => {
     setQuantity((prev) => prev + 1);
   };
@@ -55,7 +58,7 @@ export default function MovieDetails({
   const handlePoster =
     getPosterUrl(movie.posterPath, "w500") || "/default-image.jpg";
 
-  // Lägg till i varukorgen
+  // Add to cart
   const handleAddToCart = () => {
     startTransition(async () => {
       await addToCart({
@@ -71,8 +74,17 @@ export default function MovieDetails({
 
   return (
     <Card className="w-full mx-auto relative bg-background/20 backdrop-blur-xs border-border">
+      {admin && (
+        <div className="absolute top-4 right-4 z-20">
+          <EditMoviePopup
+            movie={movie}
+            allGenres={allGenres ?? []}
+            initialSelectedIds={genres.map((g) => g.id)}
+          />
+        </div>
+      )}
       <CardContent className="relative z-10 flex flex-col md:flex-row p-4 md:p-8">
-        {/* Vänster Sektion: Bild */}
+        {/* Left Section: Image */}
         <div className="w-full md:w-1/2 flex items-center justify-center mb-4 md:mb-0 md:pr-4">
           <div className="relative w-full h-auto max-w-sm flex justify-center items-center">
             <Image
@@ -85,7 +97,7 @@ export default function MovieDetails({
           </div>
         </div>
 
-        {/* Höger Sektion: Text och "Lägg i varukorgen" */}
+        {/* Right Section: Text and "Add to cart" */}
         <div className="w-full md:w-1/2 flex flex-col md:pl-4">
           <CardHeader className="p-0 mb-4">
             <CardTitle className="text-4xl font-bold mb-2 text-foreground drop-shadow-lg">
@@ -124,7 +136,7 @@ export default function MovieDetails({
             Price: {movie.price} SEK
           </div>
 
-          {/* Antal och Lägg till i varukorgen-knapp */}
+          {/* Quantity and Add to cart button */}
           <div className="flex items-center space-x-4">
             <div className="flex items-center border border-border rounded-md bg-background/20 backdrop-blur-sm">
               <Button
@@ -160,17 +172,12 @@ export default function MovieDetails({
               ? `${movie.stock} in stock`
               : "Out of stock"}
           </p>
-          {admin && (
-            <div className="absolute bottom-4 right-10 z-20">
-              <EditMoviePopup
-                movie={movie}
-                allGenres={allGenres ?? []}
-                initialSelectedIds={genres.map((g) => g.id)}
-              />
-            </div>
-          )}
         </div>
       </CardContent>
+      {/* Carousel at the bottom, full width */}
+      <div className="w-full">
+        <MovieDetailsCarousel movieCrew={movieCrew} />
+      </div>
     </Card>
   );
 }

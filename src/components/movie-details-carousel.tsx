@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { MovieCrewWithMovie } from "./person-details";
-import { PersonDetailsMovieCard } from "./person-details-movie-card";
+import { MovieCrewWithPerson } from "./movie-details";
+import { MovieDetailsPersonCard } from "./movie-details-person-card";
 import {
   Carousel,
   CarouselContent,
@@ -12,24 +12,24 @@ import {
 } from "./ui/carousel";
 import { mergeByKey } from "@/lib/merge-by-key";
 
-interface PersonDetailsCarouselProps {
-  workedOn: MovieCrewWithMovie[];
+interface MovieDetailsCarouselProps {
+  movieCrew: MovieCrewWithPerson[];
 }
 
-// Component for displaying a carousel of movies on the person details page
-export default function PersonDetailsCarousel({
-  workedOn,
-}: PersonDetailsCarouselProps) {
+// Component for displaying a carousel of people on the movie details page
+export default function MovieDetailsCarousel({
+  movieCrew,
+}: MovieDetailsCarouselProps) {
   // Filter the MovieCrew into cast and crew and merge duplicates
   const castMovies = mergeByKey(
-    workedOn.filter((item) => item.role === "CAST"),
+    movieCrew.filter((item) => item.role === "CAST"),
     "character",
-    (item) => item.movie.id
+    (item) => item.person.id
   );
   const crewMovies = mergeByKey(
-    workedOn.filter((item) => item.role === "CREW"),
+    movieCrew.filter((item) => item.role === "CREW"),
     "job",
-    (item) => item.movie.id
+    (item) => item.person.id
   );
 
   return (
@@ -46,7 +46,7 @@ export default function PersonDetailsCarousel({
                   key={movie.id}
                   className="pl-1 basis-1/2 md:basis-1/3 lg:basis-1/5"
                 >
-                  <PersonDetailsMovieCard workedOn={movie} />
+                  <MovieDetailsPersonCard workedOn={movie} />
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -66,7 +66,7 @@ export default function PersonDetailsCarousel({
                   key={movie.id}
                   className="pl-1 basis-1/2 md:basis-1/3 lg:basis-1/5"
                 >
-                  <PersonDetailsMovieCard workedOn={movie} />
+                  <MovieDetailsPersonCard workedOn={movie} />
                 </CarouselItem>
               ))}
             </CarouselContent>

@@ -6,6 +6,7 @@ import { Movie, MovieCrew, Person } from "@/generated/prisma";
 import { EditPersonPopup } from "./edit-person-popup";
 import PersonDetailsCarousel from "./person-details-carousel";
 
+// Extended type so we can include movie details
 export type MovieCrewWithMovie = MovieCrew & { movie: Movie };
 
 interface PersonDetailsProps {
