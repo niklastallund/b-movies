@@ -36,15 +36,13 @@ export default function MovieDetailsCarousel({
     <div className="my-8 px-10">
       {castMovies.length > 0 && (
         <>
-          <h2 className="text-2xl font-bold mb-4 text-foreground">
-            Starred In
-          </h2>
+          <h2 className="text-2xl font-bold my-4 text-foreground">Cast</h2>
           <Carousel className="w-full max-w-7xl mx-auto">
             <CarouselContent className="-ml-1">
               {castMovies.map((movie) => (
                 <CarouselItem
                   key={movie.id}
-                  className="pl-1 basis-1/2 md:basis-1/3 lg:basis-1/5"
+                  className="pl-1 basis-1/2 md:basis-1/4 lg:basis-1/6"
                 >
                   <MovieDetailsPersonCard workedOn={movie} />
                 </CarouselItem>
@@ -58,13 +56,13 @@ export default function MovieDetailsCarousel({
 
       {crewMovies.length > 0 && (
         <>
-          <h2 className="text-2xl font-bold mb-4 text-foreground">Worked On</h2>
+          <h2 className="text-2xl font-bold my-4 text-foreground">Crew</h2>
           <Carousel className="w-full max-w-7xl mx-auto">
             <CarouselContent className="-ml-1">
               {crewMovies.map((movie) => (
                 <CarouselItem
                   key={movie.id}
-                  className="pl-1 basis-1/2 md:basis-1/3 lg:basis-1/5"
+                  className="pl-1 basis-1/3 md:basis-1/4 lg:basis-1/6"
                 >
                   <MovieDetailsPersonCard workedOn={movie} />
                 </CarouselItem>
