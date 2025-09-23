@@ -2,14 +2,13 @@ import Image from "next/image";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getProfileUrl } from "@/lib/tmdb-image-url";
 import { Person } from "@/generated/prisma";
+import { EditPersonPopup } from "./edit-person-popup";
 
 interface PersonDetailsProps {
   person: Person;
@@ -37,7 +36,7 @@ export default function PersonDetails({ person }: PersonDetailsProps) {
     getProfileUrl(person.profilePath, "h632") || "/images/default-profile.png";
 
   return (
-    <Card className="w-full mx-auto relative bg-black/20 backdrop-blur-xs border-red-900">
+    <Card className="w-full mx-auto relative">
       <CardContent className="relative z-10 flex flex-col md:flex-row p-4 md:p-8">
         <div className="w-full md:w-1/2 flex items-center justify-center mb-4 md:mb-0 md:pr-4">
           <div className="relative w-full h-auto max-w-sm flex justify-center items-center">
@@ -53,33 +52,37 @@ export default function PersonDetails({ person }: PersonDetailsProps) {
 
         <div className="w-full md:w-1/2 flex flex-col md:pl-4">
           <CardHeader className="p-0 mb-4">
-            <CardTitle className="text-4xl font-bold mb-2 text-white drop-shadow-lg">
+            <CardTitle className="text-4xl font-bold mb-2 text-foreground drop-shadow-lg">
               {person.name}
             </CardTitle>
-            <CardDescription className="text-gray-200 text-base">
-              <Separator className="my-4 bg-white/20" />
-              <p>
-                Birthdate:{" "}
+          </CardHeader>
+          <div className="space-y-2 mb-4 text-foreground">
+            <p>
+              Birthdate:{" "}
+              <span className="text-muted-foreground">
                 {person.birthday
                   ? person.birthday.toLocaleDateString()
                   : "Unknown"}
-              </p>
-              {person.deathday
-                ? `Day of death: ${person.deathday?.toLocaleDateString()} (aged ${
-                    person.birthday
-                      ? getAgeAtDeath(person.birthday, person.deathday)
-                      : "unknown"
-                  })`
-                : ""}
-            </CardDescription>
-          </CardHeader>
-          <CardFooter className="p-0 mb-4">
-            <p className="mb-4 text-gray-100 leading-relaxed drop-shadow-sm">
-              {person.biography || "No biography available."}
+              </span>
             </p>
-          </CardFooter>
-
-          <Separator className="my-4 bg-white/20" />
+            {person.deathday && (
+              <p>
+                Day of death:{" "}
+                <span className="text-muted-foreground">
+                  {person.deathday.toLocaleDateString()}{" "}
+                  {person.birthday &&
+                    `(aged ${getAgeAtDeath(person.birthday, person.deathday)})`}
+                </span>
+              </p>
+            )}
+          </div>
+          <p className="mb-4 text-muted-foreground leading-relaxed drop-shadow-sm italic">
+            {person.biography || "No biography available."}
+          </p>
+          <Separator className="my-4 bg-border" />
+        </div>
+        <div className="absolute bottom-4 right-10 z-20">
+          <EditPersonPopup person={person} />
         </div>
       </CardContent>
     </Card>
