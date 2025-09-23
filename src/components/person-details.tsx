@@ -1,17 +1,16 @@
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getProfileUrl } from "@/lib/tmdb-image-url";
-import { Person } from "@/generated/prisma";
+import { Movie, MovieCrew, Person } from "@/generated/prisma";
 import { EditPersonPopup } from "./edit-person-popup";
+import PersonDetailsCarousel from "./person-details-carousel";
+
+export type MovieCrewWithMovie = MovieCrew & { movie: Movie };
 
 interface PersonDetailsProps {
   person: Person;
+  workedOn: MovieCrewWithMovie[];
 }
 
 function getAgeAtDeath(birthday: Date, deathday: Date): number {
@@ -31,12 +30,19 @@ function getAgeAtDeath(birthday: Date, deathday: Date): number {
   return age;
 }
 
-export default function PersonDetails({ person }: PersonDetailsProps) {
+export default function PersonDetails({
+  person,
+  workedOn,
+}: PersonDetailsProps) {
   const handlePoster =
     getProfileUrl(person.profilePath, "h632") || "/images/default-profile.png";
 
   return (
     <Card className="w-full mx-auto relative">
+      {/* Place EditPersonPopup absolutely in the top right */}
+      <div className="absolute top-4 right-4 z-20">
+        <EditPersonPopup person={person} />
+      </div>
       <CardContent className="relative z-10 flex flex-col md:flex-row p-4 md:p-8">
         <div className="w-full md:w-1/2 flex items-center justify-center mb-4 md:mb-0 md:pr-4">
           <div className="relative w-full h-auto max-w-sm flex justify-center items-center">
@@ -49,7 +55,6 @@ export default function PersonDetails({ person }: PersonDetailsProps) {
             />
           </div>
         </div>
-
         <div className="w-full md:w-1/2 flex flex-col md:pl-4">
           <CardHeader className="p-0 mb-4">
             <CardTitle className="text-4xl font-bold mb-2 text-foreground drop-shadow-lg">
@@ -81,10 +86,11 @@ export default function PersonDetails({ person }: PersonDetailsProps) {
           </p>
           <Separator className="my-4 bg-border" />
         </div>
-        <div className="absolute bottom-4 right-10 z-20">
-          <EditPersonPopup person={person} />
-        </div>
       </CardContent>
+      {/* Carousel at the bottom, full width */}
+      <div className="w-full">
+        <PersonDetailsCarousel workedOn={workedOn} />
+      </div>
     </Card>
   );
 }
