@@ -46,9 +46,15 @@ export function ShoppingCartSheet() {
 
   // Uppdatera cart när URL ändras (efter redirect från checkout)
   useEffect(() => {
-    console.log("📍 Route changed to:", pathname);
+    console.log(" Route changed to:", pathname);
     refreshCart();
   }, [pathname, refreshCart]);
+
+  // Lägg till interval för att uppdatera cart regelbundet
+  useEffect(() => {
+    const interval = setInterval(refreshCart, 1000); // Uppdatera varje sekund
+    return () => clearInterval(interval);
+  }, [refreshCart]);
 
   const totalAmount = cartTotal(items);
 
@@ -64,7 +70,7 @@ export function ShoppingCartSheet() {
           <span className="sr-only">Shopping Cart</span>
           {items.length > 0 && (
             <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-sky-700 rounded-full">
-              {items.length}
+              {items.reduce((sum, item) => sum + item.quantity, 0)}
             </span>
           )}
         </Button>
