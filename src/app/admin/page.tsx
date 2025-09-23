@@ -1,31 +1,56 @@
-// src/app/admin/page.tsx
-
-import Link from "next/link";
+// // src/app/admin/page.tsx
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth"; // проверь путь
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  // Проверяем сессию
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const isLoggedIn = !!session;
+  const isAdmin = session?.user.role === "admin"
+
+  if (!isLoggedIn || !isAdmin) {
+    return notFound();
+  }
+
   return (
-    <div className="container mx-auto p-8 space-y-8">
-      <h1 className="text-4xl font-bold text-sky-600">Admin panel</h1>
-      <p className="text-muted-foreground">
-        Select an action to manage your store:
-      </p>
+    <div className="container mx-auto p-8 space-y-6">
+      <h1 className="text-4xl font-bold text-sky-600">Admin Dashboard</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-16">
-        <Link href="/admin/movies">
-          <Button className="w-full">Create movie</Button>
+      {!isLoggedIn && (
+        <p className="text-red-500">
+          You must be logged in to use these buttons.
+        </p>
+      )}
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Link href={isLoggedIn ? "/admin/movies" : "#"}>
+          <Button className="w-full" disabled={!isLoggedIn}>
+            Create movie
+          </Button>
         </Link>
 
-        <Link href="/admin/orders">
-          <Button className="w-full">Create order</Button>
+        <Link href={isLoggedIn ? "/admin/orders" : "#"}>
+          <Button className="w-full" disabled={!isLoggedIn}>
+            Create order
+          </Button>
         </Link>
 
-        <Link href="/admin/genres">
-          <Button className="w-full">Create genre</Button>
+        <Link href={isLoggedIn ? "/admin/genres" : "#"}>
+          <Button className="w-full" disabled={!isLoggedIn}>
+            Create genre
+          </Button>
         </Link>
 
-        <Link href="/admin/people">
-          <Button className="w-full">Create person</Button>
+        <Link href={isLoggedIn ? "/admin/person" : "#"}>
+          <Button className="w-full" disabled={!isLoggedIn}>
+            Create person
+          </Button>
         </Link>
       </div>
     </div>
