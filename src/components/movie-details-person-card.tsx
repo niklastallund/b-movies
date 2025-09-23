@@ -21,14 +21,14 @@ export function MovieDetailsPersonCard({
   const personUrl = `/person/${person.id}`;
 
   return (
-    <Card className="max-w-[180px] overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl py-3">
+    <Card className="max-w-[200px] overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl py-3">
       <Link href={personUrl} className="block">
         <CardContent className="p-0 flex justify-center cursor-pointer">
           <Image
             src={profile}
             alt={person.name}
-            width={160}
-            height={240}
+            width={180}
+            height={270}
             style={{ objectFit: "cover" }}
             className="rounded-xl px-2"
           />

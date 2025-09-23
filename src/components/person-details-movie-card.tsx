@@ -20,7 +20,7 @@ export function PersonDetailsMovieCard({
   const movieUrl = `/movies/${workedOn.movie.id}`;
 
   return (
-    <Card className="max-w-[220px] overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl py-3">
+    <Card className="max-w-[200px] overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl py-3">
       <Link href={movieUrl} className="block">
         <CardContent className="p-0 flex justify-center cursor-pointer">
           {/* Movie image */}
