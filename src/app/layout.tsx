@@ -1,11 +1,9 @@
-import { Navbar } from "@/components/navbar";
+import Navbar from "@/components/navbar";
 import { ThemeProvider } from "next-themes";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/footer";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,10 +15,6 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
   return (
     <html lang="sv" suppressHydrationWarning>
       <body className={inter.className}>
@@ -30,7 +24,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar isLoggedIn={!!session} />
+          <Navbar />
 
           <main className="container mx-auto p-4">{children}</main>
           <Footer />

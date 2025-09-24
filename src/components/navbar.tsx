@@ -1,6 +1,10 @@
 import Form from "next/form";
 import Link from "next/link";
 import Image from "next/image";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+
+// Shadcn UI components
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,88 +27,23 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
+// Custom components
 import { ModeToggle } from "@/components/toggle-theme-button";
-import { ProfileDropdown } from "./button-signin-signout";
 import SignUpForm from "@/components/forms/sign-up-form";
 import SignInForm from "@/components/forms/sign-in-form";
 import ShoppingCartSheet from "./shopping-cart-sheet";
+import { SignInAndProfile } from "./sign-in-and-profile";
+import SignUpAndOut from "./sign-up-and-out";
 
-const MobileLinks = ({
-  toplists,
-}: {
-  toplists: { label: string; id: string }[];
-}) => (
-  <div className="mt-4 p-6 flex flex-col space-y-2">
-    <Link href="/" className="font-semibold text-primary text-lg">
-      Home
-    </Link>
-    <Link href="/movies" className="font-semibold text-primary text-lg">
-      Movies
-    </Link>
-    <Link href="/person" className="font-semibold text-primary text-lg">
-      People
-    </Link>
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="justify-start px-0 text-foreground text-lg"
-        >
-          Top Lists
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent side="right">
-        {toplists.map((link) => (
-          <DropdownMenuItem key={link.id} asChild>
-            <Link href={`#${link.id}`}>{link.label}</Link>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+export default async function Navbar() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-    <div className="flex flex-col space-y-2 pt-4 border-t border-border mt-4">
-      {/* SIGN UP BUTTON FOR MOBILE */}
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            className="justify-start font-semibold text-lg gap-2"
-          >
-            <UserPlus className="h-4 w-4" />
-            Sign Up
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="sr-only">Sign Up</DialogTitle>
-          </DialogHeader>
-          <SignUpForm />
-        </DialogContent>
-      </Dialog>
+  const isLoggedIn = !!session;
 
-      {/* SIGN IN BUTTON FOR MOBILE */}
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            variant="ghost"
-            className="justify-start font-semibold text-lg gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            <LogIn className="h-4 w-4" />
-            Sign In
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="sr-only">Sign In</DialogTitle>
-          </DialogHeader>
-          <SignInForm />
-        </DialogContent>
-      </Dialog>
-    </div>
-  </div>
-);
-
-export function Navbar() {
+  // Used to generate the Top Lists dropdown and mobile menu
   const toplists = [
     { label: "Top 5 Latest Movies", id: "latest" },
     { label: "Top 5 Most Popular Movies", id: "popular" },
@@ -160,28 +99,12 @@ export function Navbar() {
 
           {/* PROFILE DROPDOWN - ENDAST DESKTOP */}
           <div className="hidden md:block">
-            <ProfileDropdown />
+            <SignInAndProfile isLoggedIn={isLoggedIn} />
           </div>
 
           {/* SIGN UP BUTTON - ENDAST DESKTOP */}
           <div className="hidden md:block">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition transform hover:scale-110"
-                >
-                  <UserPlus className="h-4 w-4" />
-                  Sign Up
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle className="sr-only">Sign Up</DialogTitle>
-                </DialogHeader>
-                <SignUpForm />
-              </DialogContent>
-            </Dialog>
+            <SignUpAndOut isLoggedIn={isLoggedIn} />
           </div>
 
           {/* MOBILE MENU */}
@@ -193,7 +116,7 @@ export function Navbar() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-full sm:max-w-xs">
-              <MobileLinks toplists={toplists} />
+              <MobileLinks toplists={toplists} isLoggedIn={isLoggedIn} />
             </SheetContent>
             <SheetTitle className="sr-only">menu</SheetTitle>
           </Sheet>
@@ -251,3 +174,65 @@ export function Navbar() {
     </nav>
   );
 }
+
+// Mobile menu content
+const MobileLinks = ({
+  toplists,
+  isLoggedIn,
+}: {
+  toplists: { label: string; id: string }[];
+  isLoggedIn: boolean;
+}) => (
+  <div className="mt-4 p-6 flex flex-col space-y-2">
+    <Link href="/" className="font-semibold text-primary text-lg">
+      Home
+    </Link>
+    <Link href="/movies" className="font-semibold text-primary text-lg">
+      Movies
+    </Link>
+    <Link href="/person" className="font-semibold text-primary text-lg">
+      People
+    </Link>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="justify-start px-0 text-foreground text-lg"
+        >
+          Top Lists
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent side="right">
+        {toplists.map((link) => (
+          <DropdownMenuItem key={link.id} asChild>
+            <Link href={`#${link.id}`}>{link.label}</Link>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+
+    <div className="flex flex-col space-y-2 pt-4 border-t border-border mt-4">
+      {/* SIGN UP BUTTON FOR MOBILE */}
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            className="justify-start font-semibold text-lg gap-2"
+          >
+            <UserPlus className="h-4 w-4" />
+            Sign Up
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="sr-only">Sign Up</DialogTitle>
+          </DialogHeader>
+          <SignUpForm />
+        </DialogContent>
+      </Dialog>
+
+      {/* SIGN IN BUTTON FOR MOBILE */}
+      <SignInAndProfile isLoggedIn={isLoggedIn} />
+    </div>
+  </div>
+);

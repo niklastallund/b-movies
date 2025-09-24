@@ -28,10 +28,8 @@ interface MovieDetailsProps {
   movieCrew: MovieCrewWithPerson[];
   genres: Genre[];
   allGenres: Genre[];
+  admin: boolean;
 }
-
-// Tmp admin flag for testing
-const admin = true;
 
 // Main component for movie details
 export default function MovieDetails({
@@ -39,6 +37,7 @@ export default function MovieDetails({
   movieCrew,
   genres,
   allGenres,
+  admin,
 }: MovieDetailsProps) {
   // State to keep track of the number of movies to add
   const [quantity, setQuantity] = useState(1);
