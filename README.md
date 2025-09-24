@@ -2,7 +2,7 @@
 
 A modern movie e-commerce platform built with Next.js, featuring user authentication, shopping cart functionality, and a responsive design.
 
-![MovieShop Beta Mockup](MOCKUP_IMAGE)
+![MovieShop Beta Mockup](public/images/mockup-bmovies.jpg)
 
 **Created by:** Josefine, Niklas & Amina
 

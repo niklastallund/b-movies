@@ -4,7 +4,7 @@ import { MovieApi, PersonApi } from "./types";
 const moviedb = new MovieDb("c0d3fc45d2f4922af3c27e30726b5daa");
 
 //Constants to limit the number of results we get from TMDB
-const NUMBER_OF_MOVIES = 6;
+const NUMBER_OF_MOVIES = 8;
 const NUMBER_OF_CREW = 5;
 const NUMBER_OF_CAST = 5;
 
@@ -72,7 +72,7 @@ export async function FindMoviesByDirectors(): Promise<MovieApi[]> {
     // with at least 100 votes to avoid weird edge cases
     if (directedMovies) {
       const topMovies = directedMovies
-        .filter((movie) => (movie.vote_count ?? 0) >= 100)
+        .filter((movie) => (movie.vote_count ?? 0) >= 80)
         .sort((a, b) => (b.vote_average ?? 0) - (a.vote_average ?? 0))
         .slice(0, NUMBER_OF_MOVIES);
 

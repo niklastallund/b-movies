@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -16,41 +15,11 @@ import { cartTotal } from "@/cart/math";
 import { CartQuantityButtons } from "@/components/cart-quantity-buttons";
 import { CartRemoveButton } from "@/components/cart-remove-button";
 import { getCart } from "@/cart/actions";
-import { useEffect, useState, useCallback } from "react";
-import { usePathname } from "next/navigation";
 
-export function ShoppingCartSheet() {
-  const [items, setItems] = useState<
-    Array<{
-      id: number;
-      name: string;
-      price: number;
-      quantity: number;
-      imageUrl?: string;
-      tmdb?: boolean;
-    }>
-  >([]);
-
-  const refreshCart = useCallback(async () => {
-    console.log("🔄 Refreshing cart data...");
-    const cart = await getCart();
-    console.log("🛒 Current cart items:", cart.items.length);
-    setItems(cart.items);
-  }, []);
-
-  const pathname = usePathname();
-
-  useEffect(() => {
-    refreshCart();
-  }, [refreshCart]);
-
-  // Uppdatera cart när URL ändras (efter redirect från checkout)
-  useEffect(() => {
-    console.log("📍 Route changed to:", pathname);
-    refreshCart();
-  }, [pathname, refreshCart]);
-
-  const totalAmount = cartTotal(items);
+export default async function ShoppingCartSheet() {
+  // Fetch cart data from cookies
+  const cart = await getCart();
+  const totalAmount = cartTotal(cart.items);
 
   return (
     <Sheet>
@@ -62,9 +31,9 @@ export function ShoppingCartSheet() {
         >
           <ShoppingCart className="w-6 h-6" />
           <span className="sr-only">Shopping Cart</span>
-          {items.length > 0 && (
+          {cart.items.length > 0 && (
             <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-sky-700 rounded-full">
-              {items.length}
+              {cart.items.reduce((sum, item) => sum + item.quantity, 0)}
             </span>
           )}
         </Button>
@@ -74,8 +43,8 @@ export function ShoppingCartSheet() {
           <SheetTitle>Your Shopping Cart</SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-4 py-4">
-          {items.length > 0 ? (
-            items.map((item) => (
+          {cart.items.length > 0 ? (
+            cart.items.map((item) => (
               <div
                 key={item.id + (item.tmdb ? "-tmdb" : "")}
                 className="flex m-6 items-center justify-between"
@@ -103,12 +72,8 @@ export function ShoppingCartSheet() {
                   <CartQuantityButtons
                     productId={item.id}
                     quantity={item.quantity}
-                    onUpdated={refreshCart}
                   />
-                  <CartRemoveButton
-                    productId={item.id}
-                    onUpdated={refreshCart}
-                  />
+                  <CartRemoveButton productId={item.id} />
                 </div>
               </div>
             ))
@@ -119,7 +84,7 @@ export function ShoppingCartSheet() {
           )}
         </div>
         <Separator />
-        {items.length > 0 && (
+        {cart.items.length > 0 && (
           <div className="mt-4 m-6 flex justify-between font-bold">
             <span>Total:</span>
             <span>{totalAmount} kr</span>

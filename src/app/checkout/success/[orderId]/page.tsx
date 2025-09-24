@@ -46,7 +46,7 @@ export default async function CheckoutSuccessPage({
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      {/* Tackmeddelande */}
+      {/* Thank you message */}
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
           <CheckCircle className="h-16 w-16 text-primary" />
@@ -59,7 +59,7 @@ export default async function CheckoutSuccessPage({
         </p>
       </div>
 
-      {/* Orderdetaljer */}
+      {/* Order details */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Order Information */}
         <Card>
@@ -71,17 +71,17 @@ export default async function CheckoutSuccessPage({
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between">
-              <span className="font-medium">Ordernumber:</span>
+              <span className="font-medium">Order Number:</span>
               <span>#{order.id}</span>
             </div>
             <div className="flex justify-between">
-              <span className="font-medium">Orderdate:</span>
-              <span>{order.orderDate.toLocaleDateString("sv-SE")}</span>
+              <span className="font-medium">Order Date:</span>
+              <span>{order.orderDate.toLocaleDateString("en-US")}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-medium">Status:</span>
               <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-sm">
-                {order.status === "PENDING" ? "Behandlas" : order.status}
+                {order.status === "PENDING" ? "Processing" : order.status}
               </span>
             </div>
             <div className="flex justify-between items-center text-lg font-bold border-t pt-4">
@@ -91,7 +91,7 @@ export default async function CheckoutSuccessPage({
           </CardContent>
         </Card>
 
-        {/* Kunduppgifter */}
+        {/* Customer details */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -119,10 +119,10 @@ export default async function CheckoutSuccessPage({
         </Card>
       </div>
 
-      {/* Orderartiklar */}
+      {/* Ordered items */}
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Movie Ordered</CardTitle>
+          <CardTitle>Movies Ordered</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -144,14 +144,14 @@ export default async function CheckoutSuccessPage({
                     />
                   ) : (
                     <div className="w-full h-full bg-gray-300 rounded flex items-center justify-center">
-                      <span className="text-xs text-gray-500">Ingen bild</span>
+                      <span className="text-xs text-gray-500">No image</span>
                     </div>
                   )}
                 </div>
                 <div className="flex-1">
                   <h3 className="font-medium">{item.movie.title}</h3>
                   <p className="text-sm text-muted-foreground">
-                    Antal: {item.quantity}
+                    Quantity: {item.quantity}
                   </p>
                 </div>
                 <div className="text-right">
@@ -159,7 +159,7 @@ export default async function CheckoutSuccessPage({
                     {item.priceAtPurchase * item.quantity} SEK
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {item.priceAtPurchase} SEK/pice
+                    {item.priceAtPurchase} SEK/piece
                   </p>
                 </div>
               </div>
@@ -168,12 +168,12 @@ export default async function CheckoutSuccessPage({
         </CardContent>
       </Card>
 
-      {/* Nästa steg */}
+      {/* Next steps */}
       <Card className="mt-6">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5 text-muted-foreground" />
-            Vad händer nu?
+            What happens next?
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -215,13 +215,13 @@ export default async function CheckoutSuccessPage({
         </CardContent>
       </Card>
 
-      {/* Återgå till butik */}
+      {/* Back to store */}
       <div className="text-center mt-8">
         <Link
           href="/movies"
           className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
         >
-          Fortsätt handla
+          Continue Shopping
         </Link>
       </div>
     </div>

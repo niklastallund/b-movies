@@ -38,7 +38,7 @@ model Movie {
 
   genres    Genre[]
   OrderItem OrderItem[]
-  MovieCrew MovieCrew[]
+  movieCrew MovieCrew[]
 }
 
 model Person {
@@ -57,12 +57,18 @@ model Person {
   updatedAt DateTime @updatedAt
 }
 
+// Role can be either crew or cast
+enum Role {
+  CREW
+  CAST
+}
+
 // Junction table to link Person to Movie depending on role
 model MovieCrew {
   id        Int     @id @default(autoincrement())
   movieId   Int
   personId  Int
-  role      String //crew or cast
+  role      Role //crew or cast
   job       String? // director, writer, actor, producer, ...
   character String? // unique to actors
   order     Int? // tmdb ordering of cast (lead actor first etc)
@@ -99,13 +105,13 @@ model Order {
   orderDate   DateTime
 
   // Kunduppgifter
-  customerEmail String?
-  customerFirstName String?
-  customerLastName String?
-  customerAddress String?
-  customerCity String?
+  customerEmail      String?
+  customerFirstName  String?
+  customerLastName   String?
+  customerAddress    String?
+  customerCity       String?
   customerPostalCode String?
-  customerCountry String?
+  customerCountry    String?
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
