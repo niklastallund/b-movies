@@ -40,7 +40,7 @@ export default function CreatePersonForm() {
   }
 
   return (
-    <Card className="w-full max-w-lg mx-auto bg-black/20 backdrop-blur-xs  ">
+    <Card className="w-full max-w-lg mx-auto">
       <CardHeader>
         <CardTitle>Create Person</CardTitle>
         <CardDescription>Enter details to add a new person </CardDescription>
