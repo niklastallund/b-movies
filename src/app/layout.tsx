@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/footer";
 import { headers } from "next/headers";
-import { auth } from "@/lib/auth"; 
+import { auth } from "@/lib/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,31 +15,22 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({
-children,
-// }: Readonly<{
-//   children: React.ReactNode;
-// }>) {
-}: {
-  children: React.ReactNode;
-}) 
-{
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   return (
-    // SuppressHydrationWarning
     <html lang="sv" suppressHydrationWarning>
       <body className={inter.className}>
-        {/* Använd ThemeProvider direkt från next-themes för globalt tema-stöd */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          {/* <Navbar /> */}
-          <Navbar session = {session} />
+          <Navbar isLoggedIn={!!session} />
 
           <main className="container mx-auto p-4">{children}</main>
           <Footer />
