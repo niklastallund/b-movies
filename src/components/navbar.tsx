@@ -1,10 +1,6 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import Form from "next/form";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { UserPlus, LogIn } from "lucide-react";
+import { UserPlus, LogIn, Menu } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -27,7 +23,6 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Menu } from "lucide-react";
 import { ModeToggle } from "@/components/toggle-theme-button";
 import { ShoppingCartSheet } from "./shopping-cart-sheet";
 import { ProfileDropdown } from "./button-signin-signout";
@@ -110,27 +105,6 @@ const MobileLinks = ({
 );
 
 export function Navbar() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [mounted, setMounted] = useState(false);
-  const router = useRouter();
-  const { theme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchTerm.trim() !== "") {
-      const query = searchTerm
-        .trim()
-        .split(/\s+/)
-        .map(encodeURIComponent)
-        .join("+");
-      router.push(`/movies?q=${query}`);
-      setSearchTerm("");
-    }
-  };
-
   const toplists = [
     { label: "Top 5 Latest Movies", id: "latest" },
     { label: "Top 5 Most Popular Movies", id: "popular" },
@@ -146,16 +120,20 @@ export function Navbar() {
           href="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
+          {/* Two versions of the logo for light and dark mode */}
           <Image
-            src={
-              mounted && theme === "light"
-                ? "/images/bmovies-blue.png"
-                : "/images/bmovies.png"
-            }
+            src="/images/bmovies.png"
             alt="B-Movies logo"
             width={600}
             height={600}
-            className="h-12 w-auto"
+            className="h-12 w-auto hidden dark:block"
+          />
+          <Image
+            src="/images/bmovies-blue.png"
+            alt="B-Movies logo"
+            width={600}
+            height={600}
+            className="h-12 w-auto block dark:hidden"
           />
         </Link>
 
@@ -163,14 +141,15 @@ export function Navbar() {
         <div className="flex items-center md:order-2 space-x-2">
           {/* Search field */}
           <div className="flex items-center space-x-2">
-            <Input
-              type="search"
-              placeholder="Search for movies..."
-              className="w-full md:w-64"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={handleSearch}
-            />
+            <Form action="/movies">
+              <Input
+                type="search"
+                name="q"
+                placeholder="Search for movies..."
+                className="w-full md:w-64"
+              />
+              <button type="submit" hidden></button>
+            </Form>
           </div>
 
           {/* THEME BUTTON */}
