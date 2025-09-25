@@ -6,8 +6,8 @@ import { Github, Linkedin, Globe } from "lucide-react";
 const members = [
   {
     name: "Josefine",
-    role: "Fullstack Developer focusing on Frontend & Graphic/Web Designer",
-    bio: "Responsible for UI components and implementing responsive design. Built movie cards, carousel, landing page, and navigation menu. Developed shopping cart with cookies and local storage, checkout system, as well as admin pages for genres and orders. Implemented Zod validation.",
+    role: "Fullstack Developer focusing on Frontend,Graphics and Logodesign",
+    bio: "Responsible for UI components and implementing responsive design. Built movie cards, carousel, landing page, and navigation menu. Customer support contact sheet. Developed shopping cart with cookies and local storage, checkout system, custom orders and settings as well as admin pages for genres and orders. Implemented Zod validation.",
     image: "/images/josefine.png",
     github: "GITHUB_LINK",
     linkedin: "https://www.linkedin.com/in/josefine-eriksson-349498345/",
@@ -38,11 +38,10 @@ export default function AboutUs() {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-4xl mb-10 font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-            Vi som byggt B-Movies
+           About Us
           </h1>
           <p className="text-xl mt-10 text-muted-foreground max-w-3xl mx-auto">
-            Möt teamet bakom B-Movies - en grupp passionerade utvecklare som
-            tillsammans skapat denna filmplattform
+           We who have built B-Movies
           </p>
         </div>
 
@@ -150,7 +149,7 @@ export default function AboutUs() {
         {/* Footer Section */}
         <div className="text-center mt-20 pt-12 border-t">
           <p className="text-muted-foreground text-lg">
-            Tillsammans skapade vi B-Movies med passion för film och teknik
+            Together we have created this movie platform.
           </p>
         </div>
       </div>
