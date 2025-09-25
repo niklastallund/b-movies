@@ -11,7 +11,7 @@ import { getPosterUrl } from "@/lib/tmdb-image-url";
 import { Genre, Movie, MovieCrew, Person } from "@/generated/prisma";
 import { EditMoviePopup } from "./edit-movie-popup";
 import MovieDetailsCarousel from "./movie-details-carousel";
-import { AddToCartForm } from "./forms/add-to-cart-form"; // new client component
+import { AddToCartForm } from "./forms/add-to-cart-form";
 
 export type MovieCrewWithPerson = MovieCrew & { person: Person };
 

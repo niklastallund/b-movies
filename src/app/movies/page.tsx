@@ -12,6 +12,7 @@ const SORT_MAP = {
   votes: "votes",
 };
 
+// This page displays a list of movies with search, genre filter, and sorting options
 export default async function MoviesPage({
   searchParams,
 }: {
@@ -23,14 +24,19 @@ export default async function MoviesPage({
   }>;
 }) {
   const params = await searchParams;
+
+  // Extract and sanitize query parameters
   const query = params.q || "";
   const selectedGenre = params.genre || "";
   const sort = (params.sort as keyof typeof SORT_MAP) || "title";
-  const order = params.order === "desc" ? "desc" : "asc";
 
+  // Default to ascending order if not specified or invalid
+  const sortOrder = params.order === "desc" ? "desc" : "asc";
+
+  // Maps the sort query to the sort map so we are guaranteed to have a valid field
   const sortField = SORT_MAP[sort] || "title";
-  const sortOrder = order;
 
+  // Fetch all genres for the genre filter dropdown
   const genres = await prisma.genre.findMany({
     orderBy: { name: "asc" },
   });

@@ -2,6 +2,9 @@ import { PersonCard } from "@/components/card-person";
 import SearchBar from "@/components/search-bar";
 import { prisma } from "@/lib/prisma";
 
+// This page is similar to the MoviesPage but for persons
+// It includes a search bar and displays persons in a grid layout
+// The search functionality filters persons by name
 export default async function PersonPage({
   searchParams,
 }: {
@@ -28,8 +31,6 @@ export default async function PersonPage({
           <SearchBar />
         </div>
       </div>
-
-      {/* FILM GRID */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6  gap-6">
         {persons.length > 0 ? (
           persons.map((person) => (
@@ -37,7 +38,7 @@ export default async function PersonPage({
           ))
         ) : (
           <p className="col-span-full text-center text-gray-500">
-            No movies match your search.
+            No person matches your search.
           </p>
         )}
       </div>
