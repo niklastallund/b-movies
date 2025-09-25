@@ -31,8 +31,8 @@ export function PersonCard({ person }: PersonDetailsProps) {
           className="rounded-xl px-3"
         />
       </CardContent>
-      <CardFooter className="flex-col items-start p-4 py-0">
-        <h3 className="mb-2 text-md font-semibold leading-tight">{name}</h3>
+      <CardFooter className="flex-col items-start p-4 pt-2 pb-0">
+        <h3 className="text-md font-semibold leading-tight">{name}</h3>
         {/* "Read more" link to the dynamic page */}
         <Link href={`/person/${id}`} className="mt-4 w-full">
           <Button variant="outline" className="w-full">
