@@ -5,7 +5,10 @@ import {
   CreatePersonInput,
   UpdatePersonInput,
   updatePersonSchema,
+  deletePersonSchema,
 } from "@/lib/zod-schemas";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 // !!!!!!!!!!!!!!!!!!
 // !TODO auth checks!
@@ -24,6 +27,7 @@ export async function createPerson(person: CreatePersonInput) {
     },
   });
 
+  revalidatePath("/admin/person");
   return newPerson;
 }
 
@@ -42,15 +46,19 @@ export async function updatePerson(person: UpdatePersonInput) {
     },
   });
 
+  revalidatePath(`/person/${person.id}`);
+  revalidatePath("/person");
   return updatedPerson;
 }
 
 export async function deletePerson(id: number) {
-  const deletedPerson = await prisma.person.delete({
-    where: { id },
+  const validated = await deletePersonSchema.parseAsync({ id });
+  await prisma.person.delete({
+    where: { id: validated.id },
   });
 
-  return deletedPerson;
+  revalidatePath("/person");
+  redirect("/person");
 }
 
 export async function getAllPersons() {
@@ -90,18 +98,6 @@ export default async function getPersonsByBirthday(birthday: Date) {
       birthday: birthday,
     },
   });
-}
-
-export async function getAllPeople() {
-  try {
-    const people = await prisma.person.findMany({
-      orderBy: { name: "asc" },
-    });
-    return people;
-  } catch (error) {
-    console.error("Kunde inte hämta personer:", error);
-    return [];
-  }
 }
 
 export async function listMoviesForPerson(personId: number) {

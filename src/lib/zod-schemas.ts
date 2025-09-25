@@ -1,21 +1,42 @@
 import { z } from "zod";
 
-// --- Genre Schemas ---
-export const createGenreSchema = z.object({
-  name: z.string().min(1, { message: "Genrenamn är obligatoriskt." }),
-  description: z.string().optional(),
+// --- Movies Shemas ---
+export const createMovieSchema = z.object({
+  tmdbId: z.coerce.number<number>().positive().optional(),
+  title: z.string().min(1, { message: "Titel är obligatoriskt." }),
+  overview: z.string().optional(),
+  tagline: z.string().optional(),
+  releaseDate: z.date().optional(),
+  budget: z.coerce.number<number>().positive().optional(),
+  revenue: z.coerce.number<number>().positive().optional(),
+  runtime: z.coerce.number<number>().positive().optional(),
+  price: z.coerce.number<number>().positive().optional(),
+  stock: z.coerce.number<number>().int().min(0).optional(),
+  posterPath: z.string().optional(),
+  backdropPath: z.string().optional(),
 });
 
-export const updateGenreSchema = z.object({
+export type CreateMovieInput = z.infer<typeof createMovieSchema>;
+
+export const updateMovieSchema = z.object({
+  tmdbId: z.coerce.number<number>().positive().optional(),
   id: z.number().int().positive(),
-  name: z
-    .string()
-    .min(1, { message: "Genrenamn är obligatoriskt." })
-    .optional(),
-  description: z.string().optional(),
+  title: z.string().min(1, { message: "Title is required." }).optional(),
+  overview: z.string().optional(),
+  tagline: z.string().optional(),
+  releaseDate: z.date().optional(),
+  budget: z.coerce.number<number>().positive().optional(),
+  revenue: z.coerce.number<number>().positive().optional(),
+  runtime: z.coerce.number<number>().positive().optional(),
+  price: z.coerce.number<number>().positive().optional(),
+  stock: z.coerce.number<number>().int().min(0).optional(),
+  posterPath: z.string().optional(),
+  backdropPath: z.string().optional(),
 });
 
-export const deleteGenreSchema = z.object({
+export type UpdateMovieInput = z.infer<typeof updateMovieSchema>;
+
+export const deleteMovieSchema = z.object({
   id: z.number().int().positive(),
 });
 
@@ -49,6 +70,22 @@ export const deletePersonSchema = z.object({
 
 export type DeletePersonInput = z.infer<typeof deletePersonSchema>;
 
+// --- Genre Schemas ---
+export const createGenreSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+});
+
+export const updateGenreSchema = z.object({
+  id: z.number().int().positive(),
+  name: z.string().min(1).optional(),
+  description: z.string().optional(),
+});
+
+export const deleteGenreSchema = z.object({
+  id: z.number().int().positive(),
+});
+
 // --- MovieCrew link schemas ---
 export const roleEnum = z.enum(["CREW", "CAST"]);
 
@@ -80,7 +117,7 @@ export const linkPersonToMovieSchema = z
           path: ["character"],
           message: "Character is required for cast.",
         });
-      }
+      } // Order (inklusive relationer)
     }
   });
 
@@ -101,56 +138,12 @@ export const userSchema = z.object({
   image: z.string().nullable().optional(),
 });
 
-// --- Movies Shemas ---
-export const createMovieSchema = z.object({
-  tmdbId: z.coerce.number<number>().positive().optional(),
-  title: z.string().min(1, { message: "Titel är obligatoriskt." }),
-  overview: z.string().optional(),
-  tagline: z.string().optional(),
-  releaseDate: z.date().optional(),
-  budget: z.coerce.number<number>().positive().optional(),
-  revenue: z.coerce.number<number>().positive().optional(),
-  runtime: z.coerce.number<number>().positive().optional(),
-  price: z.coerce.number<number>().positive().optional(),
-  stock: z.coerce.number<number>().int().min(0).optional(),
-  posterPath: z.string().optional(),
-  backdropPath: z.string().optional(),
-});
-
-export type CreateMovieInput = z.infer<typeof createMovieSchema>;
-
-//Update
-export const updateMovieSchema = z.object({
-  tmdbId: z.coerce.number<number>().positive().optional(),
-  id: z.number().int().positive(),
-  title: z.string().min(1, { message: "Title is required." }).optional(),
-  overview: z.string().optional(),
-  tagline: z.string().optional(),
-  releaseDate: z.date().optional(),
-  budget: z.coerce.number<number>().positive().optional(),
-  revenue: z.coerce.number<number>().positive().optional(),
-  runtime: z.coerce.number<number>().positive().optional(),
-  price: z.coerce.number<number>().positive().optional(),
-  stock: z.coerce.number<number>().int().min(0).optional(),
-  posterPath: z.string().optional(),
-  backdropPath: z.string().optional(),
-});
-
-export type UpdateMovieInput = z.infer<typeof updateMovieSchema>;
-
-//Delete
-export const deleteMovieSchema = z.object({
-  id: z.number().int().positive(),
-});
-
-// Movie (endast de fält du visar i orderdetaljer)
 export const movieSchema = z.object({
   id: z.number(),
   title: z.string(),
   price: z.number(),
 });
 
-// OrderItem (relation mellan order och film)
 export const orderItemSchema = z.object({
   id: z.number(),
   quantity: z.number(),
@@ -158,7 +151,6 @@ export const orderItemSchema = z.object({
   movie: movieSchema,
 });
 
-// Order (inklusive relationer)
 export const orderSchema = z.object({
   id: z.number(),
   totalAmount: z.number(),
@@ -191,3 +183,12 @@ export const checkoutOrderSchema = z.object({
 });
 
 export type CheckoutOrderInput = z.infer<typeof checkoutOrderSchema>;
+
+export const updateMovieGenresSchema = z.object({
+  movieId: z.number().int().positive(),
+  genreIds: z
+    .array(z.number().int().positive())
+    .min(1, "Select at least one genre."),
+});
+
+export type UpdateMovieGenresInput = z.infer<typeof updateMovieGenresSchema>;

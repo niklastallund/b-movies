@@ -37,7 +37,7 @@ export default async function MoviesPage({
 
   // Fetch movies from the database, optionally filtering by search query and genre
   // The selectedGenre filter is only applied if a genre is selected (not an empty string)
-  // The order and sorting is handles by the SortPicker component, which updates the URL parameters
+  // The order and sorting is handled by the SortPicker component, which updates the URL parameters
   // and this component reads them and applies them to the query
   const movies = await prisma.movie.findMany({
     orderBy: { [sortField]: sortOrder },

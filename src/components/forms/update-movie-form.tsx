@@ -216,7 +216,9 @@ export default function UpdateMovieForm({ movie }: UpdateMovieFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Update</Button>
+        <Button type="submit" className="mt-4 max-w-1/4">
+          Update Movie
+        </Button>
       </form>
     </Form>
   );

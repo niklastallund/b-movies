@@ -2,11 +2,12 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth"; // проверь путь
 import { Button } from "@/components/ui/button";
+import { addMoviesAndCrewFromTmdb } from "@/actions/api-actions";
+import AddTmdbButton from "./add-tmdb-button";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export default async function AdminPage() {
-  // Проверяем сессию
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -19,39 +20,37 @@ export default async function AdminPage() {
   }
 
   return (
-    <div className="container mx-auto p-8 space-y-6">
-      <h1 className="text-4xl font-bold text-sky-600">Admin Dashboard</h1>
-
-      {!isLoggedIn && (
-        <p className="text-red-500">
-          You must be logged in to use these buttons.
+    <div className="flex justify-center">
+      <div className="container mx-auto p-8 space-y-8 max-w-2xl">
+        <h1 className="text-4xl font-bold text-sky-600">Admin panel</h1>
+        <p className="text-muted-foreground">
+          Select an action to manage the store:
         </p>
-      )}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Link href={isLoggedIn ? "/admin/movies" : "#"}>
-          <Button className="w-full" disabled={!isLoggedIn}>
-            Create movie
-          </Button>
-        </Link>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Link href="/admin/movies">
+            <Button className="w-full">Create movie</Button>
+          </Link>
 
-        <Link href={isLoggedIn ? "/admin/orders" : "#"}>
-          <Button className="w-full" disabled={!isLoggedIn}>
-            Create order
-          </Button>
-        </Link>
+          <Link href="/admin/person">
+            <Button className="w-full">Create person</Button>
+          </Link>
 
-        <Link href={isLoggedIn ? "/admin/genres" : "#"}>
-          <Button className="w-full" disabled={!isLoggedIn}>
-            Create genre
-          </Button>
-        </Link>
+          <Link href="/admin/orders">
+            <Button className="w-full">Create order</Button>
+          </Link>
 
-        <Link href={isLoggedIn ? "/admin/person" : "#"}>
-          <Button className="w-full" disabled={!isLoggedIn}>
-            Create person
-          </Button>
-        </Link>
+          <Link href="/admin/genres">
+            <Button className="w-full">Create genre</Button>
+          </Link>
+
+          <AddTmdbButton
+            onAdd={async () => {
+              "use server";
+              await addMoviesAndCrewFromTmdb();
+            }}
+          />
+        </div>
       </div>
     </div>
   );

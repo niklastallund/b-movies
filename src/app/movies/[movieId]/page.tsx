@@ -65,7 +65,7 @@ export default async function MovieDetailsPage(props: { params: Params }) {
         movie={movie}
         genres={movie.genres}
         movieCrew={movie.movieCrew}
-        allGenres={allGenres} // pass all genres to the details (used by the dialog)
+        allGenres={allGenres} // pass all genres to the details, used for editing
         admin={isLoggedIn && isAdmin}
       />
     </main>

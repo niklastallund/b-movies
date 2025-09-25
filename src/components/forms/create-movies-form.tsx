@@ -46,7 +46,7 @@ export default function CreateMovieForm() {
   }
 
   return (
-    <Card className="w-full max-w-lg mx-auto bg-black/20 backdrop-blur-xs  ">
+    <Card className="w-full max-w-lg mx-auto">
       <CardHeader>
         <CardTitle>Create Movie</CardTitle>
         <CardDescription>Enter details to add a new movie</CardDescription>
