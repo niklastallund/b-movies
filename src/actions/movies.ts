@@ -73,30 +73,29 @@ export async function updateMovie(formData: UpdateMovieInput) {
       price: validated.price || 0,
     },
   });
-  revalidatePath("/admin/movies");
+
+  revalidatePath(`/movies/${validated.id}`);
+  revalidatePath("/movies");
   return updateMovie;
 }
 
-export async function deleteMovie(formData: FormData) {
-  const validated = await deleteMovieSchema.parseAsync({
-    id: Number(formData.get("id")),
-  });
+export async function deleteMovie(id: number) {
+  const validated = await deleteMovieSchema.parseAsync({ id });
 
   await prisma.movie.delete({
     where: { id: validated.id },
   });
 
-  revalidatePath("/admin/movies");
+  revalidatePath("/movies");
+  redirect("/movies");
 }
 
-// --- Hämta alla filmer ---
 export async function getAllMovies() {
   return await prisma.movie.findMany({
     orderBy: { createdAt: "desc" },
   });
 }
 
-// --- Uppdatera filmens genrer ---
 export async function updateMovieGenresAction(formData: FormData) {
   const movieIdRaw = formData.get("movieId");
   const selected = formData.getAll("genreIds");

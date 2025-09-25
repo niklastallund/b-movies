@@ -74,11 +74,7 @@ export default function CreateGenreForm() {
 
           <div className="space-y-2">
             <Label htmlFor="description">Beskrivning</Label>
-            <Input
-              id="description"
-              name="description"
-              placeholder="T.ex. Vetenskaplig fiktion"
-            />
+            <Input id="description" name="description" />
             {state.errors?.description && (
               <p className="text-destructive text-sm">
                 {state.errors.description[0]}

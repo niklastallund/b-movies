@@ -216,7 +216,7 @@ export default function UpdateMovieForm({ movie }: UpdateMovieFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Update</Button>
+        <Button type="submit">Update Movie</Button>
       </form>
     </Form>
   );

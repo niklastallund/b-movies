@@ -15,6 +15,7 @@ import type { Movie } from "@/generated/prisma";
 import UpdateMovieForm from "@/components/forms/update-movie-form";
 import { EditMovieGenres } from "./forms/edit-movie-genres";
 import { Separator } from "@/components/ui/separator";
+import { DeleteMovieForm } from "@/components/forms/delete-movie-form";
 
 export function EditMoviePopup({
   movie,
@@ -30,7 +31,6 @@ export function EditMoviePopup({
       <DialogTrigger asChild>
         <Button variant="destructive">Edit Movie</Button>
       </DialogTrigger>
-
       <DialogContent className="w-3/4 sm:max-w-6xl max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit movie</DialogTitle>
@@ -38,11 +38,11 @@ export function EditMoviePopup({
             Update details and save changes.
           </DialogDescription>
         </DialogHeader>
-
         {/* 1 column on mobile; on lg use 3 tracks: left | thin separator | right */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-8">
-          <div className="min-w-0">
+          <div className="min-w-0 flex flex-col gap-4">
             <UpdateMovieForm movie={movie} />
+            <DeleteMovieForm movieId={movie.id} />
           </div>
 
           <Separator orientation="vertical" className="hidden lg:block" />
@@ -55,10 +55,11 @@ export function EditMoviePopup({
             />
           </div>
         </div>
-
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Close</Button>
+            <Button variant="outline" className="w-30">
+              Close
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
