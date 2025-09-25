@@ -1,82 +1,87 @@
-# MovieShop Beta 🎬
+<div align="center">
 
-A modern movie e-commerce platform built with Next.js, featuring user authentication, shopping cart functionality, and a responsive design.
+# MovieShop Beta
+
+Modern movie ecommerce implemented with a clean, component‑driven Next.js 15 (App Router) architecture. Features include authenticated user flows, shopping cart with server actions, order management, and modular UI composition.
 
 ![MovieShop Beta Mockup](public/images/mockup-bmovies.jpg)
 
-**Created by:** Josefine, Niklas & Amina
+</div>
 
-## 📋 Table of Contents
+**Authors:** Josefine · Niklas · Amina
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
-- [Components](#components)
-- [Authentication](#authentication)
-- [Usage](#usage)
-- [Team](#team)
-- [Contributing](#contributing)
+---
 
-## ✨ Features
+## Table of Contents
 
-- **🎭 Movie Browsing**: Browse and search through a comprehensive movie database
-- **🔐 User Authentication**: Sign up and sign in functionality with secure authentication
-- **🛒 Shopping Cart**: Add movies to cart and manage purchases
-- **📱 Responsive Design**: Fully responsive navbar and UI components
-- **🌙 Dark/Light Mode**: Theme toggle for better user experience
-- **🔍 Search Functionality**: Search for movies across the platform
-- **👤 User Profiles**: User profile management with dropdown menu
-- **📊 Top Lists**: Curated lists of latest, popular, oldest, and cheapest movies
+1. [Overview](#overview)
+2. [Key Features](#key-features)
+3. [Tech Stack](#tech-stack)
+4. [Architecture Highlights](#architecture-highlights)
+5. [Project Structure](#project-structure)
+6. [Getting Started](#getting-started)
+7. [Development Workflow](#development-workflow)
+8. [Authentication](#authentication)
+9. [Orders & Checkout](#orders--checkout)
+10. [Styling & UI](#styling--ui)
+11. [Accessibility](#accessibility)
+12. [Usage Scenarios](#usage-scenarios)
+13. [Roadmap](#roadmap)
+14. [Team](#team)
+15. [Contributing](#contributing)
+16. [License](#license)
 
-## 🛠 Tech Stack
+---
 
-- **Framework**: [Next.js](https://nextjs.org/) (React)
-- **Language**: TypeScript
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **UI Components**: [shadcn/ui](https://ui.shadcn.com/)
-- **Form Handling**: [React Hook Form](https://react-hook-form.com/)
-- **Validation**: [Zod](https://zod.dev/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Authentication**: Custom auth client
-- **Theme**: [next-themes](https://github.com/pacocoursey/next-themes)
+## Overview
 
-## 🚀 Getting Started
+MovieShop Beta (B‑Movies) is a learning and showcase project demonstrating production‑aligned patterns for a media storefront: data modeling with Prisma, secure session-based authentication, dynamic server rendering, UI layering with Tailwind and shadcn primitives, and progressive enhancement through selective client components.
 
-### Prerequisites
+---
 
-- Node.js 18+
-- npm or yarn
+## Key Features
 
-### Installation
+- Movie catalogue browsing with filtering and search.
+- User authentication (email + password) with session management.
+- Profile & settings pages (extensible for future first/last name separation and contact data).
+- Order creation, order history, and per‑order detail dialog (inline modal specification; no PDF overhead).
+- Shopping cart (cookie + server action driven) with quantity adjustments and price snapshots at purchase time.
+- Thematic mode switching (light/dark) persisting across sessions.
+- Top lists (latest, popular, oldest, cheapest) surfaced as quick navigation anchors.
+- Responsive adaptive layout across viewport breakpoints.
+- Defensive fallbacks for missing images/posters.
 
-1. **Clone the repository**
+---
 
-   ```bash
-   git clone <repository-url>
-   cd movieshop-beta
-   ```
+## Tech Stack
 
-2. **Install dependencies**
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 15 (App Router, Server & Client Components) |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| UI Primitives | shadcn/ui (Radix under the hood) |
+| Forms | React Hook Form + Zod validation |
+| Auth | better-auth (custom integration + client) |
+| Data Layer | Prisma ORM (PostgreSQL target) |
+| Icons | Lucide React |
+| Theming | next-themes |
 
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
+---
 
-3. **Run the development server**
+## Architecture Highlights
 
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
+- **Server Actions** centralize mutations (orders, profile) to reduce API boilerplate.
+- **Selective Client Components** only where interactivity is needed: dialogs, forms, cart controls.
+- **Schema-first Data Model** with explicit order + order item relations storing purchase-time pricing.
+- **Composable UI** built from small, stateless display components and form logic wrappers.
+- **Edge-friendly Rendering** (no heavy global client state libraries).
+- **Graceful Degradation**: image placeholders, empty state messaging, robust parsing.
+- **Scalability Hooks**: ready for extended profile attributes, address book, and re‑order flows.
 
-4. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+---
 
-## 📁 Project Structure
+## Project Structure
 
 movieshop-beta/
 ├── .next/ # Next.js build output (auto-genererad)
@@ -189,7 +194,59 @@ movieshop-beta/
 ├── README.md # Projekt dokumentation
 └── tsconfig.json # TypeScript konfiguration
 
-## 🧩 Components
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18 or later
+- A PostgreSQL database (or adjust datasource configuration)
+
+### Environment Variables (example)
+
+Create a `.env` file:
+
+```bash
+DATABASE_URL="postgresql://user:password@localhost:5432/movieshop"
+TMDB_API_KEY="your_tmdb_api_key"
+```
+
+### Install & Run
+
+```bash
+git clone <repository-url>
+cd movieshop-beta
+npm install
+npx prisma generate
+npm run dev
+```
+
+Visit http://localhost:3000
+
+For a production build:
+
+```bash
+npm run build
+npm start
+```
+
+---
+
+## Development Workflow
+
+| Action | Command |
+|--------|---------|
+| Lint | `npm run lint` |
+| Dev server | `npm run dev` |
+| Build | `npm run build` |
+| Type check (implicit) | Via `tsc` during build |
+
+Migrations are managed through Prisma (e.g. `npx prisma migrate dev`).
+
+---
+
+## Components
 
 ### Navbar
 
@@ -215,7 +272,9 @@ movieshop-beta/
 - **Search**: Always visible on both desktop and mobile
 - **Adaptive UI**: Different layouts optimized for each screen size
 
-## 🔐 Authentication
+---
+
+## Authentication
 
 The application uses a custom authentication system with:
 
@@ -232,7 +291,39 @@ The application uses a custom authentication system with:
 3. **Profile Access**: Authenticated users see profile dropdown instead of auth buttons
 4. **Logout**: Users can sign out from the profile dropdown
 
-## 📱 Usage
+---
+
+## Orders & Checkout
+
+The checkout flow creates an Order with associated OrderItems capturing:
+
+- Snapshot of unit price at time of purchase.
+- Quantity integrity (no reliance on mutable product price after the fact).
+- Basic status life cycle (pending → processed extensible to shipped/delivered).
+
+Success page and order detail dialog reuse layout segments to reduce duplication.
+
+---
+
+## Styling & UI
+
+- Tailwind CSS utility-first composition.
+- shadcn/ui for accessible primitives (Dialog, Dropdown, Card, Sheet, etc.).
+- Theme handled via `next-themes` with instant CSS variable swap.
+- Icons standardized on Lucide for consistent line style.
+
+---
+
+## Accessibility
+
+- Semantic headings and ARIA-friendly component primitives (Radix-based).
+- Focus management in dialogs and sheets.
+- Color contrast mindful of dark/light themes.
+- Text alternatives for images and placeholders when posters are absent.
+
+---
+
+## Usage Scenarios
 
 ### For Visitors (Not Logged In)
 
@@ -262,7 +353,22 @@ The application uses a custom authentication system with:
   - Top 5 Oldest Movies
   - Top 5 Cheapest Movies
 
-## 👥 Team
+---
+
+## Roadmap
+
+Potential future enhancements:
+
+- Address & shipping profiles.
+- Re-order from previous purchases.
+- Recommendation engine (history + popularity blending).
+- Watchlist / favorites persistence.
+- Inventory alerts and low-stock indicators.
+- Payment provider integration abstraction.
+
+---
+
+## Team
 
 This project was collaboratively developed by:
 
@@ -270,7 +376,9 @@ This project was collaboratively developed by:
 - **Niklas** - Frontend Development, Backend, API, Integration & Authentication
 - **Amina** - Backend Authentication
 
-## 🎨 Design & Mockups
+---
+
+## Design & Mockups
 
 _Add your mockup image here:_
 
@@ -285,7 +393,9 @@ The design features a modern, clean interface with:
 - Dark/light theme support
 - Accessible UI components
 
-## 🤝 Contributing
+---
+
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -293,10 +403,12 @@ The design features a modern, clean interface with:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+---
+
+## License
 
 This project is part of a portfolio demonstration.
 
 ---
 
-**Built with ❤️ by Josefine, Niklas & Amina using Next.js and modern web technologies**
+**Built by Josefine · Niklas · Amina using Next.js and modern web technologies.**
