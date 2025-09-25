@@ -1,12 +1,8 @@
 //src\components\admin-genre-form.tsx
 "use client";
 
-import { useFormStatus } from "react-dom";
-import { useActionState } from "react";
 import { createGenre } from "@/actions/genres";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardHeader,
@@ -15,77 +11,83 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { createGenreSchema } from "@/lib/zod-schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-interface FormErrors {
-  _global?: string[];
-  name?: string[];
-  description?: string[];
-}
+type CreateGenreInput = z.infer<typeof createGenreSchema>;
 
-interface FormState {
-  success: boolean;
-  errors: FormErrors;
-}
-
-const initialState: FormState = {
-  success: false,
-  errors: {},
-};
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" aria-disabled={pending}>
-      {pending ? "Skapar..." : "Skapa genre"}
-    </Button>
-  );
-}
-// Komponent för att skapa en ny genere
+// Create Genre using react-hook-form + shadcn Form
 export default function CreateGenreForm() {
-  const [state, formAction] = useActionState(async (prevState, formData) => {
-    let data: any = formData;
-    if (typeof FormData !== "undefined" && formData instanceof FormData) {
-      data = Object.fromEntries(formData.entries());
-    }
-    return await createGenre(data);
-  }, initialState);
-  // IGNORE
+  const form = useForm<CreateGenreInput>({
+    resolver: zodResolver(createGenreSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+    },
+  });
+
+  async function onSubmit(values: CreateGenreInput) {
+    await createGenre(values);
+    form.reset();
+  }
+
   return (
     <Card className="max-w-lg">
       <CardHeader>
-        <CardTitle>Skapa ny genre</CardTitle>
+        <CardTitle>Create new genre</CardTitle>
         <CardDescription>
-          Lägg till en ny filmgenre i databasen.
+          Add a new movie genre to the database.
         </CardDescription>
       </CardHeader>
 
-      <form action={formAction} className="space-y-4">
-        <CardContent>
-          {state.errors?._global && (
-            <p className="text-destructive mb-4">{state.errors._global[0]}</p>
-          )}
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="E.g. Sci-Fi" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="space-y-2">
-            <Label htmlFor="name">Namn</Label>
-            <Input id="name" name="name" placeholder="T.ex. Sci-Fi" required />
-            {state.errors?.name && (
-              <p className="text-destructive text-sm">{state.errors.name[0]}</p>
-            )}
-          </div>
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="space-y-2">
-            <Label htmlFor="description">Beskrivning</Label>
-            <Input id="description" name="description" />
-            {state.errors?.description && (
-              <p className="text-destructive text-sm">
-                {state.errors.description[0]}
-              </p>
-            )}
-          </div>
-        </CardContent>
-        <CardFooter>
-          <SubmitButton />
-        </CardFooter>
-      </form>
+            <CardFooter className="p-0">
+              <Button type="submit">Create genre</Button>
+            </CardFooter>
+          </form>
+        </Form>
+      </CardContent>
     </Card>
   );
 }

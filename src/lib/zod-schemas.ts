@@ -76,15 +76,21 @@ export const createGenreSchema = z.object({
   description: z.string().optional(),
 });
 
+export type CreateGenreInput = z.infer<typeof createGenreSchema>;
+
 export const updateGenreSchema = z.object({
   id: z.number().int().positive(),
   name: z.string().min(1).optional(),
   description: z.string().optional(),
 });
 
+export type UpdateGenreInput = z.infer<typeof updateGenreSchema>;
+
 export const deleteGenreSchema = z.object({
   id: z.number().int().positive(),
 });
+
+export type DeleteGenreInput = z.infer<typeof deleteGenreSchema>;
 
 // --- MovieCrew link schemas ---
 export const roleEnum = z.enum(["CREW", "CAST"]);

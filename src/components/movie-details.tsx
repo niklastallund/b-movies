@@ -20,7 +20,7 @@ interface MovieDetailsProps {
   movieCrew: MovieCrewWithPerson[];
   genres: Genre[];
   allGenres: Genre[];
-  admin: boolean;
+  isAdmin: boolean;
 }
 
 export default function MovieDetails({
@@ -28,14 +28,14 @@ export default function MovieDetails({
   movieCrew,
   genres,
   allGenres,
-  admin,
+  isAdmin,
 }: MovieDetailsProps) {
   const handlePoster =
     getPosterUrl(movie.posterPath, "w500") || "/default-image.jpg";
 
   return (
     <Card className="w-full mx-auto relative bg-background/20 backdrop-blur-xs border-border">
-      {admin && (
+      {isAdmin && (
         <div className="absolute top-4 right-4 z-20">
           <EditMoviePopup
             movie={movie}

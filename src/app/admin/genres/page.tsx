@@ -1,23 +1,23 @@
 //src\app\admin\genres\page.tsx
 
-import { deleteGenre, getAllGenres } from "@/actions/genres";
+import { getAllGenres } from "@/actions/genres";
 import CreateGenreForm from "@/components/forms/create-genre-form";
-import { Button } from "@/components/ui/button";
+import DeleteGenreButton from "@/components/forms/delete-genre-button";
 
 export default async function AdminGenresPage() {
   const genres = await getAllGenres();
 
   return (
     <div className="container mx-auto p-8 space-y-10">
-      <h1 className="text-4xl text-sky-600 font-bold ">Admin: Genrer</h1>
+      <h1 className="text-4xl text-sky-600 font-bold ">Admin: Genres</h1>
 
-      {/* Form för att skapa ny genre */}
+      {/* Form to create a new genre */}
       <CreateGenreForm />
 
-      {/* Lista med befintliga genrer */}
+      {/* List of existing genres */}
       <div className="space-y-4">
         <h2 className="text-2xl text-sky-600 font-semibold ">
-          Befintliga genrer
+          Existing genres
         </h2>
 
         {genres.length > 0 ? (
@@ -30,25 +30,16 @@ export default async function AdminGenresPage() {
                 <div>
                   <h3 className="font-medium">{genre.name}</h3>
                   <p className="text-sm text-muted-foreground italic">
-                    {genre.description || "Ingen beskrivning"}
+                    {genre.description || "No description"}
                   </p>
                 </div>
 
-                <form action={deleteGenre}>
-                  <input type="hidden" name="id" value={genre.id} />
-                  <Button
-                    type="submit"
-                    className="bg-red-800 text-white-50"
-                    size="sm"
-                  >
-                    Ta bort
-                  </Button>
-                </form>
+                <DeleteGenreButton id={genre.id} name={genre.name} />
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-muted-foreground">Inga genrer hittades.</p>
+          <p className="text-muted-foreground">No genres found.</p>
         )}
       </div>
     </div>
