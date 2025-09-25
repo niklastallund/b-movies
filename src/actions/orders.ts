@@ -19,6 +19,32 @@ export async function getAllOrders() {
   }
 }
 
+// --- Hämta användarens ordrar ---
+export async function getUserOrders(userId: string) {
+  try {
+    const orders = await prisma.order.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      include: {
+        OrderItem: {
+          include: {
+            movie: {
+              select: {
+                title: true,
+                price: true,
+                posterPath: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return orders;
+  } catch (error) {
+    return [];
+  }
+}
+
 // --- Hämta en order med ID ---
 export async function getOrderById(orderId: string) {
   const id = Number(orderId);
