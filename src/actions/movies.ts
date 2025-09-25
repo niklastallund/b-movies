@@ -1,7 +1,3 @@
-//Aminas
-
-// src/actions/movies.ts
-
 "use server";
 
 import { prisma } from "@/lib/prisma";
@@ -10,6 +6,7 @@ import {
   createMovieSchema,
   updateMovieSchema,
   deleteMovieSchema,
+  updateMovieGenresSchema,
   CreateMovieInput,
   UpdateMovieInput,
 } from "@/lib/zod-schemas";
@@ -18,7 +15,6 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-// --- Skapa ny film ---
 export async function createMovie(formData: CreateMovieInput) {
   //Authorization
   const session = await auth.api.getSession({
@@ -30,7 +26,6 @@ export async function createMovie(formData: CreateMovieInput) {
   }
 
   const validated = await createMovieSchema.parseAsync(formData);
-  //console.log(validated.releaseDate);
 
   const newMovie = await prisma.movie.create({
     data: {
@@ -53,9 +48,9 @@ export async function createMovie(formData: CreateMovieInput) {
   return newMovie;
 }
 
-// update movie
 export async function updateMovie(formData: UpdateMovieInput) {
   const validated = await updateMovieSchema.parseAsync(formData);
+
   const updateMovie = await prisma.movie.update({
     where: { id: validated.id },
     data: {
@@ -100,30 +95,31 @@ export async function updateMovieGenresAction(formData: FormData) {
   const movieIdRaw = formData.get("movieId");
   const selected = formData.getAll("genreIds");
 
+  // Convert to numbers
   const movieId = Number(movieIdRaw);
-  if (!Number.isInteger(movieId) || movieId <= 0) {
-    throw new Error("Invalid movieId");
-  }
+  const genreIds = selected.map((v) => Number(v));
 
-  const genreIds = selected
-    .map((v) => Number(v))
-    .filter((n) => Number.isInteger(n) && n > 0);
+  // Validate with Zod
+  const validated = await updateMovieGenresSchema.parseAsync({
+    movieId,
+    genreIds,
+  });
 
   await prisma.movie.update({
-    where: { id: movieId },
+    where: { id: validated.movieId },
     data: {
       genres: {
-        set: genreIds.map((id) => ({ id })),
+        set: validated.genreIds.map((id) => ({ id })),
       },
     },
   });
 
-  revalidatePath(`/movies/${movieId}`);
+  revalidatePath(`/movies/${validated.movieId}`);
   revalidatePath("/movies");
   revalidatePath("/admin/movies");
 }
 
-// --- Search movies by title (for client-side pickers) ---
+
 export async function searchMoviesByTitle(query: string, limit = 10) {
   const q = query.trim();
   if (!q) return [] as { id: number; title: string; subtitle?: number }[];

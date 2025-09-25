@@ -183,3 +183,12 @@ export const checkoutOrderSchema = z.object({
 });
 
 export type CheckoutOrderInput = z.infer<typeof checkoutOrderSchema>;
+
+export const updateMovieGenresSchema = z.object({
+  movieId: z.number().int().positive(),
+  genreIds: z
+    .array(z.number().int().positive())
+    .min(1, "Select at least one genre."),
+});
+
+export type UpdateMovieGenresInput = z.infer<typeof updateMovieGenresSchema>;
