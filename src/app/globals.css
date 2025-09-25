@@ -100,7 +100,7 @@
   --accent-foreground: oklch(0.92 0.01 0);
 
   /* Destructive - använder primary red men ljusare */
-  --destructive: oklch(0.52 0.22 15); /* ljusare röd för varningar */
+  --destructive: oklch(62.803% 0.25754 29.002); /* ljusare röd för varningar */
   --destructive-foreground: oklch(0.96 0.01 0);
 
   /* Borders och input - tydlig men inte för stark */

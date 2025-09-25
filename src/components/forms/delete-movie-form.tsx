@@ -19,7 +19,7 @@ export function DeleteMovieForm({ movieId }: { movieId: number }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" className="mt-10 max-w-1/4">
+        <Button variant="destructive" className="max-w-1/4">
           Delete Movie
         </Button>
       </AlertDialogTrigger>

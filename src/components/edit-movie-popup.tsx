@@ -42,6 +42,7 @@ export function EditMoviePopup({
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-8">
           <div className="min-w-0 flex flex-col gap-4">
             <UpdateMovieForm movie={movie} />
+            <Separator />
             <DeleteMovieForm movieId={movie.id} />
           </div>
 
