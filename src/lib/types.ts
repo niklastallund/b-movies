@@ -18,8 +18,8 @@ export interface MovieApi {
   posterPath?: string;
   backdropPath?: string;
 
-  stock?: number; //tmp
-  price?: number; //tmp
+  stock?: number;
+  price?: number; 
 }
 
 export interface PersonApi {
