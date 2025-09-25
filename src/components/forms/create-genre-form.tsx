@@ -9,7 +9,6 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import {
   Form,
@@ -24,6 +23,7 @@ import { createGenreSchema } from "@/lib/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { toast } from "sonner";
 
 type CreateGenreInput = z.infer<typeof createGenreSchema>;
 
@@ -38,8 +38,14 @@ export default function CreateGenreForm() {
   });
 
   async function onSubmit(values: CreateGenreInput) {
-    await createGenre(values);
-    form.reset();
+    try {
+      await createGenre(values);
+      toast.success("Genre created");
+      form.reset();
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to create genre");
+    }
   }
 
   return (
@@ -81,10 +87,7 @@ export default function CreateGenreForm() {
                 </FormItem>
               )}
             />
-
-            <CardFooter className="p-0">
-              <Button type="submit">Create genre</Button>
-            </CardFooter>
+            <Button type="submit">Create genre</Button>
           </form>
         </Form>
       </CardContent>

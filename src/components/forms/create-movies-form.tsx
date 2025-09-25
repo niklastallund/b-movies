@@ -223,7 +223,7 @@ export default function CreateMovieForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Create</Button>
+            <Button type="submit">Create Movie</Button>
           </form>
         </Form>
       </CardContent>

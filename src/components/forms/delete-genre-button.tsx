@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export function DeleteGenreButton({ id, name }: { id: number; name: string }) {
   return (
@@ -31,17 +32,19 @@ export function DeleteGenreButton({ id, name }: { id: number; name: string }) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <form
-          action={async (formData) => {
-            await deleteGenre(formData);
+          action={async () => {
+            try {
+              await deleteGenre(id);
+              toast.success("Genre deleted");
+            } catch (e) {
+              console.error(e);
+              toast.error("Failed to delete genre");
+            }
           }}
         >
-          <input type="hidden" name="id" value={id} />
           <AlertDialogFooter>
             <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              type="submit"
-              className="bg-red-600 hover:bg-red-700"
-            >
+            <AlertDialogAction className="bg-red-600 hover:bg-red-700">
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

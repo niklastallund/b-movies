@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { deletePerson } from "@/actions/person";
 
 // This does not use react-hook-form because it's a simple confirmation dialog
-export function DeletePersonForm({ personId }: { personId: number }) {
+export function DeletePersonButton({ personId }: { personId: number }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>

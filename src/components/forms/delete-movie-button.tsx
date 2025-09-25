@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { deleteMovie } from "@/actions/movies";
 
 // This does not use react-hook-form because it's a simple confirmation dialog
-export function DeleteMovieForm({ movieId }: { movieId: number }) {
+export function DeleteMovieButton({ movieId }: { movieId: number }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>

@@ -15,7 +15,7 @@ import type { Movie } from "@/generated/prisma";
 import UpdateMovieForm from "@/components/forms/update-movie-form";
 import { EditMovieGenres } from "./forms/edit-movie-genres";
 import { Separator } from "@/components/ui/separator";
-import { DeleteMovieForm } from "@/components/forms/delete-movie-form";
+import { DeleteMovieButton } from "@/components/forms/delete-movie-button";
 
 export function EditMoviePopup({
   movie,
@@ -43,7 +43,7 @@ export function EditMoviePopup({
           <div className="min-w-0 flex flex-col gap-4">
             <UpdateMovieForm movie={movie} />
             <Separator />
-            <DeleteMovieForm movieId={movie.id} />
+            <DeleteMovieButton movieId={movie.id} />
           </div>
 
           <Separator orientation="vertical" className="hidden lg:block" />

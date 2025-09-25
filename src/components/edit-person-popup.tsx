@@ -15,7 +15,7 @@ import type { Person } from "@/generated/prisma";
 import UpdatePersonForm from "@/components/forms/update-person-form";
 import { LinkPersonToMovieForm } from "@/components/forms/link-person-to-movie-form";
 import { Separator } from "@/components/ui/separator";
-import { DeletePersonForm } from "./forms/delete-person-form";
+import { DeletePersonButton } from "./forms/delete-person-button";
 
 export function EditPersonPopup({ person }: { person: Person }) {
   return (
@@ -37,7 +37,7 @@ export function EditPersonPopup({ person }: { person: Person }) {
           <div className="min-w-0 flex flex-col gap-4">
             <UpdatePersonForm person={person} />
             <Separator />
-            <DeletePersonForm personId={person.id} />
+            <DeletePersonButton personId={person.id} />
           </div>
 
           <Separator orientation="vertical" className="hidden lg:block" />
