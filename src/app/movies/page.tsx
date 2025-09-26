@@ -3,6 +3,15 @@ import GenreFilter from "@/components/genre-filter";
 import SearchBar from "@/components/search-bar";
 import SortPicker from "@/components/sort-picker";
 import { prisma } from "@/lib/prisma";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 // These are used to map the sort query parameter for prisma
 const SORT_MAP = {
@@ -21,6 +30,7 @@ export default async function MoviesPage({
     genre?: string;
     sort?: string;
     order?: string;
+    page?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -29,12 +39,17 @@ export default async function MoviesPage({
   const query = params.q || "";
   const selectedGenre = params.genre || "";
   const sort = (params.sort as keyof typeof SORT_MAP) || "title";
+  const page = parseInt(params.page || "1");
 
   // Default to ascending order if not specified or invalid
   const sortOrder = params.order === "desc" ? "desc" : "asc";
 
   // Maps the sort query to the sort map so we are guaranteed to have a valid field
   const sortField = SORT_MAP[sort] || "title";
+
+  // Pagination settings
+  const PAGE_SIZE = 18;
+  const currentPage = Math.max(1, page); // Avoid pages less than 1
 
   // Fetch all genres for the genre filter dropdown
   const genres = await prisma.genre.findMany({
@@ -60,7 +75,28 @@ export default async function MoviesPage({
           }
         : {}),
     },
+    skip: (currentPage - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
   });
+
+  // Fetch total count of movies for pagination
+  const totalMovies = await prisma.movie.count({
+    where: {
+      title: {
+        contains: query,
+        mode: "insensitive",
+      },
+      ...(selectedGenre
+        ? {
+            genres: {
+              some: { name: selectedGenre },
+            },
+          }
+        : {}),
+    },
+  });
+
+  const totalPages = Math.ceil(totalMovies / PAGE_SIZE);
 
   return (
     <main className="container mx-auto py-8 px-4">
@@ -88,6 +124,44 @@ export default async function MoviesPage({
           </p>
         )}
       </div>
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <Pagination className="mt-8 flex justify-center">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href={`?${new URLSearchParams({
+                  ...params,
+                  page: String(currentPage - 1),
+                })}`}
+                aria-disabled={currentPage === 1}
+              />
+            </PaginationItem>
+            {[...Array(totalPages)].map((_, i) => (
+              <PaginationItem key={i}>
+                <PaginationLink
+                  href={`?${new URLSearchParams({
+                    ...params,
+                    page: String(i + 1),
+                  })}`}
+                  isActive={currentPage === i + 1}
+                >
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            <PaginationItem>
+              <PaginationNext
+                href={`?${new URLSearchParams({
+                  ...params,
+                  page: String(currentPage + 1),
+                })}`}
+                aria-disabled={currentPage === totalPages}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </main>
   );
 }

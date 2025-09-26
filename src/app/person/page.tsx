@@ -26,7 +26,7 @@ export default async function PersonPage({
   return (
     <main className="container mx-auto py-8 px-4">
       <h1 className="text-4xl font-bold mb-8 text-sky-800 ">People</h1>
-      <div className="mb-8 mt-8 grid text-gray-50  grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
+      <div className="mb-8 mt-8 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
         <div className="w-full">
           <SearchBar />
         </div>
