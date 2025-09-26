@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { CreateMovieInput, createMovieSchema } from "@/lib/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function CreateMovieForm() {
   const form = useForm<CreateMovieInput>({
@@ -42,7 +43,13 @@ export default function CreateMovieForm() {
   });
 
   async function onSubmit(data: CreateMovieInput) {
-    await createMovie(data);
+    try {
+      await createMovie(data);
+      toast.success("Movie created");
+    } catch (error) {
+      toast.error("Failed to create movie");
+      console.error(error);
+    }
   }
 
   return (

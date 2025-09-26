@@ -15,6 +15,7 @@ import { Person } from "@/generated/prisma";
 import { UpdatePersonInput, updatePersonSchema } from "@/lib/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 interface UpdatePersonFormProps {
   person: Person;
@@ -43,7 +44,13 @@ export default function UpdatePersonForm({ person }: UpdatePersonFormProps) {
       )
     ) as UpdatePersonInput;
 
-    await updatePerson(cleanedData);
+    try {
+      await updatePerson(cleanedData);
+      toast.success("Person updated");
+    } catch (error) {
+      toast.error("Failed to update person");
+      console.error(error);
+    }
   }
 
   return (
@@ -151,7 +158,7 @@ export default function UpdatePersonForm({ person }: UpdatePersonFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Update</Button>
+        <Button type="submit">Update Person</Button>
       </form>
     </Form>
   );

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { addToCart } from "@/cart/actions";
+import { toast } from "sonner";
 
 export function AddToCartForm({
   movieId,
@@ -27,13 +28,19 @@ export function AddToCartForm({
 
   const handleAddToCart = () => {
     startTransition(async () => {
-      await addToCart({
-        id: movieId,
-        name: title,
-        price,
-        quantity,
-        imageUrl,
-      });
+      try {
+        await addToCart({
+          id: movieId,
+          name: title,
+          price,
+          quantity,
+          imageUrl,
+        });
+        toast.success(`${title} added to cart`);
+      } catch (error) {
+        toast.error("Failed to add to cart");
+        console.error(error);
+      }
       router.refresh();
     });
   };

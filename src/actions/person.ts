@@ -9,16 +9,11 @@ import {
   deletePersonSchema,
 } from "@/lib/zod-schemas";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
-// !!!!!!!!!!!!!!!!!!
-// !TODO auth checks!
-// !!!!!!!!!!!!!!!!!!
 export async function createPerson(person: CreatePersonInput) {
+  //Authorization
+  await requireAdmin();
 
-   //Authorization
-    await requireAdmin();
-    
   const data = await createPersonSchema.parseAsync(person);
 
   const newPerson = await prisma.person.create({
@@ -37,8 +32,7 @@ export async function createPerson(person: CreatePersonInput) {
 }
 
 export async function updatePerson(person: UpdatePersonInput) {
-
-   //Authorization
+  //Authorization
   await requireAdmin();
 
   const data = await updatePersonSchema.parseAsync(person);
@@ -61,17 +55,12 @@ export async function updatePerson(person: UpdatePersonInput) {
 }
 
 export async function deletePerson(id: number) {
-
-   //Authorization
   await requireAdmin();
-  
   const validated = await deletePersonSchema.parseAsync({ id });
   await prisma.person.delete({
     where: { id: validated.id },
   });
-
   revalidatePath("/person");
-  redirect("/person");
 }
 
 export async function getAllPersons() {

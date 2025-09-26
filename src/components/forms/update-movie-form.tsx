@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { UpdateMovieInput, updateMovieSchema } from "@/lib/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 interface UpdateMovieFormProps {
   movie: Movie;
@@ -41,7 +42,13 @@ export default function UpdateMovieForm({ movie }: UpdateMovieFormProps) {
   });
 
   async function onSubmit(data: UpdateMovieInput) {
-    await updateMovie(data);
+    try {
+      await updateMovie(data);
+      toast.success("Movie updated");
+    } catch (error) {
+      toast.error("Failed to update movie");
+      console.error(error);
+    }
   }
 
   return (
