@@ -25,10 +25,7 @@ export function SignInAndProfile({ isLoggedIn }: { isLoggedIn: boolean }) {
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <Button
-            variant="ghost"
-            className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition transform hover:scale-110"
-          >
+          <Button className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition transform hover:scale-110">
             <LogIn className="h-4 w-4" />
             Sign In
           </Button>
@@ -46,10 +43,7 @@ export function SignInAndProfile({ isLoggedIn }: { isLoggedIn: boolean }) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition transform hover:scale-110"
-          >
+          <Button className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition transform hover:scale-110">
             <User className="h-4 w-4" />
             Profile
           </Button>

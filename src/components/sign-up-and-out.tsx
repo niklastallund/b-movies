@@ -8,10 +8,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
-import { UserPlus } from "lucide-react";
+import { LogOut, UserPlus } from "lucide-react";
 import SignUpForm from "./forms/sign-up-form";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 export default function SignUpAndOut({ isLoggedIn }: { isLoggedIn: boolean }) {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function SignUpAndOut({ isLoggedIn }: { isLoggedIn: boolean }) {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
+          toast.success("Successfully signed out");
           router.refresh();
         },
       },
@@ -54,6 +56,7 @@ export default function SignUpAndOut({ isLoggedIn }: { isLoggedIn: boolean }) {
         variant="outline"
         className="flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition transform hover:scale-110"
       >
+        <LogOut className="h-4 w-4" />
         Sign Out
       </Button>
     );

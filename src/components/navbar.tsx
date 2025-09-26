@@ -1,8 +1,7 @@
 import Form from "next/form";
 import Link from "next/link";
 import Image from "next/image";
-import { headers } from "next/headers";
-import { auth, getSession, requireUser } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 
 // Shadcn UI components
 import {
@@ -11,14 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { UserPlus, LogIn, Menu } from "lucide-react";
+
+import { Menu } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -30,7 +23,6 @@ import { Input } from "@/components/ui/input";
 
 // Custom components
 import { ModeToggle } from "@/components/toggle-theme-button";
-import SignUpForm from "@/components/forms/sign-up-form";
 import ShoppingCartSheet from "./shopping-cart-sheet";
 import { SignInAndProfile } from "./sign-in-and-profile";
 import SignUpAndOut from "./sign-up-and-out";
@@ -41,8 +33,8 @@ export default async function Navbar() {
 
   // Used to generate the Top Lists dropdown and mobile menu
   const toplists = [
+    { label: "Top 5 Popular Movies", id: "popular" },
     { label: "Top 5 Latest Movies", id: "latest" },
-    { label: "Top 5 Most Popular Movies", id: "popular" },
     { label: "Top 5 Oldest Movies", id: "oldest" },
     { label: "Top 5 Cheapest Movies", id: "cheapest" },
   ];
@@ -73,15 +65,15 @@ export default async function Navbar() {
         </Link>
 
         {/* SEARCH - CART - PROFILE - MOBILE BUTTON */}
-        <div className="flex items-center md:order-2 space-x-2">
+        <div className="flex items-center lg:order-2 space-x-3">
           {/* Search field */}
-          <div className="flex items-center space-x-2">
-            <Form action="/movies">
+          <div className="flex items-center space-x-2 flex-1 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
+            <Form action="/movies" className="w-full">
               <Input
                 type="search"
                 name="q"
                 placeholder="Search for movies..."
-                className="w-full md:w-64"
+                className="w-full"
               />
               <button type="submit" hidden></button>
             </Form>
@@ -94,19 +86,19 @@ export default async function Navbar() {
           <ShoppingCartSheet />
 
           {/* PROFILE DROPDOWN - ENDAST DESKTOP */}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <SignInAndProfile isLoggedIn={isLoggedIn} />
           </div>
 
           {/* SIGN UP BUTTON - ENDAST DESKTOP */}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <SignUpAndOut isLoggedIn={isLoggedIn} />
           </div>
 
           {/* MOBILE MENU */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
+              <Button variant="ghost" size="icon" className="lg:hidden">
                 <Menu className="w-6 h-6" />
                 <span className="sr-only">Open menu</span>
               </Button>
@@ -119,8 +111,8 @@ export default async function Navbar() {
         </div>
 
         {/* NAVIGATION FOR DESKTOP */}
-        <div className="hidden w-full md:flex md:w-auto md:order-1 text-foreground items-center justify-between">
-          <ul className="flex items-center font-medium space-x-8">
+        <div className="hidden w-full lg:flex lg:w-auto lg:order-1 text-foreground items-center justify-between">
+          <ul className="flex items-center font-medium space-x-3 lg:space-x-8">
             <li>
               <Link
                 href="/"
@@ -207,25 +199,10 @@ const MobileLinks = ({
       </DropdownMenuContent>
     </DropdownMenu>
 
-    <div className="flex flex-col space-y-2 pt-4 border-t border-border mt-4">
+    <div className="flex flex-col space-y-4 pt-4 border-t border-border mt-4">
       {/* SIGN UP BUTTON FOR MOBILE */}
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            className="justify-start font-semibold text-lg gap-2"
-          >
-            <UserPlus className="h-4 w-4" />
-            Sign Up
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="sr-only">Sign Up</DialogTitle>
-          </DialogHeader>
-          <SignUpForm />
-        </DialogContent>
-      </Dialog>
+
+      <SignUpAndOut isLoggedIn={isLoggedIn} />
 
       {/* SIGN IN BUTTON FOR MOBILE */}
       <SignInAndProfile isLoggedIn={isLoggedIn} />

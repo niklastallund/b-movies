@@ -21,6 +21,7 @@ import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 const FormSchema = z.object({
@@ -48,10 +49,10 @@ export default function SignInForm({ onSuccess }: { onSuccess?: () => void }) {
     });
 
     if (error) {
-      alert(error.message);
+      toast.error(error.message);
     } else {
-      onSuccess?.(); // Stäng dialogen
-      router.replace("/");
+      onSuccess?.();
+      toast.success("Successfully signed in");
       router.refresh();
     }
   }
