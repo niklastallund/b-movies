@@ -11,29 +11,28 @@
   }
 }
 
-/* Dark-variant för Tailwind v4 (fungerar med .dark på html/body) */
 @custom-variant dark (&:where(.dark &));
 
 :root {
-  --background: oklch(0.97 0.01 240); /* #f5fbff - ljusblå bakgrund */
-  --foreground: oklch(0.15 0.02 240); /* mörk blå text */
-  --card: oklch(0.99 0.005 240); /* vit med lätt blå ton */
+  --background: oklch(0.97 0.01 240);
+  --foreground: oklch(0.15 0.02 240);
+  --card: oklch(0.99 0.005 240);
   --card-foreground: oklch(0.15 0.02 240);
   --popover: oklch(0.99 0.005 240);
   --popover-foreground: oklch(0.15 0.02 240);
-  --primary: oklch(0.42 0.15 240); /* #0060a7 - huvudblå färg */
+  --primary: oklch(0.42 0.15 240);
   --primary-foreground: oklch(0.98 0.01 240);
-  --secondary: oklch(0.55 0.05 240); /* ljusare blå */
+  --secondary: oklch(0.55 0.05 240);
   --secondary-foreground: oklch(0.25 0.08 240);
   --muted: oklch(0.92 0.015 240);
-  --muted-foreground: oklch(0.42 0.15 240);
-  --accent: oklch(0.88 0.02 240); /* accent blå */
+  --muted-foreground: oklch(36.177% 0.01922 242.362);
+  --accent: oklch(0.88 0.02 240);
   --accent-foreground: oklch(0.25 0.08 240);
-  --destructive: oklch(0.58 0.25 27.33); /* röd för varningar */
+  --destructive: oklch(0.58 0.25 27.33);
   --destructive-foreground: oklch(0.98 0.01 240);
   --border: oklch(0.87 0.02 240);
   --input: oklch(0.94 0.015 240);
-  --ring: oklch(0.42 0.15 240); /* samma som primary */
+  --ring: oklch(0.42 0.15 240);
   --chart-1: oklch(0.65 0.12 240);
   --chart-2: oklch(0.55 0.15 245);
   --chart-3: oklch(0.45 0.18 250);
@@ -71,64 +70,40 @@
   --spacing: 0.25rem;
 }
 
-/* Mörkt tema med röd accent (#990017) */
 .dark {
-  /* Bakgrunder med tydlig hierarki */
-  --background: oklch(0.06 0.02 15); /* #0e0301 - huvudbakgrund */
-  --foreground: oklch(0.94 0.01 0); /* ljus text */
-
-  /* Card och popover med tydlig skillnad från bakgrund */
-  --card: oklch(0.15 0.03 200); /* #001f23 - mörk cyan för cards */
+  --background: oklch(0.06 0.02 15);
+  --foreground: oklch(0.94 0.01 0);
+  --card: oklch(0.15 0.03 200);
   --card-foreground: oklch(0.94 0.01 0);
-  --popover: oklch(0.18 0.03 200); /* lite ljusare än cards */
+  --popover: oklch(0.18 0.03 200);
   --popover-foreground: oklch(0.94 0.01 0);
-
-  /* Primary färg - din röda */
-  --primary: oklch(0.35 0.18 15); /* #990017 - huvudröd färg */
+  --primary: oklch(0.35 0.18 15);
   --primary-foreground: oklch(0.96 0.01 0);
-
-  /* Sekundär med cyan-touch */
-  --secondary: oklch(0.15 0.03 200); /* #001f23 - mörk cyan/blå */
+  --secondary: oklch(0.15 0.03 200);
   --secondary-foreground: oklch(0.88 0.01 0);
-
-  /* Muted färger för subtil information */
-  --muted: oklch(0.12 0.02 200); /* mellan card och background, cyan-ton */
+  --muted: oklch(0.12 0.02 200);
   --muted-foreground: oklch(0.68 0.01 0);
-
-  /* Accent - ljusare variant av cyan */
-  --accent: oklch(0.2 0.03 200); /* cyan accent */
+  --accent: oklch(0.2 0.03 200);
   --accent-foreground: oklch(0.92 0.01 0);
-
-  /* Destructive - använder primary red men ljusare */
-  --destructive: oklch(62.803% 0.25754 29.002); /* ljusare röd för varningar */
+  --destructive: oklch(62.803% 0.25754 29.002);
   --destructive-foreground: oklch(0.96 0.01 0);
-
-  /* Borders och input - tydlig men inte för stark */
-  --border: oklch(0.2 0.03 200); /* samma som accent för konsistens */
-  --input: oklch(0.22 0.03 200); /* lite ljusare än border */
-  --ring: oklch(0.35 0.18 15); /* samma som primary för focus */
-
-  /* Chart färger med röd/cyan tema */
-  --chart-1: oklch(0.45 0.15 15); /* röd variant */
-  --chart-2: oklch(0.42 0.12 200); /* cyan variant */
-  --chart-3: oklch(0.38 0.18 20); /* orange-röd */
-  --chart-4: oklch(0.35 0.15 180); /* blå-cyan */
-  --chart-5: oklch(0.32 0.1 30); /* gul-röd */
-
-  /* Sidebar med tydlig separation */
-  --sidebar: oklch(0.12 0.02 15); /* mellan background och card */
+  --border: oklch(0.2 0.03 200);
+  --input: oklch(0.22 0.03 200);
+  --ring: oklch(0.35 0.18 15);
+  --chart-1: oklch(0.45 0.15 15);
+  --chart-2: oklch(0.42 0.12 200);
+  --chart-3: oklch(0.38 0.18 20);
+  --chart-4: oklch(0.35 0.15 180);
+  --chart-5: oklch(0.32 0.1 30);
+  --sidebar: oklch(0.12 0.02 15);
   --sidebar-foreground: oklch(0.92 0.01 0);
-  --sidebar-primary: oklch(0.35 0.18 15); /* samma som primary */
+  --sidebar-primary: oklch(0.35 0.18 15);
   --sidebar-primary-foreground: oklch(0.96 0.01 0);
-  --sidebar-accent: oklch(0.18 0.03 200); /* cyan accent för sidebar */
+  --sidebar-accent: oklch(0.18 0.03 200);
   --sidebar-accent-foreground: oklch(0.88 0.01 0);
   --sidebar-border: oklch(0.2 0.03 200);
   --sidebar-ring: oklch(0.32 0.15 15);
-
-  /* Border radius */
   --radius: 0.625rem;
-
-  /* Förbättrade skuggor för bättre depth */
   --shadow-2xs: 0 1px 3px 0px hsl(200 80% 0% / 0.2);
   --shadow-xs: 0 1px 3px 0px hsl(200 80% 0% / 0.25);
   --shadow-sm: 0 1px 3px 0px hsl(200 80% 0% / 0.3),
@@ -144,7 +119,6 @@
   --shadow-2xl: 0 1px 3px 0px hsl(200 80% 0% / 0.5);
 }
 
-/* Extra utility klasser för bättre separation */
 .dark .carousel-item {
   background: var(--card);
   border: 1px solid var(--border);
@@ -156,7 +130,7 @@
 }
 
 .dark .glass-effect {
-  background: oklch(0.15 0.03 200 / 0.8); /* cyan-ton för glass effect */
+  background: oklch(0.15 0.03 200 / 0.8);
   backdrop-filter: blur(12px);
   border: 1px solid oklch(0.22 0.03 200 / 0.3);
 }
