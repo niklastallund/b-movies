@@ -23,6 +23,8 @@ export default async function MoviesPage({
     order?: string;
   }>;
 }) {
+  
+
   const params = await searchParams;
 
   // Extract and sanitize query parameters

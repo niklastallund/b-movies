@@ -1,4 +1,5 @@
 "use server";
+import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
   createPersonSchema,
@@ -14,6 +15,10 @@ import { redirect } from "next/navigation";
 // !TODO auth checks!
 // !!!!!!!!!!!!!!!!!!
 export async function createPerson(person: CreatePersonInput) {
+
+   //Authorization
+    await requireAdmin();
+    
   const data = await createPersonSchema.parseAsync(person);
 
   const newPerson = await prisma.person.create({
@@ -32,6 +37,10 @@ export async function createPerson(person: CreatePersonInput) {
 }
 
 export async function updatePerson(person: UpdatePersonInput) {
+
+   //Authorization
+  await requireAdmin();
+
   const data = await updatePersonSchema.parseAsync(person);
 
   const updatedPerson = await prisma.person.update({
@@ -52,6 +61,10 @@ export async function updatePerson(person: UpdatePersonInput) {
 }
 
 export async function deletePerson(id: number) {
+
+   //Authorization
+  await requireAdmin();
+  
   const validated = await deletePersonSchema.parseAsync({ id });
   await prisma.person.delete({
     where: { id: validated.id },

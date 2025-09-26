@@ -1,23 +1,11 @@
-// // src/app/admin/page.tsx
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth"; // проверь путь
+import { requireAdmin } from "@/lib/auth"; // проверь путь
 import { Button } from "@/components/ui/button";
 import { addMoviesAndCrewFromTmdb } from "@/actions/api-actions";
 import AddTmdbButton from "./add-tmdb-button";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 export default async function AdminPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  const isLoggedIn = !!session;
-  const isAdmin = session?.user.role === "admin"
-
-  if (!isLoggedIn || !isAdmin) {
-    return notFound();
-  }
+  await requireAdmin();
 
   return (
     <div className="flex justify-center">

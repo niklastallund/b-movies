@@ -11,6 +11,7 @@ import {
   CreateGenreInput,
   UpdateGenreInput,
 } from "@/lib/zod-schemas";
+import { requireAdmin } from "@/lib/auth";
 
 // Create a new genre
 export async function createGenre(input: CreateGenreInput) {
@@ -33,6 +34,9 @@ export async function updateGenre(input: UpdateGenreInput) {
 
 // Delete a genre by id
 export async function deleteGenre(id: number) {
+  //Authorization
+  await requireAdmin();
+
   const validated = await deleteGenreSchema.parseAsync({ id });
   await prisma.genre.delete({ where: { id: validated.id } });
   revalidatePath("/admin/genres");

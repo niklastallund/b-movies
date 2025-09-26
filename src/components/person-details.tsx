@@ -12,6 +12,7 @@ export type MovieCrewWithMovie = MovieCrew & { movie: Movie };
 interface PersonDetailsProps {
   person: Person;
   workedOn: MovieCrewWithMovie[];
+  isAdmin: boolean;
 }
 
 function getAgeAtDeath(birthday: Date, deathday: Date): number {
@@ -34,6 +35,7 @@ function getAgeAtDeath(birthday: Date, deathday: Date): number {
 export default function PersonDetails({
   person,
   workedOn,
+  isAdmin,
 }: PersonDetailsProps) {
   const handlePoster =
     getProfileUrl(person.profilePath, "h632") || "/images/default-profile.png";
@@ -42,7 +44,7 @@ export default function PersonDetails({
     <Card className="w-full mx-auto relative">
       {/* Place EditPersonPopup absolutely in the top right */}
       <div className="absolute top-4 right-4 z-20">
-        <EditPersonPopup person={person} />
+        {isAdmin && <EditPersonPopup person={person} />}
       </div>
       <CardContent className="relative z-10 flex flex-col md:flex-row p-4 md:p-8">
         <div className="w-full md:w-1/2 flex items-center justify-center mb-4 md:mb-0 md:pr-4">

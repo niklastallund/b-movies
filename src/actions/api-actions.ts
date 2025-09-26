@@ -5,8 +5,11 @@ import { prisma } from "@/lib/prisma";
 import { Role } from "@/generated/prisma";
 import { FindCrewByMovieId, FindMoviesByDirectors } from "@/lib/tmdb";
 import { Genre } from "moviedb-promise";
+import { requireAdmin } from "@/lib/auth";
 
 export async function addMoviesAndCrewFromTmdb() {
+  await requireAdmin();
+      
   const movies = await FindMoviesByDirectors();
 
   // For each movie, create a new movie or update it (if it already exists),

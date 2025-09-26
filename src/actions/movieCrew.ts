@@ -4,8 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { linkPersonToMovieSchema } from "@/lib/zod-schemas";
 import type { Role } from "@/generated/prisma";
+import { requireAdmin } from "@/lib/auth";
 
 export async function linkPersonToMovieAction(formData: FormData) {
+  await requireAdmin();
+
   const data = await linkPersonToMovieSchema.parseAsync({
     personId: formData.get("personId"),
     movieId: formData.get("movieId"),
@@ -56,6 +59,8 @@ export async function linkPersonToMovieAction(formData: FormData) {
 }
 
 export async function unlinkPersonFromMovieAction(formData: FormData) {
+  await requireAdmin();
+
   const parsed = await linkPersonToMovieSchema
     .partial({ order: true })
     .parseAsync({
