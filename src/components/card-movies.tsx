@@ -32,12 +32,12 @@ export function MovieCard({ movie }: MovieDetailsProps) {
           width={400}
           height={620}
           style={{ objectFit: "cover" }}
-          className="rounded-xl px-3"
+          className="rounded-3xl px-3"
         />
       </CardContent>
-      <CardFooter className="flex-col items-start p-4 pt-0 pb-0">
+      <CardFooter className="flex-col items-start px-4 py-0">
         {/* Movie title */}
-        <h3 className="mb-2 text-md mt-2 font-semibold leading-tight truncate w-full">
+        <h3 className="mb-2 text-md font-semibold leading-tight truncate w-full">
           {title}
         </h3>
         <div className="flex w-full items-center text-secondary justify-between">

@@ -21,7 +21,7 @@ export function MovieDetailsPersonCard({
   const personUrl = `/person/${person.id}`;
 
   return (
-    <Card className="max-w-[200px] overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl py-3">
+    <Card className="max-w-[200px] overflow-hidden rounded-lg hover:shadow-xl pt-3">
       <Link href={personUrl} className="block">
         <CardContent className="p-0 flex justify-center cursor-pointer">
           <Image
@@ -30,12 +30,12 @@ export function MovieDetailsPersonCard({
             width={180}
             height={270}
             style={{ objectFit: "cover" }}
-            className="rounded-xl px-2"
+            className="rounded-2xl px-2"
           />
         </CardContent>
       </Link>
       <CardFooter className="flex-col items-start px-4 py-0">
-        <h3 className="mb-2 text-md mt-2 font-semibold leading-tight truncate w-full">
+        <h3 className="mb-2 text-md font-semibold leading-tight truncate w-full">
           {person.name}
         </h3>
         {workedOn.role === "CREW" && workedOn.job && (

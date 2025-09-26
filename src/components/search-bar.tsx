@@ -19,6 +19,7 @@ export default function SearchBar() {
     } else {
       params.delete("q");
     }
+    params.set("page", "1"); // Always reset to page 1 on search
     router.replace(`?${params.toString()}`);
   };
 
