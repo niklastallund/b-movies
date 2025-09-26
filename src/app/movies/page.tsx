@@ -6,7 +6,6 @@ import { prisma } from "@/lib/prisma";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -59,7 +58,7 @@ export default async function MoviesPage({
   // Fetch movies from the database, optionally filtering by search query and genre
   // The selectedGenre filter is only applied if a genre is selected (not an empty string)
   // The order and sorting is handled by the SortPicker component, which updates the URL parameters
-  // and this component reads them and applies them to the query
+  // Pagination is handled by skipping and taking a subset of movies based on the current page
   const movies = await prisma.movie.findMany({
     orderBy: { [sortField]: sortOrder },
     where: {
@@ -134,7 +133,6 @@ export default async function MoviesPage({
                   ...params,
                   page: String(currentPage - 1),
                 })}`}
-                aria-disabled={currentPage === 1}
               />
             </PaginationItem>
             {[...Array(totalPages)].map((_, i) => (
@@ -156,7 +154,6 @@ export default async function MoviesPage({
                   ...params,
                   page: String(currentPage + 1),
                 })}`}
-                aria-disabled={currentPage === totalPages}
               />
             </PaginationItem>
           </PaginationContent>
