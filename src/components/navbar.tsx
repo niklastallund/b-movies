@@ -2,7 +2,7 @@ import Form from "next/form";
 import Link from "next/link";
 import Image from "next/image";
 import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
+import { auth, getSession, requireUser } from "@/lib/auth";
 
 // Shadcn UI components
 import {
@@ -31,17 +31,13 @@ import { Input } from "@/components/ui/input";
 // Custom components
 import { ModeToggle } from "@/components/toggle-theme-button";
 import SignUpForm from "@/components/forms/sign-up-form";
-import SignInForm from "@/components/forms/sign-in-form";
 import ShoppingCartSheet from "./shopping-cart-sheet";
 import { SignInAndProfile } from "./sign-in-and-profile";
 import SignUpAndOut from "./sign-up-and-out";
 
 export default async function Navbar() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  const isLoggedIn = !!session;
+  const session = await getSession();
+  const isLoggedIn: boolean = session ? true : false;
 
   // Used to generate the Top Lists dropdown and mobile menu
   const toplists = [

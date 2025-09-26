@@ -2,8 +2,12 @@ import { getAllOrders, deleteOrder } from "@/actions/orders";
 import { Button } from "@/components/ui/button";
 import CreateOrderForm from "@/components/forms/create-order-form";
 import Link from "next/link";
+import { requireAdmin } from "@/lib/auth";
 
 export default async function AdminOrdersPage() {
+  //Authorization
+  await requireAdmin();
+
   const orders = await getAllOrders();
 
   return (

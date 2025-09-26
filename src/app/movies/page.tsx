@@ -22,6 +22,8 @@ export default async function MoviesPage({
     order?: string;
   }>;
 }) {
+  
+
   const params = await searchParams;
   const query = params.q || "";
   const selectedGenre = params.genre || "";

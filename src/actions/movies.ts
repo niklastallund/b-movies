@@ -13,21 +13,11 @@ import {
   CreateMovieInput,
   UpdateMovieInput,
 } from "@/lib/zod-schemas";
-
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-
+import { requireAdmin } from "@/lib/auth";
 // --- Skapa ny film ---
 export async function createMovie(formData: CreateMovieInput) {
   //Authorization
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session) {
-    redirect("/sign-in");
-  }
+  await requireAdmin();
 
   const validated = await createMovieSchema.parseAsync(formData);
   //console.log(validated.releaseDate);
@@ -55,6 +45,9 @@ export async function createMovie(formData: CreateMovieInput) {
 
 // update movie
 export async function updateMovie(formData: UpdateMovieInput) {
+ //Authorization
+  await requireAdmin();
+  
   const validated = await updateMovieSchema.parseAsync(formData);
   const updateMovie = await prisma.movie.update({
     where: { id: validated.id },
@@ -78,6 +71,9 @@ export async function updateMovie(formData: UpdateMovieInput) {
 }
 
 export async function deleteMovie(formData: FormData) {
+ //Authorization
+  await requireAdmin();
+
   const validated = await deleteMovieSchema.parseAsync({
     id: Number(formData.get("id")),
   });
@@ -98,6 +94,8 @@ export async function getAllMovies() {
 
 // --- Uppdatera filmens genrer ---
 export async function updateMovieGenresAction(formData: FormData) {
+  await requireAdmin();
+      
   const movieIdRaw = formData.get("movieId");
   const selected = formData.getAll("genreIds");
 

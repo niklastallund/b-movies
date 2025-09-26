@@ -8,6 +8,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { requireAdmin } from "@/lib/auth";
 
 interface OrderDetailsPageProps {
   params: {
@@ -19,6 +20,8 @@ export default async function OrderDetailsPage({
   params,
 }: OrderDetailsPageProps) {
   const order = await getOrderById(params.orderId);
+
+  await requireAdmin();
 
   if (!order) {
     return (

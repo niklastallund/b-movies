@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { updateOrderStatusSchema } from "@/lib/zod-schemas";
+import { requireAdmin } from "@/lib/auth";
 
 // --- Hämta alla ordrar ---
 export async function getAllOrders() {
@@ -43,6 +44,10 @@ export async function getOrderById(orderId: string) {
 
 // --- Skapa en ny order (används av kassan, ej admin) ---
 export async function createOrder(formData: FormData) {
+
+   //Authorization
+    await requireAdmin();
+
   const data = Object.fromEntries(formData);
   const userId = data.userId as string;
 
@@ -70,6 +75,10 @@ export async function createOrder(formData: FormData) {
 
 // --- Ta bort en order ---
 export async function deleteOrder(formData: FormData) {
+
+   //Authorization
+    await requireAdmin();
+
   const data = Object.fromEntries(formData);
   const orderId = Number(data.id);
 
@@ -93,6 +102,10 @@ export async function deleteOrder(formData: FormData) {
 
 // --- Uppdatera en orders status ---
 export async function updateOrderStatus(formData: FormData) {
+
+   //Authorization
+    await requireAdmin();
+    
   const data = Object.fromEntries(formData);
   const validated = updateOrderStatusSchema.safeParse({
     ...data,

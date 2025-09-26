@@ -10,6 +10,7 @@ import {
   updateGenreSchema,
   deleteGenreSchema,
 } from "@/lib/zod-schemas";
+import { requireAdmin } from "@/lib/auth";
 
 // Typ för formulärfel
 interface FormErrors {
@@ -27,6 +28,9 @@ interface FormState {
 // --- Skapa ny genre ---
 // OBS! Med useActionState (React 19) får du ett objekt, inte FormData!
 export async function createGenre(formData: any): Promise<FormState> {
+  //Authorization
+  await requireAdmin();
+
   const data = formData; // formData är redan ett objekt
   const validated = createGenreSchema.safeParse(data);
 
@@ -55,6 +59,10 @@ export async function updateGenre(
   prevState: FormState,
   formData: any
 ): Promise<FormState> {
+
+ //Authorization
+  await requireAdmin();
+
   const data = formData;
   const validated = updateGenreSchema.safeParse({
     ...data,
@@ -82,6 +90,10 @@ export async function updateGenre(
 
 // --- Ta bort genre ---
 export async function deleteGenre(formData: FormData): Promise<FormState> {
+
+ //Authorization
+  await requireAdmin();
+
   const validated = deleteGenreSchema.safeParse({
     id: Number(formData.get("id")),
   });

@@ -3,7 +3,7 @@ import MovieDetails from "@/components/movie-details";
 import { getBackdropUrl } from "@/lib/tmdb-image-url";
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
+import { auth, getSession } from "@/lib/auth";
 import { headers } from "next/headers";
 
 export type Params = {
@@ -11,15 +11,12 @@ export type Params = {
 };
 
 export default async function MovieDetailsPage(props: { params: Params }) {
-  const params = await props.params;
-  const movieId = parseInt(params.movieId);
-
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
+  const session = await getSession();
   const isLoggedIn = !!session;
   const isAdmin = session?.user?.role === "admin";
+
+  const params = await props.params;
+  const movieId = parseInt(params.movieId);
 
   if (isNaN(movieId) || movieId <= 0) {
     return redirect("/movies");
