@@ -44,9 +44,7 @@ export function DeleteGenreButton({ id, name }: { id: number; name: string }) {
         >
           <AlertDialogFooter>
             <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-red-600 hover:bg-red-700">
-              Delete
-            </AlertDialogAction>
+            <AlertDialogAction type="submit">Delete</AlertDialogAction>
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>
