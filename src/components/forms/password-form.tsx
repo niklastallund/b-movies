@@ -72,7 +72,7 @@ export default function PasswordForm() {
   }
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Lock className="h-5 w-5" />
