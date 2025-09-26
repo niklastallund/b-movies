@@ -28,7 +28,7 @@ export function PersonCard({ person }: PersonDetailsProps) {
           width={421}
           height={632}
           style={{ objectFit: "cover" }}
-          className="rounded-xl px-3"
+          className="rounded-3xl px-3"
         />
       </CardContent>
       <CardFooter className="flex-col items-start p-4 pt-2 pb-0">

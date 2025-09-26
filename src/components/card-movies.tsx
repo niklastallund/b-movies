@@ -32,7 +32,7 @@ export function MovieCard({ movie }: MovieDetailsProps) {
           width={400}
           height={620}
           style={{ objectFit: "cover" }}
-          className="rounded-xl px-3"
+          className="rounded-3xl px-3"
         />
       </CardContent>
       <CardFooter className="flex-col items-start px-4 py-0">
