@@ -4,6 +4,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import {
+  MapPin,
+  Phone,
+  Building2,
+  ArrowUp,
+  Film,
+  UserCircle2,
+  Github,
+  Info,
+  SquareStack
+} from "lucide-react";
 
 export function Footer() {
   const { theme } = useTheme();
@@ -13,70 +24,26 @@ export function Footer() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (mounted) {
-      console.log("Footer theme:", theme);
-    }
-  }, [mounted, theme]);
+  // No console logging in production footer – keep minimal.
 
-  // Visa default logga under hydration
+  // Initial (pre-hydration) render – keep simple to avoid mismatch
   if (!mounted) {
     return (
-      <footer className="bg-background/95  border-t border-border backdrop-blur supports-[backdrop-filter]:bg-background/60 mt-auto">
-        <div className="mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-          {/* LOGGA */}
-          <div className="flex items-center justify-center md:justify-start">
-            <Link
-              href="/"
-              className="flex items-center space-x-3 rtl:space-x-reverse"
-            >
-              <Image
-                src="/images/bmovies.png" // Default logga under hydration
-                alt="B-Movies logo"
-                width={100}
-                height={100}
-                className="h-auto w-auto"
-              />
-            </Link>
-          </div>
-
-          {/* KONTAKT INFO */}
-          <div className="my-4 text-center md:my-0">
-            <p className="text-sm text-foreground">
-              📍Adress
-              <br />
-              1313 Swamp Lagoon Drive
-              <br />
-              Bayou Heights, FL 66613
-              <br />
-              🏟️ Landmark:
-              <br />
-              Across from Coach Gator&apos;s Haunted Gymnasium
-              <br /> 📞 Phone: (555) CHOMP-333
-            </p>
-          </div>
-
-          {/* LÄNKAR */}
-          <div className="flex flex-col items-center space-y-2 md:items-end">
-            <Link
-              href="/aboutus"
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-            >
-              About Us
-            </Link>
-            <Link
-              href="/aboutus"
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-            >
-              Back to top
-            </Link>
+      <footer className="bg-background/95 border-t border-border backdrop-blur supports-[backdrop-filter]:bg-background/60 mt-auto">
+        <div className="mx-auto max-w-screen-xl p-8">
+          <div className="flex items-center justify-center">
+            <Image
+              src="/images/bmovies.png"
+              alt="B-Movies logo"
+              width={120}
+              height={120}
+              className="h-14 w-auto"
+            />
           </div>
         </div>
-
-        {/* COPYRIGHT */}
         <div className="border-t border-border py-4 text-center">
-          <p className="text-sm text-foreground">
-            ©2025 Provided by Niklas, Josefine, Aminat
+          <p className="text-xs text-muted-foreground tracking-wide">
+            ©2025 B-Movies
           </p>
         </div>
       </footer>
@@ -85,64 +52,78 @@ export function Footer() {
 
   return (
     <footer className="bg-background/95 border-t border-border backdrop-blur supports-[backdrop-filter]:bg-background/60 mt-auto">
-      <div className="mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-        {/* LOGGA */}
-        <div className="flex items-center justify-center md:justify-start">
-          <Link
-            href="/"
-            className="flex items-center space-x-3 rtl:space-x-reverse"
-          >
-            <Image
-              src={
-                theme === "light"
-                  ? "/images/bmovies-blue.png"
-                  : "/images/bmovies.png"
-              }
-              alt="B-Movies logo"
-              width={100}
-              height={100}
-              className="h-auto w-auto"
-            />
-          </Link>
-        </div>
+      <div className="mx-auto max-w-screen-xl px-6 py-14">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
+          {/* Brand */}
+          <div className="space-y-4 col-span-1">
+            <Link href="/" className="flex items-center space-x-2">
+              <Image
+                src={theme === "light" ? "/images/bmovies-blue.png" : "/images/bmovies.png"}
+                alt="B-Movies logo"
+                width={140}
+                height={140}
+                className="h-16 w-auto"
+              />
+            </Link>
+            <p className="text-sm text-muted-foreground leading-relaxed pr-4">
+              A curated B-Movie store built with modern web
+              technologies for a performant and delightful shopping experience.
+            </p>
+          </div>
 
-        {/* KONTAKT INFO */}
-        <div className="my-4 text-center md:my-0">
-          <p className="text-sm text-foreground">
-            📍Adress
-            <br />
-            1313 Swamp Lagoon Drive
-            <br />
-            Bayou Heights, FL 66613
-            <br />
-            🏟️ Landmark:
-            <br />
-            Across from Coach Gator&apos;s Haunted Gymnasium
-            <br /> 📞 Phone: (555) CHOMP-333
-          </p>
-        </div>
+            {/* Navigation */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold tracking-wide flex items-center gap-2"><Film className="h-4 w-4" /> Explore</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link className="hover:text-primary transition-colors" href="/movies">Movies</Link></li>
+              <li><Link className="hover:text-primary transition-colors" href="/person">People</Link></li>
+              <li><Link className="hover:text-primary transition-colors" href="/orders">My Orders</Link></li>
+              <li><Link className="hover:text-primary transition-colors" href="/project-presentation">Project Presentation</Link></li>
+              <li><Link className="hover:text-primary transition-colors" href="/aboutus">About Us</Link></li>
+            </ul>
+          </div>
 
-        {/* LÄNKAR */}
-        <div className="flex flex-col items-center space-y-2 md:items-end">
-          <Link
-            href="/aboutus"
-            className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-          >
-            About Us
-          </Link>
-          <Link
-            href="/aboutus"
-            className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-          >
-            Back to top
-          </Link>
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold tracking-wide flex items-center gap-2"><UserCircle2 className="h-4 w-4" /> Account</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link className="hover:text-primary transition-colors" href="/sign-in">Sign In</Link></li>
+              <li><Link className="hover:text-primary transition-colors" href="/sign-up">Create Account</Link></li>
+              <li><Link className="hover:text-primary transition-colors" href="/settings">Settings</Link></li>
+              <li><Link className="hover:text-primary transition-colors" href="/checkout">Checkout</Link></li>
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold tracking-wide flex items-center gap-2"><SquareStack className="h-4 w-4" /> Resources</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link className="hover:text-primary transition-colors" href="/#latest">Top 5 Latest</Link></li>
+              <li><Link className="hover:text-primary transition-colors" href="/#popular">Top 5 Popular</Link></li>
+              <li><Link className="hover:text-primary transition-colors" href="/#oldest">Top 5 Oldest</Link></li>
+              <li><Link className="hover:text-primary transition-colors" href="/#cheapest">Top 5 Cheapest</Link></li>
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold tracking-wide flex items-center gap-2"><Info className="h-4 w-4" /> Contact</h4>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-0.5" /> <span>1313 Swamp Lagoon Drive<br />Bayou Heights, FL 66613</span></li>
+              <li className="flex items-start gap-2"><Building2 className="h-4 w-4 mt-0.5" /> <span>Opposite Coach Gator&apos;s Haunted Gymnasium</span></li>
+              <li className="flex items-center gap-2"><Phone className="h-4 w-4" /> <span>(555) CHOMP-333</span></li>
+              <li className="flex items-center gap-2"><Github className="h-4 w-4" /> <a className="hover:text-primary transition-colors" href="https://github.com" target="_blank" rel="noreferrer">GitHub</a></li>
+            </ul>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              <ArrowUp className="h-4 w-4" /> Back to top
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* COPYRIGHT */}
-      <div className="border-t border-border py-4 text-center">
-        <p className="text-sm text-foreground">
-          ©2025 Provided by Niklas, Josefine, Aminat
+      <div className="border-t border-border py-6 text-center px-4">
+        <p className="text-xs md:text-sm text-muted-foreground tracking-wide">
+          ©2025 B-Movies • Built by Niklas • Josefine • Amina
         </p>
       </div>
     </footer>
