@@ -13,8 +13,11 @@ import {
   UserCircle2,
   Github,
   Info,
-  SquareStack
+  SquareStack,
+  Mail
 } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import ContactForm from "@/components/forms/contact-form";
 
 export function Footer() {
   const { theme } = useTheme();
@@ -109,7 +112,19 @@ export function Footer() {
               <li className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-0.5" /> <span>1313 Swamp Lagoon Drive<br />Bayou Heights, FL 66613</span></li>
               <li className="flex items-start gap-2"><Building2 className="h-4 w-4 mt-0.5" /> <span>Opposite Coach Gator&apos;s Haunted Gymnasium</span></li>
               <li className="flex items-center gap-2"><Phone className="h-4 w-4" /> <span>(555) CHOMP-333</span></li>
-              <li className="flex items-center gap-2"><Github className="h-4 w-4" /> <a className="hover:text-primary transition-colors" href="https://github.com" target="_blank" rel="noreferrer">GitHub</a></li>
+              <li>
+                <Dialog>
+                  <DialogTrigger className="inline-flex items-center gap-2 hover:text-primary transition-colors">
+                    <Mail className="h-4 w-4" /> Contact Us
+                  </DialogTrigger>
+                  <DialogContent className="p-0 sm:max-w-2xl">
+                    <DialogTitle className="sr-only">Contact Form</DialogTitle>
+                    <div className="max-h-[80vh] overflow-auto p-4 sm:p-6">
+                      <ContactForm variant="dialog" />
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </li>
             </ul>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
