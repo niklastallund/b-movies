@@ -6,10 +6,10 @@ const moviedb = new MovieDb("c0d3fc45d2f4922af3c27e30726b5daa");
 // Constants to limit the number of results we get from TMDB
 // so we don't make too many requests to their API.
 // Probably should be environment variables but whatever
-const NUMBER_OF_MOVIES = 8;
+const NUMBER_OF_MOVIES = 6;
 const NUMBER_OF_CREW = 5;
-const NUMBER_OF_CAST = 5;
-const NUMBER_OF_VOTES = 80;
+const NUMBER_OF_CAST = 10;
+const NUMBER_OF_VOTES = 20;
 
 // Had to expand PersonResult because it is defined
 // in the JSON but not in the original interface
@@ -25,12 +25,19 @@ export async function FindMoviesByDirectors(): Promise<MovieApi[]> {
   // Because we have a B-movie shop, we want to focus on cult directors
   // that are known for their B-movies and not the big Hollywood directors
   const directorNames: string[] = [
-    "Roger Corman",
     "Edward D. Wood Jr.",
-    "Jack Arnold",
     "William Castle",
-    "Mario Bava",
     "Lloyd Kaufman",
+    "Mario Bava",
+    "Dario Argento",
+    "Lucio Fulci",
+    "Riccardo Freda",
+    "Antonio Margheriti",
+    "Umberto Lenzi",
+    "Lloyd Kaufman",
+    "Bert I. Gordon",
+    "Don Dohler",
+    "Sam Newfield",
   ];
 
   const directorIds: number[] = [];
@@ -144,23 +151,83 @@ export async function FindCrewByMovieId(
     }
   }
 
-  // We have to sort the crew by popularity because unlike cast they don't have an order field
-  // So we take the most popular crew members to add to the database
-  const crewSlice = credits.crew
-    ? credits.crew
-        .sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0))
-        .slice(0, NUMBER_OF_CREW)
-    : [];
-  for (const crewMember of crewSlice) {
-    if (crewMember.id && crewMember.name) {
-      crew.push({
-        id: crewMember.id,
-        name: crewMember.name,
-        job: crewMember.job,
-        profilePath: crewMember.profile_path,
+  // Ensure important roles (Director, Writer, Screenplay, Story, etc.) are included
+  // in the crew list, then fill the rest with the most popular crew members.
+  const importantJobs = new Set([
+    "Director",
+    "Writer",
+    "Screenplay",
+    "Story",
+    "Screenwriter",
+    "Author",
+  ]);
+
+  const crewList = credits.crew ?? [];
+
+  // Allow the same person to appear multiple times for different jobs:
+  const includedKeys = new Set<string>();
+  const importantMembers: PersonApi[] = [];
+
+  const importantJobsLower = new Set(
+    Array.from(importantJobs).map((j) => j.toLowerCase())
+  );
+
+  const normalizeJob = (j?: string) => (j ?? "").trim();
+  const jobKey = (id: number, j?: string) =>
+    `${id}:${normalizeJob(j).toLowerCase()}`;
+
+  for (const c of crewList) {
+    if (!c.id || !c.name) continue;
+    const job = normalizeJob(c.job);
+    const jobLower = job.toLowerCase();
+
+    // match important jobs case-insensitively, or use department fallback
+    const isImportant =
+      importantJobsLower.has(jobLower) ||
+      c.department === "Directing" ||
+      /director/i.test(job);
+
+    const key = jobKey(c.id as number, job);
+
+    if (isImportant && !includedKeys.has(key)) {
+      includedKeys.add(key);
+      importantMembers.push({
+        id: c.id,
+        name: c.name,
+        job: c.job,
+        profilePath: c.profile_path,
       });
     }
   }
+
+  // Then take the most popular remaining crew members until we reach NUMBER_OF_CREW
+  const otherCandidates = crewList
+    .filter(
+      (c) =>
+        c.id &&
+        c.name &&
+        !includedKeys.has(jobKey(c.id as number, normalizeJob(c.job)))
+    )
+    .sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0));
+
+  const finalCrew: PersonApi[] = [...importantMembers];
+
+  for (const c of otherCandidates) {
+    if (finalCrew.length >= NUMBER_OF_CREW) break;
+    const key = jobKey(c.id as number, normalizeJob(c.job));
+    if (includedKeys.has(key)) continue;
+    finalCrew.push({
+      id: c.id as number,
+      name: c.name as string,
+      job: c.job,
+      profilePath: c.profile_path,
+    });
+    includedKeys.add(key);
+  }
+
+  // If there are fewer than NUMBER_OF_CREW but more important members than the limit,
+  // truncate to the limit (keeps important ones first).
+  crew.push(...finalCrew.slice(0, NUMBER_OF_CREW));
 
   return { crew, cast };
 }

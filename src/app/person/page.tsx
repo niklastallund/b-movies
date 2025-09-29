@@ -25,7 +25,7 @@ export default async function PersonPage({
   const page = parseInt(params.page || "1");
 
   // Pagination settings
-  const PAGE_SIZE = 18;
+  const PAGE_SIZE = 36;
   const currentPage = Math.max(1, page); // Avoid pages less than 1
 
   const persons = await prisma.person.findMany({

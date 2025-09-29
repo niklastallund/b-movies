@@ -1,5 +1,5 @@
-import { addExtraPersonInfo } from "@/actions/api-actions";
 import PersonDetails from "@/components/person-details";
+import FetchExtraPersonInfo from "@/components/fetch-extra-person-info";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
@@ -29,11 +29,8 @@ export default async function PersonPage(props: { params: Params }) {
     return notFound();
   }
 
-  // If we don't have a birthday or biography for the person,
-  // try to fetch it from TMDB and update the database.
-  if (!person.birthday || !person.biography) {
-    await addExtraPersonInfo(personId);
-  }
+  // Do NOT run side effects during render.
+  const needExtra = !person.birthday || !person.biography;
 
   return (
     <main className="relative min-h-screen flex items-center justify-center">
@@ -42,6 +39,8 @@ export default async function PersonPage(props: { params: Params }) {
         workedOn={person.movieCrew}
         isAdmin={isAdmin}
       />
+      {/* Client-only helper: will call server action to fetch extra info and refresh */}
+      <FetchExtraPersonInfo personId={person.id} needExtra={needExtra} />
       {/* Admin-only: Place LinkPersonToMovieForm next to an Edit panel when authenticated as admin */}
       {/* <div className="fixed bottom-6 right-6 w-[380px]">
         <LinkPersonToMovieForm personId={person.id} />
