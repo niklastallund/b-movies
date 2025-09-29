@@ -5,15 +5,15 @@ import { z } from "zod";
 export const runtime = "nodejs"; // ensure Node runtime for nodemailer
 
 const FormSchema = z.object({
-  firstName: z.string().min(1, "Förnamn är obligatoriskt"),
-  lastName: z.string().min(1, "Efternamn är obligatoriskt"),
-  email: z.string().email("Ogiltig e-postadress"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
   phone: z.union([z.string().max(50), z.literal("")]).optional(),
   city: z.union([z.string().max(100), z.literal("")]).optional(),
   message: z
     .string()
-    .min(1, "Meddelande är obligatoriskt")
-    .max(2000, "Max 2000 tecken"),
+    .min(1, "Message is required")
+    .max(2000, "Max 2000 characters"),
 });
 
 export async function POST(req: NextRequest) {
