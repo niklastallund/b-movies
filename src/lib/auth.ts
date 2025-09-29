@@ -24,7 +24,6 @@ export async function getSession() {
   return session;
 }
 
-//Hämta user oavsett role
 export async function requireUser() {
   const session = await auth.api.getSession({
     headers: await headers(),
