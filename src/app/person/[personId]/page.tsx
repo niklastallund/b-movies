@@ -1,3 +1,4 @@
+import { addExtraPersonInfo } from "@/actions/api-actions";
 import PersonDetails from "@/components/person-details";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -15,13 +16,6 @@ export default async function PersonPage(props: { params: Params }) {
   const params = await props.params;
   const personId = parseInt(params.personId);
 
-  // const session = await auth.api.getSession({
-  //   headers: await headers(),
-  // });
-
-  // Kontrollera admin
-  // const isAdmin = !!session && session.user?.role === "admin";
-
   if (isNaN(personId) || personId <= 0) {
     return redirect("/person");
   }
@@ -33,6 +27,12 @@ export default async function PersonPage(props: { params: Params }) {
 
   if (!person) {
     return notFound();
+  }
+
+  // If we don't have a birthday or biography for the person,
+  // try to fetch it from TMDB and update the database.
+  if (!person.birthday || !person.biography) {
+    await addExtraPersonInfo(personId);
   }
 
   return (
