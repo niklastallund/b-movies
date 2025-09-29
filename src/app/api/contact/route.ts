@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { z } from "zod";
 
+export const runtime = "nodejs"; // ensure Node runtime for nodemailer
+
 const FormSchema = z.object({
   firstName: z.string().min(1, "Förnamn är obligatoriskt"),
   lastName: z.string().min(1, "Efternamn är obligatoriskt"),
@@ -19,25 +21,31 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const values = await FormSchema.parseAsync(body);
 
+    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
+    if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
+      console.error("Missing SMTP env vars");
+      return NextResponse.json(
+        { message: "Server email configuration missing." },
+        { status: 500 }
+      );
+    }
+
     const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      auth: {
-        user: "karianne36@ethereal.email",
-        pass: "EnTMMFfq8TeUdaf9aF",
-      },
+      host: SMTP_HOST,
+      port: Number(SMTP_PORT),
+      auth: { user: SMTP_USER, pass: SMTP_PASS },
     });
 
     const mailOptions = {
-      from: "karianne36@ethereal.email", // Specify a sender
-      to: "karianne36@ethereal.email", // Specify the recipient
+      from: SMTP_USER,
+      to: SMTP_USER,
       subject: "New message from the website contact form",
       html: `
         <h2>Contact Inquiry</h2>
         <p><strong>Name:</strong> ${values.firstName} ${values.lastName}</p>
         <p><strong>Email:</strong> ${values.email}</p>
-        <p><strong>Phone:</strong> ${values.phone}</p>
-        <p><strong>City/Location:</strong> ${values.city}</p>
+        <p><strong>Phone:</strong> ${values.phone ?? ""}</p>
+        <p><strong>City/Location:</strong> ${values.city ?? ""}</p>
         <p><strong>Message:</strong></p>
         <p>${values.message}</p>
       `,
