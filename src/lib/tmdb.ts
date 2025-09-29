@@ -172,6 +172,7 @@ export async function FindCrewByMovieId(
     Array.from(importantJobs).map((j) => j.toLowerCase())
   );
 
+  // Helper functions to normalize job titles and create unique keys
   const normalizeJob = (j?: string) => (j ?? "").trim();
   const jobKey = (id: number, j?: string) =>
     `${id}:${normalizeJob(j).toLowerCase()}`;
