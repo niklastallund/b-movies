@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { updateUserProfile } from "@/actions/user-profile";
-import { User, Mail, Save } from "lucide-react";
+import { User, Mail, Save, Loader2 } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 interface ProfileFormProps {
   user: {
@@ -17,28 +20,66 @@ interface ProfileFormProps {
   };
 }
 
+const ProfileSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  email: z.string().email("Invalid email address"),
+});
+
+type ProfileValues = z.infer<typeof ProfileSchema>;
+
+function getErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (typeof err === "string") return err;
+  return "Could not update profile. Please try again.";
+}
+
 export default function ProfileForm({ user }: ProfileFormProps) {
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [errors, setErrors] = useState<Record<string, string[]>>({});
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
+  const form = useForm<ProfileValues>({
+    resolver: zodResolver(ProfileSchema),
+    defaultValues: { name: user.name ?? "", email: user.email ?? "" },
+    mode: "onTouched",
+  });
+
+  const onSubmit = async (values: ProfileValues) => {
     setMessage(null);
-    setErrors({});
 
-    const formData = new FormData(event.currentTarget);
-    const result = await updateUserProfile(formData);
-
-    if (result.success) {
-      setMessage(result.message || "Profile updated successfully!");
-    } else if (result.errors) {
-      setErrors(result.errors);
+    const ops: Promise<unknown>[] = [];
+    if (values.email !== user.email) {
+      ops.push(
+        authClient.changeEmail({
+          newEmail: values.email,
+          callbackURL: "/dashboard",
+        })
+      );
+    }
+    if (values.name !== user.name) {
+      ops.push(
+        authClient.updateUser({
+          name: values.name,
+        })
+      );
     }
 
-    setLoading(false);
+    if (ops.length === 0) {
+      setMessage("Nothing to update.");
+      return;
+    }
+
+    try {
+      await Promise.all(ops);
+      setMessage(
+        values.email !== user.email
+          ? "Profile updated. If you changed your email, check your inbox to verify."
+          : "Profile updated successfully."
+      );
+    } catch (err: unknown) {
+      setMessage(getErrorMessage(err));
+    }
   };
+
+  const isSubmitting = form.formState.isSubmitting;
 
   return (
     <Card>
@@ -49,17 +90,9 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {message && (
-            <div className="p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-              {message}
-            </div>
-          )}
-
-          {errors._global && (
-            <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-              {errors._global.join(", ")}
-            </div>
+            <p className="text-sm text-muted-foreground">{message}</p>
           )}
 
           <div className="space-y-2">
@@ -68,16 +101,17 @@ export default function ProfileForm({ user }: ProfileFormProps) {
               <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="name"
-                name="name"
                 type="text"
-                defaultValue={user.name}
-                className="pl-10"
                 placeholder="Enter your full name"
-                disabled={loading}
+                className="pl-10"
+                disabled={isSubmitting}
+                {...form.register("name")}
               />
             </div>
-            {errors.name && (
-              <p className="text-sm text-red-600">{errors.name.join(", ")}</p>
+            {form.formState.errors.name && (
+              <p className="text-sm text-destructive">
+                {form.formState.errors.name.message}
+              </p>
             )}
           </div>
 
@@ -87,23 +121,24 @@ export default function ProfileForm({ user }: ProfileFormProps) {
               <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="email"
-                name="email"
                 type="email"
-                defaultValue={user.email}
-                className="pl-10"
                 placeholder="Enter your email address"
-                disabled={loading}
+                className="pl-10"
+                disabled={isSubmitting}
+                {...form.register("email")}
               />
             </div>
-            {errors.email && (
-              <p className="text-sm text-red-600">{errors.email.join(", ")}</p>
+            {form.formState.errors.email && (
+              <p className="text-sm text-destructive">
+                {form.formState.errors.email.message}
+              </p>
             )}
           </div>
 
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? (
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            {isSubmitting ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Updating...
               </>
             ) : (

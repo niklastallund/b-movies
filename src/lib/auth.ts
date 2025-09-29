@@ -6,6 +6,10 @@ import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 
 export const auth = betterAuth({
+  user: {
+    changeEmail: { enabled: true },
+    update: { enabled: true },
+  },
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
