@@ -19,12 +19,12 @@ export interface MovieApi {
   backdropPath?: string;
 
   stock?: number;
-  price?: number; 
+  price?: number;
 }
 
 export interface PersonApi {
-  id: number;
-  name: string;
+  id?: number;
+  name?: string;
   biography?: string;
   birthday?: string | null;
   deathday?: string | null;

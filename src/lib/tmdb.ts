@@ -3,10 +3,13 @@ import { MovieApi, PersonApi } from "./types";
 
 const moviedb = new MovieDb("c0d3fc45d2f4922af3c27e30726b5daa");
 
-//Constants to limit the number of results we get from TMDB
-const NUMBER_OF_MOVIES = 8;
+// Constants to limit the number of results we get from TMDB
+// so we don't make too many requests to their API.
+// Probably should be environment variables but whatever
+const NUMBER_OF_MOVIES = 6;
 const NUMBER_OF_CREW = 5;
-const NUMBER_OF_CAST = 5;
+const NUMBER_OF_CAST = 10;
+const NUMBER_OF_VOTES = 20;
 
 // Had to expand PersonResult because it is defined
 // in the JSON but not in the original interface
@@ -19,13 +22,22 @@ interface PersonResultWithDepartment extends PersonResult {
 // which need to be handed seperatly in the database
 export async function FindMoviesByDirectors(): Promise<MovieApi[]> {
   // Hardcoded a list of directors to search for
+  // Because we have a B-movie shop, we want to focus on cult directors
+  // that are known for their B-movies and not the big Hollywood directors
   const directorNames: string[] = [
-    "Roger Corman",
     "Edward D. Wood Jr.",
-    "Jack Arnold",
     "William Castle",
-    "Mario Bava",
     "Lloyd Kaufman",
+    "Mario Bava",
+    "Dario Argento",
+    "Lucio Fulci",
+    "Riccardo Freda",
+    "Antonio Margheriti",
+    "Umberto Lenzi",
+    "Lloyd Kaufman",
+    "Bert I. Gordon",
+    "Don Dohler",
+    "Sam Newfield",
   ];
 
   const directorIds: number[] = [];
@@ -69,10 +81,10 @@ export async function FindMoviesByDirectors(): Promise<MovieApi[]> {
     );
 
     // We take the NUMBER_OF_MOVIES most popular movies by the director,
-    // with at least 100 votes to avoid weird edge cases
+    // with at least NUMBER_OF_VOTES votes to avoid weird edge cases
     if (directedMovies) {
       const topMovies = directedMovies
-        .filter((movie) => (movie.vote_count ?? 0) >= 80)
+        .filter((movie) => (movie.vote_count ?? 0) >= NUMBER_OF_VOTES)
         .sort((a, b) => (b.vote_average ?? 0) - (a.vote_average ?? 0))
         .slice(0, NUMBER_OF_MOVIES);
 
@@ -121,8 +133,7 @@ export async function FindCrewByMovieId(
   const crew: PersonApi[] = [];
 
   // We sort the cast by order and take the first NUMBER_OF_CAST members
-  // because order is the field that defines the importance of the cast member
-  // in the movie
+  // because order is the field that defines the importance of the cast member in the movie
   const castSlice = credits.cast
     ? credits.cast
         .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
@@ -130,51 +141,121 @@ export async function FindCrewByMovieId(
     : [];
   for (const castMember of castSlice) {
     if (castMember.id && castMember.name) {
-      const personInfo = await moviedb.personInfo(castMember.id);
-
-      // Let's only add them if they have either a birthday or a profilePath
-      // to avoid adding too many empty entries
-      if (personInfo.birthday || castMember.profile_path) {
-        cast.push({
-          id: castMember.id,
-          name: castMember.name,
-          character: castMember.character,
-          order: castMember.order,
-          biography: personInfo.biography,
-          birthday: personInfo.birthday,
-          deathday: personInfo.deathday,
-          profilePath: castMember.profile_path,
-        });
-      }
+      cast.push({
+        id: castMember.id,
+        name: castMember.name,
+        character: castMember.character,
+        order: castMember.order,
+        profilePath: castMember.profile_path,
+      });
     }
   }
 
-  // We have to sort the crew by popularity because unlike cast they don't have an order field
-  // So we take the most popular crew members to add to the database
-  const crewSlice = credits.crew
-    ? credits.crew
-        .sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0))
-        .slice(0, NUMBER_OF_CREW)
-    : [];
-  for (const crewMember of crewSlice) {
-    if (crewMember.id && crewMember.name) {
-      const personInfo = await moviedb.personInfo(crewMember.id);
+  // Ensure important roles (Director, Writer, Screenplay, Story, etc.) are included
+  // in the crew list, then fill the rest with the most popular crew members.
+  const importantJobs = new Set([
+    "Director",
+    "Writer",
+    "Screenplay",
+    "Story",
+    "Screenwriter",
+    "Author",
+  ]);
 
-      // Let's only add them if they have either a birthday or a profilePath
-      // to avoid adding too many empty entries
-      if (personInfo.birthday || crewMember.profile_path) {
-        crew.push({
-          id: crewMember.id,
-          name: crewMember.name,
-          job: crewMember.job,
-          biography: personInfo.biography,
-          birthday: personInfo.birthday,
-          deathday: personInfo.deathday,
-          profilePath: crewMember.profile_path,
-        });
-      }
+  const crewList = credits.crew ?? [];
+
+  // Allow the same person to appear multiple times for different jobs:
+  const includedKeys = new Set<string>();
+  const importantMembers: PersonApi[] = [];
+
+  const importantJobsLower = new Set(
+    Array.from(importantJobs).map((j) => j.toLowerCase())
+  );
+
+  // Helper functions to normalize job titles and create unique keys
+  const normalizeJob = (j?: string) => (j ?? "").trim();
+  const jobKey = (id: number, j?: string) =>
+    `${id}:${normalizeJob(j).toLowerCase()}`;
+
+  for (const c of crewList) {
+    if (!c.id || !c.name) continue;
+    const job = normalizeJob(c.job);
+    const jobLower = job.toLowerCase();
+
+    // match important jobs case-insensitively, or use department fallback
+    const isImportant =
+      importantJobsLower.has(jobLower) ||
+      c.department === "Directing" ||
+      /director/i.test(job);
+
+    const key = jobKey(c.id as number, job);
+
+    if (isImportant && !includedKeys.has(key)) {
+      includedKeys.add(key);
+      importantMembers.push({
+        id: c.id,
+        name: c.name,
+        job: c.job,
+        profilePath: c.profile_path,
+      });
     }
   }
+
+  // Then take the most popular remaining crew members until we reach NUMBER_OF_CREW
+  const otherCandidates = crewList
+    .filter(
+      (c) =>
+        c.id &&
+        c.name &&
+        !includedKeys.has(jobKey(c.id as number, normalizeJob(c.job)))
+    )
+    .sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0));
+
+  const finalCrew: PersonApi[] = [...importantMembers];
+
+  for (const c of otherCandidates) {
+    if (finalCrew.length >= NUMBER_OF_CREW) break;
+    const key = jobKey(c.id as number, normalizeJob(c.job));
+    if (includedKeys.has(key)) continue;
+    finalCrew.push({
+      id: c.id as number,
+      name: c.name as string,
+      job: c.job,
+      profilePath: c.profile_path,
+    });
+    includedKeys.add(key);
+  }
+
+  // If there are fewer than NUMBER_OF_CREW but more important members than the limit,
+  // truncate to the limit (keeps important ones first).
+  crew.push(...finalCrew.slice(0, NUMBER_OF_CREW));
 
   return { crew, cast };
+}
+
+// This function fetches additional information about a person from TMDB
+// in case it is missing in the database. It is supposed to be used on an
+// individual basis when a user enters a person's page and we don't have
+// all the information about them yet.
+// This is needed to avoid making too many requests to the API when we first
+// add a bunch of movies and their crew and cast to the database.
+export async function FindExtraPersonInfo(
+  personId: number
+): Promise<PersonApi> {
+  // Fetch additional information about a person from TMDB
+  const personInfo = await moviedb.personInfo(personId);
+
+  const person: PersonApi = {};
+
+  // Let's make sure that the person we look for exists to avoid adding dead data
+  if (personInfo.id && personInfo.name) {
+    person.id = personInfo.id;
+    person.name = personInfo.name;
+    person.biography = personInfo.biography;
+    person.birthday = personInfo.birthday;
+    person.deathday = personInfo.deathday;
+    person.profilePath = personInfo.profile_path;
+  }
+
+  return person;
 }

@@ -3,13 +3,18 @@
 // These are API actions meant to be used with tmdb.ts, a wrapper for The Movie Database API.
 import { prisma } from "@/lib/prisma";
 import { Role } from "@/generated/prisma";
-import { FindCrewByMovieId, FindMoviesByDirectors } from "@/lib/tmdb";
+import {
+  FindCrewByMovieId,
+  FindExtraPersonInfo,
+  FindMoviesByDirectors,
+} from "@/lib/tmdb";
 import { Genre } from "moviedb-promise";
 import { requireAdmin } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 
 export async function addMoviesAndCrewFromTmdb() {
   await requireAdmin();
-      
+
   const movies = await FindMoviesByDirectors();
 
   // For each movie, create a new movie or update it (if it already exists),
@@ -70,6 +75,7 @@ export async function addMoviesAndCrewFromTmdb() {
     console.log("Added Movie:", { addedMovie });
 
     for (const actor of crew.cast) {
+      if (!actor.id || !actor.name) continue;
       const addedCastMember = await prisma.person.upsert({
         where: { tmdbId: actor.id },
         create: {
@@ -103,6 +109,7 @@ export async function addMoviesAndCrewFromTmdb() {
     }
 
     for (const crewMember of crew.crew) {
+      if (!crewMember.id || !crewMember.name) continue;
       const addedCrewMember = await prisma.person.upsert({
         where: { tmdbId: crewMember.id },
         create: {
@@ -218,4 +225,34 @@ async function addGenresToMovie(movieId: number, genres: Genre[]) {
       },
     },
   });
+}
+
+// This function fetches additional information about a person from TMDB
+// in case it is missing in the database. It is supposed to be used on an
+// individual basis when a user enters a person's page and we don't have
+// all the information about them yet.
+// This is needed to avoid making too many requests to the API when we first
+// add a bunch of movies and their crew and cast to the database.
+export async function addExtraPersonInfo(personId: number) {
+  const person = await prisma.person.findUnique({
+    where: { id: personId },
+  });
+
+  if (!person) return;
+  if (!person.tmdbId) return;
+
+  // Fetch additional information from TMDB
+  const extraInfo = await FindExtraPersonInfo(Number(person.tmdbId));
+
+  // Update person with extra information
+  await prisma.person.update({
+    where: { id: personId },
+    data: {
+      birthday: extraInfo.birthday ? new Date(extraInfo.birthday) : undefined,
+      deathday: extraInfo.deathday ? new Date(extraInfo.deathday) : undefined,
+      biography: extraInfo.biography,
+    },
+  });
+
+  revalidatePath(`/person/${personId}`);
 }
