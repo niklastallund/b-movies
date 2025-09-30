@@ -11,8 +11,7 @@ import {
   UpdateMovieInput,
 } from "@/lib/zod-schemas";
 import { requireAdmin } from "@/lib/auth";
-import { redirect } from "next/navigation";
-// --- Skapa ny film ---
+
 export async function createMovie(formData: CreateMovieInput) {
   //Authorization
   await requireAdmin();
@@ -80,7 +79,6 @@ export async function deleteMovie(id: number) {
   });
 
   revalidatePath("/movies");
-  redirect("/movies");
 }
 
 export async function getAllMovies() {

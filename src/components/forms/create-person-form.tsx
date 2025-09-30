@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { createPersonSchema, CreatePersonInput } from "@/lib/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function CreatePersonForm() {
   const form = useForm<CreatePersonInput>({
@@ -36,7 +37,14 @@ export default function CreatePersonForm() {
   });
 
   async function onSubmit(data: CreatePersonInput) {
-    await createPerson(data);
+    try {
+      await createPerson(data);
+      toast.success("Person created");
+      form.reset();
+    } catch (error) {
+      toast.error("Failed to create person");
+      console.error(error);
+    }
   }
 
   return (

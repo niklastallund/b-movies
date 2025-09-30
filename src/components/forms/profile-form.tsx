@@ -1,12 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { updateUserProfile } from "@/actions/user-profile";
-import { User, Mail, Save } from "lucide-react";
+import { User, Mail, Save, Loader2 } from "lucide-react";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from "@/components/ui/form";
+import { authClient } from "@/lib/auth-client";
 
 interface ProfileFormProps {
   user: {
@@ -17,28 +28,63 @@ interface ProfileFormProps {
   };
 }
 
+const ProfileSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  email: z.string().email("Invalid email address"),
+});
+
+type ProfileValues = z.infer<typeof ProfileSchema>;
+
+function getErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (typeof err === "string") return err;
+  return "Could not update profile. Please try again.";
+}
+
 export default function ProfileForm({ user }: ProfileFormProps) {
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const form = useForm<ProfileValues>({
+    resolver: zodResolver(ProfileSchema),
+    defaultValues: { name: user.name ?? "", email: user.email ?? "" },
+    mode: "onTouched",
+  });
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    setMessage(null);
-    setErrors({});
+  const onSubmit = async (values: ProfileValues) => {
+    const ops: Promise<unknown>[] = [];
 
-    const formData = new FormData(event.currentTarget);
-    const result = await updateUserProfile(formData);
-
-    if (result.success) {
-      setMessage(result.message || "Profile updated successfully!");
-    } else if (result.errors) {
-      setErrors(result.errors);
+    if (values.email !== user.email) {
+      ops.push(
+        authClient.changeEmail({
+          newEmail: values.email,
+          callbackURL: "/dashboard",
+        })
+      );
+    }
+    if (values.name !== user.name) {
+      ops.push(
+        authClient.updateUser({
+          name: values.name,
+        })
+      );
     }
 
-    setLoading(false);
+    if (ops.length === 0) {
+      toast("Nothing to update.");
+      return;
+    }
+
+    const successMsg =
+      values.email !== user.email
+        ? "Profile updated. If you changed your email, check your inbox to verify."
+        : "Profile updated successfully.";
+
+    await toast.promise(Promise.all(ops), {
+      loading: "Updating profile...",
+      success: successMsg,
+      error: (err) => getErrorMessage(err),
+    });
   };
+
+  const isSubmitting = form.formState.isSubmitting;
 
   return (
     <Card>
@@ -49,71 +95,74 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {message && (
-            <div className="p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-              {message}
-            </div>
-          )}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Enter your full name"
+                        className="pl-10"
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {errors._global && (
-            <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-              {errors._global.join(", ")}
-            </div>
-          )}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email Address</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type="email"
+                        placeholder="Enter your email address"
+                        className="pl-10"
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormDescription>
+                    We’ll use this to contact you.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="space-y-2">
-            <Label htmlFor="name">Username</Label>
-            <div className="relative">
-              <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                defaultValue={user.name}
-                className="pl-10"
-                placeholder="Enter your full name"
-                disabled={loading}
-              />
-            </div>
-            {errors.name && (
-              <p className="text-sm text-red-600">{errors.name.join(", ")}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                defaultValue={user.email}
-                className="pl-10"
-                placeholder="Enter your email address"
-                disabled={loading}
-              />
-            </div>
-            {errors.email && (
-              <p className="text-sm text-red-600">{errors.email.join(", ")}</p>
-            )}
-          </div>
-
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Updating...
-              </>
-            ) : (
-              <>
-                <Save className="h-4 w-4 mr-2" />
-                Save Changes
-              </>
-            )}
-          </Button>
-        </form>
+            <Button type="submit" disabled={isSubmitting} className="w-full">
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Changes
+                </>
+              )}
+            </Button>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );

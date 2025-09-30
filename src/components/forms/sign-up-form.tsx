@@ -22,6 +22,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { on } from "events";
 
 const FormSchema = z
   .object({
@@ -58,10 +60,10 @@ export default function SignUpForm({ onSuccess }: { onSuccess?: () => void }) {
     });
 
     if (error) {
-      alert(error.message);
+      toast.error(error.message);
     } else {
-      onSuccess?.(); // Stäng dialogen
-      router.replace("/");
+      onSuccess?.();
+      toast.success("Account created successfully");
       router.refresh();
     }
   }

@@ -41,16 +41,16 @@ export async function updateUserProfile(formData: FormData) {
 
   // Validering
   if (!name || name.trim().length < 2) {
-    return { 
-      success: false, 
-      errors: { name: ["Name must be at least 2 characters long"] } 
+    return {
+      success: false,
+      errors: { name: ["Name must be at least 2 characters long"] },
     };
   }
 
   if (!email || !email.includes("@")) {
-    return { 
-      success: false, 
-      errors: { email: ["Please enter a valid email address"] } 
+    return {
+      success: false,
+      errors: { email: ["Please enter a valid email address"] },
     };
   }
 
@@ -60,15 +60,15 @@ export async function updateUserProfile(formData: FormData) {
       where: {
         email: email,
         NOT: {
-          id: session.user.id
-        }
-      }
+          id: session.user.id,
+        },
+      },
     });
 
     if (existingUser) {
-      return { 
-        success: false, 
-        errors: { email: ["This email is already in use"] } 
+      return {
+        success: false,
+        errors: { email: ["This email is already in use"] },
       };
     }
 
@@ -86,61 +86,9 @@ export async function updateUserProfile(formData: FormData) {
     return { success: true, message: "Profile updated successfully!" };
   } catch (error) {
     console.error("Error updating profile:", error);
-    return { 
-      success: false, 
-      errors: { _global: ["Failed to update profile. Please try again."] } 
-    };
-  }
-}
-
-// --- Uppdatera lösenord ---
-export async function updatePassword(formData: FormData) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session) {
-    redirect("/sign-in");
-  }
-
-  const currentPassword = formData.get("currentPassword") as string;
-  const newPassword = formData.get("newPassword") as string;
-  const confirmPassword = formData.get("confirmPassword") as string;
-
-  // Validering
-  if (!currentPassword) {
-    return { 
-      success: false, 
-      errors: { currentPassword: ["Current password is required"] } 
-    };
-  }
-
-  if (!newPassword || newPassword.length < 6) {
-    return { 
-      success: false, 
-      errors: { newPassword: ["New password must be at least 6 characters long"] } 
-    };
-  }
-
-  if (newPassword !== confirmPassword) {
-    return { 
-      success: false, 
-      errors: { confirmPassword: ["Passwords do not match"] } 
-    };
-  }
-
-  try {
-    // Här skulle vi normalt verifiera det gamla lösenordet och uppdatera det nya
-    // Men since vi använder better-auth, låt oss returnera en placeholder
-    return { 
-      success: false, 
-      errors: { _global: ["Password update is not yet implemented. Please contact support."] } 
-    };
-  } catch (error) {
-    console.error("Error updating password:", error);
-    return { 
-      success: false, 
-      errors: { _global: ["Failed to update password. Please try again."] } 
+    return {
+      success: false,
+      errors: { _global: ["Failed to update profile. Please try again."] },
     };
   }
 }

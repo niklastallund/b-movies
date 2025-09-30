@@ -32,8 +32,6 @@ export default async function MoviesPage({
     page?: string;
   }>;
 }) {
-  
-
   const params = await searchParams;
 
   // Extract and sanitize query parameters
@@ -49,7 +47,7 @@ export default async function MoviesPage({
   const sortField = SORT_MAP[sort] || "title";
 
   // Pagination settings
-  const PAGE_SIZE = 18;
+  const PAGE_SIZE = 24;
   const currentPage = Math.max(1, page); // Avoid pages less than 1
 
   // Fetch all genres for the genre filter dropdown

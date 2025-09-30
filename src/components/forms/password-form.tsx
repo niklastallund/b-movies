@@ -1,36 +1,75 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { updatePassword } from "@/actions/user-profile";
-import { Lock, Key } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Lock } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import z from "zod";
+
+const FormSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(6, "Current password must be at least 6 characters")
+      .max(128),
+    newPassword: z
+      .string()
+      .min(6, "New password must be at least 6 characters")
+      .max(128),
+    confirmPassword: z
+      .string()
+      .min(6, "Confirm password must be at least 6 characters")
+      .max(128),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+type FormValues = z.infer<typeof FormSchema>;
 
 export default function PasswordForm() {
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [errors, setErrors] = useState<Record<string, string[] | undefined>>({});
+  const form = useForm<FormValues>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+  });
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    setMessage(null);
-    setErrors({});
+  async function onSubmit(values: FormValues) {
+    const { error } = await authClient.changePassword({
+      newPassword: values.newPassword,
+      currentPassword: values.currentPassword,
+      revokeOtherSessions: true,
+    });
 
-    const formData = new FormData(event.currentTarget);
-    const result = await updatePassword(formData);
-
-    if (result.success) {
-      setMessage("Password updated successfully!");
-      (event.target as HTMLFormElement).reset();
-    } else if (result.errors) {
-      setErrors(result.errors);
+    if (error) {
+      toast.error(error.message || "Failed to update password");
+    } else {
+      toast.success("Password updated successfully");
+      form.reset();
     }
-
-    setLoading(false);
-  };
+  }
 
   return (
     <Card>
@@ -39,89 +78,80 @@ export default function PasswordForm() {
           <Lock className="h-5 w-5" />
           Change Password
         </CardTitle>
+        <CardDescription>
+          Enter your current password and a new password to update your account
+          password.
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {message && (
-            <div className="p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-              {message}
-            </div>
-          )}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+            <FormField
+              control={form.control}
+              name="currentPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Current Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      autoComplete="current-password"
+                      {...field}
+                      disabled={form.formState.isSubmitting}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {errors._global && (
-            <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-              {errors._global.join(", ")}
-            </div>
-          )}
+            <FormField
+              control={form.control}
+              name="newPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>New Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      autoComplete="new-password"
+                      {...field}
+                      disabled={form.formState.isSubmitting}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="space-y-2">
-            <Label htmlFor="currentPassword">Current Password</Label>
-            <div className="relative">
-              <Key className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="currentPassword"
-                name="currentPassword"
-                type="password"
-                className="pl-10"
-                placeholder="Enter your current password"
-                disabled={loading}
-              />
-            </div>
-            {errors.currentPassword && (
-              <p className="text-sm text-red-600">{errors.currentPassword.join(", ")}</p>
-            )}
-          </div>
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm New Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      autoComplete="new-password"
+                      {...field}
+                      disabled={form.formState.isSubmitting}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="space-y-2">
-            <Label htmlFor="newPassword">New Password</Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="newPassword"
-                name="newPassword"
-                type="password"
-                className="pl-10"
-                placeholder="Enter your new password"
-                disabled={loading}
-              />
-            </div>
-            {errors.newPassword && (
-              <p className="text-sm text-red-600">{errors.newPassword.join(", ")}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm New Password</Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                className="pl-10"
-                placeholder="Confirm your new password"
-                disabled={loading}
-              />
-            </div>
-            {errors.confirmPassword && (
-              <p className="text-sm text-red-600">{errors.confirmPassword.join(", ")}</p>
-            )}
-          </div>
-
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Updating...
-              </>
-            ) : (
-              <>
-                <Lock className="h-4 w-4 mr-2" />
-                Update Password
-              </>
-            )}
-          </Button>
-        </form>
+            <Button
+              className="w-auto bg-primary text-primary-foreground hover:bg-primary/90"
+              type="submit"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? "Saving..." : "Update Password"}
+            </Button>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );
