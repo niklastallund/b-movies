@@ -8,7 +8,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PaginationEllipsis, // added
 } from "@/components/ui/pagination";
+import { getPaginationItems } from "@/lib/pagination";
 
 // This page is similar to the MoviesPage but for persons
 // It includes a search bar and displays persons in a grid layout
@@ -26,7 +28,7 @@ export default async function PersonPage({
 
   // Pagination settings
   const PAGE_SIZE = 24;
-  const currentPage = Math.max(1, page); // Avoid pages less than 1
+  const currentPage = Math.max(1, page);
 
   const persons = await prisma.person.findMany({
     orderBy: { name: "asc" },
@@ -41,7 +43,6 @@ export default async function PersonPage({
   });
 
   const totalPersons = await prisma.person.count({
-    orderBy: { name: "asc" },
     where: {
       name: {
         contains: query,
@@ -51,6 +52,16 @@ export default async function PersonPage({
   });
 
   const totalPages = Math.ceil(totalPersons / PAGE_SIZE);
+
+  // Href builder that preserves q and sets page
+  const createPageHref = (p: number) => {
+    const sp = new URLSearchParams();
+    if (query) sp.set("q", query);
+    sp.set("page", String(p));
+    return `?${sp.toString()}`;
+  };
+
+  const paginationItems = getPaginationItems(totalPages, currentPage, 2); // adjust siblings as needed
 
   return (
     <main className="container mx-auto py-8 px-4">
@@ -77,33 +88,44 @@ export default async function PersonPage({
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
-                href={`?${new URLSearchParams({
-                  ...params,
-                  page: String(currentPage - 1),
-                })}`}
+                href={createPageHref(Math.max(1, currentPage - 1))}
                 aria-disabled={currentPage === 1}
+                tabIndex={currentPage === 1 ? -1 : 0}
+                className={
+                  currentPage === 1
+                    ? "pointer-events-none opacity-50"
+                    : undefined
+                }
               />
             </PaginationItem>
-            {[...Array(totalPages)].map((_, i) => (
-              <PaginationItem key={i}>
-                <PaginationLink
-                  href={`?${new URLSearchParams({
-                    ...params,
-                    page: String(i + 1),
-                  })}`}
-                  isActive={currentPage === i + 1}
-                >
-                  {i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
+
+            {paginationItems.map((item, idx) =>
+              item === "ellipsis" ? (
+                <PaginationItem key={`e-${idx}`}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              ) : (
+                <PaginationItem key={item}>
+                  <PaginationLink
+                    href={createPageHref(item)}
+                    isActive={currentPage === item}
+                  >
+                    {item}
+                  </PaginationLink>
+                </PaginationItem>
+              )
+            )}
+
             <PaginationItem>
               <PaginationNext
-                href={`?${new URLSearchParams({
-                  ...params,
-                  page: String(currentPage + 1),
-                })}`}
+                href={createPageHref(Math.min(totalPages, currentPage + 1))}
                 aria-disabled={currentPage === totalPages}
+                tabIndex={currentPage === totalPages ? -1 : 0}
+                className={
+                  currentPage === totalPages
+                    ? "pointer-events-none opacity-50"
+                    : undefined
+                }
               />
             </PaginationItem>
           </PaginationContent>

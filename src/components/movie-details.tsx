@@ -88,7 +88,9 @@ export default function MovieDetails({
               movie.runtime ? `${movie.runtime} minutes` : "Unknown"
             }`}</p>
             <p>{`Budget: ${movie.budget ? `$${movie.budget}` : "Unknown"}`}</p>
-            <p>{`Revenue: ${movie.revenue ? movie.revenue : "Unknown"}`}</p>
+            <p>{`Revenue: ${
+              movie.revenue ? `$${movie.revenue}` : "Unknown"
+            }`}</p>
           </div>
 
           <Separator className="mb-4 mt-0 bg-border" />
