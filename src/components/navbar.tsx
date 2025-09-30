@@ -2,6 +2,7 @@ import Form from "next/form";
 import Link from "next/link";
 import Image from "next/image";
 import { getSession } from "@/lib/auth";
+// Note: Import client components directly; Next.js will handle the client boundary.
 
 // Shadcn UI components
 import {
@@ -24,6 +25,7 @@ import { Input } from "@/components/ui/input";
 // Custom components
 import { ModeToggle } from "@/components/toggle-theme-button";
 import ShoppingCartSheet from "./shopping-cart-sheet";
+
 import { SignInAndProfile } from "./sign-in-and-profile";
 import SignUpAndOut from "./sign-up-and-out";
 
