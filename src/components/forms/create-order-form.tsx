@@ -1,11 +1,12 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
-import { useActionState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import { createOrder } from "@/actions/orders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardHeader,
@@ -14,64 +15,106 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from "@/components/ui/form";
+import { User, Loader2 } from "lucide-react";
 
-// dataTyp för formulärtillstånd och fel
-interface FormState {
-  success: boolean;
-  errors: {
-    _global?: string[];
-    userId?: string[];
-    // Lägg till fält för filmer här om det behövs
-  };
+const CreateOrderSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+});
+
+type CreateOrderValues = z.infer<typeof CreateOrderSchema>;
+
+function getErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (typeof err === "string") return err;
+  return "Could not create order. Please try again.";
 }
 
-const initialState: FormState = {
-  success: false,
-  errors: {},
-};
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button className="mt-4" type="submit" aria-disabled={pending}>
-      {pending ? "Skapar order..." : "Skapa ny order"}
-    </Button>
-  );
-}
-// Komponent för att skapa en ny order
 export default function CreateOrderForm() {
-  const [state, formAction] = useActionState(createOrder as any, initialState);
+  const form = useForm<CreateOrderValues>({
+    resolver: zodResolver(CreateOrderSchema),
+    defaultValues: {
+      userId: "",
+    },
+    mode: "onTouched",
+  });
+
+  const onSubmit = async (values: CreateOrderValues) => {
+    const formData = new FormData();
+    formData.append("userId", values.userId);
+
+    await toast.promise(createOrder(formData), {
+      loading: "Creating order...",
+      success: () => {
+        form.reset();
+        return "Order created successfully!";
+      },
+      error: (err) => getErrorMessage(err),
+    });
+  };
+
+  const isSubmitting = form.formState.isSubmitting;
 
   return (
     <Card className="max-w-lg">
       <CardHeader>
-        <CardTitle>Skapa ny order</CardTitle>
-        <CardDescription>Skapa en ny order i databasen.</CardDescription>
+        <CardTitle>Create New Order</CardTitle>
+        <CardDescription>Create a new order in the database.</CardDescription>
       </CardHeader>
-      <form action={formAction}>
-        <CardContent className="space-y-4">
-          {state.errors?._global && (
-            <p className="text-destructive mb-4">{state.errors._global[0]}</p>
-          )}
-          <div className="space-y-2">
-            <Label htmlFor="userId">Användar-ID</Label>
-            <Input
-              id="userId"
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4">
+            <FormField
+              control={form.control}
               name="userId"
-              placeholder="T.ex. clx2k7..."
-              required
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>User ID</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="e.g. clx2k7..."
+                        className="pl-10"
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormDescription>
+                    Enter the user ID for the new order.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {state.errors?.userId && (
-              <p className="text-destructive text-sm">
-                {state.errors.userId[0]}
-              </p>
-            )}
-          </div>
-        </CardContent>
-        <CardFooter>
-          <SubmitButton />
-        </CardFooter>
-      </form>
+          </CardContent>
+          <CardFooter>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-4 w-full"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating order...
+                </>
+              ) : (
+                "Create New Order"
+              )}
+            </Button>
+          </CardFooter>
+        </form>
+      </Form>
     </Card>
   );
 }
