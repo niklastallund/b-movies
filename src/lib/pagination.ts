@@ -11,11 +11,13 @@ export function getPaginationItems(
     return items;
   }
 
+  // Calculate left and right page numbers to show around the current page
   const left = Math.max(2, currentPage - siblings);
   const right = Math.min(totalPages - 1, currentPage + siblings);
   const showLeftEllipsis = left > 2;
   const showRightEllipsis = right < totalPages - 1;
 
+  // Push the first page, the last page, and the pages around the current page
   items.push(1);
   if (showLeftEllipsis) items.push("ellipsis");
   for (let i = left; i <= right; i++) items.push(i);

@@ -70,10 +70,10 @@ export default function MovieDetails({
           </CardHeader>
 
           <Separator className="mb-3 mt-0 bg-border" />
-          <p className="mb-4 text-muted-foreground leading-relaxed drop-shadow-sm italic">
+          <p className="mb-4 text-muted-foreground leading-relaxed drop-shadow-sm italic whitespace-pre-line">
             {movie.tagline}
           </p>
-          <p className="mb-4 text-foreground leading-relaxed drop-shadow-sm">
+          <p className="mb-4 text-foreground leading-relaxed drop-shadow-sm whitespace-pre-line">
             {movie.overview}
           </p>
 

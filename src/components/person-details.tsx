@@ -84,7 +84,7 @@ export default function PersonDetails({
               </p>
             )}
           </div>
-          <p className="mb-4 text-muted-foreground leading-relaxed drop-shadow-sm italic">
+          <p className="mb-4 text-muted-foreground leading-relaxed drop-shadow-sm italic whitespace-pre-line">
             {person.biography || "No biography available."}
           </p>
           <Separator className="my-4 bg-border" />

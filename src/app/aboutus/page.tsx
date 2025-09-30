@@ -6,8 +6,8 @@ import { Github, Linkedin, Globe } from "lucide-react";
 const members = [
   {
     name: "Josefine",
-    role: "Fullstack Developer focusing on Frontend,Graphics and Logodesign",
-    bio: "Responsible for UI components and implementing responsive design. Built movie cards, carousel, landing page, and navigation menu. Customer support contact sheet. Developed shopping cart with cookies and local storage, checkout system, custom orders and settings as well as admin pages for genres and orders. Implemented Zod validation.",
+    role: "Fullstack Developer focusing on Frontend, Graphics and Logodesign",
+    bio: "Responsible for UI components and implementing responsive design. Built movie cards, carousel, landing page, and navigation menu. Customer support contact sheet. Developed shopping cart with cookies and local storage, checkout system, custom orders and settings as well as admin pages for genres and orders, including Zod validation. Designed the logo and overall site aesthetics.",
     image: "/images/josefine.png",
     github: "GITHUB_LINK",
     linkedin: "https://www.linkedin.com/in/josefine-eriksson-349498345/",
@@ -15,15 +15,15 @@ const members = [
   },
   {
     name: "Niklas",
-    role: "Fullstack Developer focusing on Backend & API",
-    bio: "Created and managed movie data APIs. Responsible for backend logic and database integration. Built admin panel for people, wrote Prisma schema and Zod validation. Developed carousel for people.",
+    role: "Fullstack Developer focused on the Backend, Form Validation, TMDB API integration, Search, Filtering and Pagination",
+    bio: "Created and managed the integration with the TMDB API. Responsible for backend logic, schema design and database integration. Was involved in a lot of form handling, wrote the Prisma schema and helped out with Zod validation for the forms and backend. Responsible for a lot of front end logic, in particular the search, filtering and pagination functionality on the browse pages.",
     image: "/images/default-profile.png",
     github: "https://github.com/niklastallund",
   },
   {
     name: "Amina",
     role: "Fullstack Developer focusing on security & authentication",
-    bio: "Responsible for movie admin panel and authentication. Implemented security measures and user management systems.",
+    bio: "Responsible for movie admin panel and authentication. Implemented security measures and user management systems using better-auth and Zod schemas.",
     image: "/images/aminat.png",
     github: "https://github.com/AminaDev13",
     linkedin: "https://www.linkedin.com/in/aminat-balieva-78bb2a164/",
@@ -38,10 +38,10 @@ export default function AboutUs() {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-4xl mb-10 font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-           About Us
+            About Us
           </h1>
           <p className="text-xl mt-10 text-muted-foreground max-w-3xl mx-auto">
-           We who have built B-Movies
+            We who have built B-Movies
           </p>
         </div>
 
