@@ -5,9 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "npx prisma migrate deploy && next start & npm run seed:admin:delayed",
-    "lint": "eslint",
-    "seed:admin:delayed": "sleep 5 && tsx scripts/create-admin.ts"
+    "start": "npx prisma migrate deploy && next start",
+    "lint": "eslint"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
