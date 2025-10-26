@@ -85,8 +85,9 @@ export async function createOrder(formData: FormData) {
     const order = await prisma.order.create({
       data: {
         user: { connect: { id: userId } },
-        // Lägg till OrderItem om du vill skapa filmer i ordern direkt
-        // OrderItem: { create: ... }
+        totalAmount: 0, // Initial amount, can be updated when items are added
+        status: "PENDING", // Initial status
+        orderDate: new Date(), // Current date/time
       },
     });
     revalidatePath("/admin/orders");

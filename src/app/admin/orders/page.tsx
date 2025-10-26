@@ -33,10 +33,7 @@ export default async function AdminOrdersPage() {
                   {/* Länk till orderspecifikationssidan */}
                   <Link href={`/admin/orders/${order.id}`}>
                     <h3 className="font-medium text-blue-600 hover:underline">
-                      Order-ID:{" "}
-                      {typeof order.id === "string"
-                        ? order.id.substring(0, 8) + "..."
-                        : order.id}
+                      Order-ID:{` ${order.id} `}
                     </h3>
                   </Link>
                   <p className="text-sm text-muted-foreground">
@@ -45,7 +42,11 @@ export default async function AdminOrdersPage() {
                 </div>
 
                 {/* Form för att ta bort en order */}
-                <form action={deleteOrder}>
+                <form
+                  action={async (formData) => {
+                    await deleteOrder(formData);
+                  }}
+                >
                   <input type="hidden" name="id" value={order.id} />
                   <Button
                     type="submit"
