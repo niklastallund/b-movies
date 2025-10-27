@@ -3,12 +3,8 @@ import { Button } from "@/components/ui/button";
 import { addMoviesAndCrewFromTmdb } from "@/actions/api-actions";
 import AddTmdbButton from "./add-tmdb-button";
 import Link from "next/link";
-import { createAdmin } from "@/lib/create-admin";
 
 export default async function AdminPage() {
-  // Very hacky solution to ensure admin user exists
-  await createAdmin();
-
   await requireAdmin();
 
   return (
