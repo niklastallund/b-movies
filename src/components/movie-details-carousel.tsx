@@ -62,7 +62,7 @@ export default function MovieDetailsCarousel({
               {crewMovies.map((movie) => (
                 <CarouselItem
                   key={movie.id}
-                  className="pl-1 basis-1/3 md:basis-1/4 lg:basis-1/6"
+                  className="pl-1 basis-1/2 md:basis-1/4 lg:basis-1/6"
                 >
                   <MovieDetailsPersonCard workedOn={movie} />
                 </CarouselItem>
