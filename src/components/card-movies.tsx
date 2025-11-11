@@ -39,10 +39,10 @@ export function MovieCard({ movie }: MovieDetailsProps) {
           price: price ?? 0,
           quantity: 1,
           imageUrl: handlePoster,
-          tmdb: false, // Since this is from your database
+          tmdb: false,
         });
         toast.success(`${title} added to cart!`);
-        router.refresh(); // Force refresh för navbar update
+        router.refresh();
       } catch {
         toast.error("Failed to add to cart. Please try again.");
       }
@@ -50,30 +50,26 @@ export function MovieCard({ movie }: MovieDetailsProps) {
   };
 
   return (
-    <Card className="max-w-xs overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl py-3">
+    <Card className="flex flex-col h-full max-w-xs overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl py-3">
       <CardContent className="p-0">
-        {/* Movie image */}
-        <Image
-          src={handlePoster}
-          alt={title}
-          width={400}
-          height={620}
-          style={{ objectFit: "cover" }}
-          className="rounded-3xl px-3"
-        />
+        {/* Fixed aspect-ratio image container to normalize height */}
+        <div className="relative w-full aspect-[2/3] px-3">
+          <Image
+            src={handlePoster}
+            alt={title}
+            fill
+            sizes="(max-width: 640px) 100vw, 400px"
+            className="rounded-3xl object-cover"
+            priority={false}
+          />
+        </div>
       </CardContent>
-      <CardFooter className="flex-col items-start px-4 py-0">
-        {/* Movie title */}
+      <CardFooter className="mt-auto flex-col items-start px-4 py-0">
         <h3 className="mb-2 text-md font-semibold leading-tight truncate w-full">
           {title}
         </h3>
-
-        {/* Price and Add to Cart button on same row */}
         <div className="flex w-full items-center justify-between mb-3">
-          {/* Price */}
           <span className="text-md font-bold text-primary">{price} SEK</span>
-
-          {/* Compact Add to Cart button */}
           <Button
             onClick={handleAddToCart}
             disabled={!isAvailable || isPending}
@@ -91,8 +87,6 @@ export function MovieCard({ movie }: MovieDetailsProps) {
             )}
           </Button>
         </div>
-
-        {/* "Read more" link to the dynamic page */}
         <Link href={`/movies/${id}`} className="w-full">
           <Button variant="outline" className="w-full" disabled={!isAvailable}>
             Read More
