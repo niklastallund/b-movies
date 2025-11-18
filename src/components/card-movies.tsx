@@ -81,14 +81,18 @@ export function MovieCard({ movie }: MovieDetailsProps) {
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <>
-                <Plus className="h-4 w-4 mr-1" />
+                <Plus className="h-4 w-4 mr-1 hidden sm:block" />
                 <ShoppingCart className="h-4 w-4" />
               </>
             )}
           </Button>
         </div>
         <Link href={`/movies/${id}`} className="w-full">
-          <Button variant="outline" className="w-full" disabled={!isAvailable}>
+          <Button
+            variant="outline"
+            className="text-xs md:text-sm w-full"
+            disabled={!isAvailable}
+          >
             Read More
           </Button>
         </Link>
