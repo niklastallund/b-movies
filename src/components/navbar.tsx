@@ -20,11 +20,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 // Custom components
 import { ModeToggle } from "@/components/toggle-theme-button";
 import ShoppingCartSheet from "./shopping-cart-sheet";
+import NavbarSearchBar from "./navbar-search-bar";
 
 import { SignInAndProfile } from "./sign-in-and-profile";
 import SignUpAndOut from "./sign-up-and-out";
@@ -70,15 +70,7 @@ export default async function Navbar() {
         <div className="flex items-center lg:order-2 space-x-3">
           {/* Search field */}
           <div className="flex items-center space-x-2 flex-1 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
-            <Form action="/movies" className="w-full">
-              <Input
-                type="search"
-                name="q"
-                placeholder="Search for movies..."
-                className="w-full"
-              />
-              <button type="submit" hidden></button>
-            </Form>
+            <NavbarSearchBar />
           </div>
 
           {/* THEME BUTTON */}
