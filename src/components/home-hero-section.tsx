@@ -39,13 +39,25 @@ export default function HeroSection() {
         id="desktop-hero"
         className="relative h-screen w-screen flex flex-col justify-center items-center text-center px-4"
       >
+        {/* Desktop Image */}
         <Image
           src="/images/hero1.png"
           alt=""
           fill
           priority
           aria-hidden
-          className="object-cover -z-10"
+          className="hidden md:block object-cover -z-10"
+          sizes="100vw"
+        />
+        {/* Mobile Image */}
+        <Image
+          src="/images/hero1mobil.png"
+          alt=""
+          fill
+          priority
+          aria-hidden
+          className="block md:hidden object-cover -z-10"
+          sizes="100vw"
         />
         <div className="absolute inset-0 bg-background opacity-60 z-0"></div>
         <div className="z-10 relative">
