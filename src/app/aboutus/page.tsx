@@ -5,20 +5,20 @@ import { Github, Linkedin, Globe } from "lucide-react";
 
 const members = [
   {
-    name: "Josefine",
-    role: "Fullstack Developer focusing on Frontend, Graphics and Logodesign",
-    bio: "Responsible for UI components and implementing responsive design. Built movie cards, carousel, landing page, and navigation menu. Customer support contact sheet. Developed shopping cart with cookies and local storage, checkout system, custom orders and settings as well as admin pages for genres and orders, including Zod validation. Designed the logo and overall site aesthetics.",
-    image: "/images/josefine.png",
-    github: "GITHUB_LINK",
-    linkedin: "https://www.linkedin.com/in/josefine-eriksson-349498345/",
-    website: "https://kodochdesign.se/",
-  },
-  {
     name: "Niklas",
-    role: "Fullstack Developer focused on the Backend, Form Validation, TMDB API integration, Search, Filtering and Pagination",
-    bio: "Created and managed the integration with the TMDB API. Responsible for backend logic, schema design and database integration. Was involved in a lot of form handling, wrote the Prisma schema and helped out with Zod validation for the forms and backend. Responsible for a lot of front end logic, in particular the search, filtering and pagination functionality on the browse pages.",
+    role: "Fullstack Developer focused on Backend and API integration.",
+    bio: "Project lead who was responsible for backend architecture and implementation. Designed the Prisma schema and database integrations, implemented robust form validation with Zod, and built the TMDB API integration. Responsible for the core backend logic, search/filtering/pagination features, and upheld code quality and maintainability across the project.",
     image: "/images/default-profile.png",
     github: "https://github.com/niklastallund",
+  },
+  {
+    name: "Josefine",
+    role: "Fullstack Developer focusing on Frontend and Graphics",
+    bio: "Responsible for UI components and implementing responsive design. Built movie cards, carousel, landing page, and navigation menu. Customer support contact sheet. Developed shopping cart with cookies and local storage, checkout system, custom orders and settings as well as admin pages for genres and orders, including Zod validation. Designed the logo and overall site aesthetics.",
+    image: "/images/josefine.png",
+    github: "https://github.com/knixan",
+    linkedin: "https://www.linkedin.com/in/josefine-eriksson-349498345/",
+    website: "https://kodochdesign.se/",
   },
   {
     name: "Amina",
@@ -40,9 +40,6 @@ export default function AboutUs() {
           <h1 className="text-4xl md:text-4xl mb-10 font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
             About Us
           </h1>
-          <p className="text-xl mt-10 text-muted-foreground max-w-3xl mx-auto">
-            We who have built B-Movies
-          </p>
         </div>
 
         {/* Team Members */}
@@ -121,7 +118,7 @@ export default function AboutUs() {
                         <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-3">
                           {member.name}
                         </h2>
-                        <div className="inline-block px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-full text-sm font-medium mb-6">
+                        <div className="inline-block px-6 py-2 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-full text-sm font-semibold">
                           {member.role}
                         </div>
                       </div>
