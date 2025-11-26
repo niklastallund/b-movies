@@ -1,10 +1,7 @@
-import Form from "next/form";
 import Link from "next/link";
 import Image from "next/image";
 import { getSession } from "@/lib/auth";
-// Note: Import client components directly; Next.js will handle the client boundary.
 
-// Shadcn UI components
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +25,7 @@ import NavbarSearchBar from "./navbar-search-bar";
 
 import { SignInAndProfile } from "./sign-in-and-profile";
 import SignUpAndOut from "./sign-up-and-out";
+import { NavbarMobileSheet } from "./navbar-mobile-sheet";
 
 export default async function Navbar() {
   const session = await getSession();
@@ -90,18 +88,7 @@ export default async function Navbar() {
           </div>
 
           {/* MOBILE MENU */}
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden">
-                <Menu className="w-6 h-6" />
-                <span className="sr-only">Open menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-full sm:max-w-xs">
-              <MobileLinks toplists={toplists} isLoggedIn={isLoggedIn} />
-            </SheetContent>
-            <SheetTitle className="sr-only">menu</SheetTitle>
-          </Sheet>
+          <NavbarMobileSheet toplists={toplists} isLoggedIn={isLoggedIn} />
         </div>
 
         {/* NAVIGATION FOR DESKTOP */}
@@ -157,49 +144,49 @@ export default async function Navbar() {
   );
 }
 
-// Mobile menu content
-const MobileLinks = ({
-  toplists,
-  isLoggedIn,
-}: {
-  toplists: { label: string; id: string }[];
-  isLoggedIn: boolean;
-}) => (
-  <div className="mt-4 p-6 flex flex-col space-y-2">
-    <Link href="/" className="font-semibold text-primary text-lg">
-      Home
-    </Link>
-    <Link href="/movies" className="font-semibold text-primary text-lg">
-      Movies
-    </Link>
-    <Link href="/person" className="font-semibold text-primary text-lg">
-      People
-    </Link>
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="justify-start px-0 text-foreground text-lg"
-        >
-          Top Lists
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent side="right">
-        {toplists.map((link) => (
-          <DropdownMenuItem key={link.id} asChild>
-            <Link href={`#${link.id}`}>{link.label}</Link>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+// // Mobile menu content
+// const MobileLinks = ({
+//   toplists,
+//   isLoggedIn,
+// }: {
+//   toplists: { label: string; id: string }[];
+//   isLoggedIn: boolean;
+// }) => (
+//   <div className="mt-4 p-6 flex flex-col space-y-2">
+//     <Link href="/" className="font-semibold text-primary text-lg">
+//       Home
+//     </Link>
+//     <Link href="/movies" className="font-semibold text-primary text-lg">
+//       Movies
+//     </Link>
+//     <Link href="/person" className="font-semibold text-primary text-lg">
+//       People
+//     </Link>
+//     <DropdownMenu>
+//       <DropdownMenuTrigger asChild>
+//         <Button
+//           variant="ghost"
+//           className="justify-start px-0 text-foreground text-lg"
+//         >
+//           Top Lists
+//         </Button>
+//       </DropdownMenuTrigger>
+//       <DropdownMenuContent side="right">
+//         {toplists.map((link) => (
+//           <DropdownMenuItem key={link.id} asChild>
+//             <Link href={`#${link.id}`}>{link.label}</Link>
+//           </DropdownMenuItem>
+//         ))}
+//       </DropdownMenuContent>
+//     </DropdownMenu>
 
-    <div className="flex flex-col space-y-4 pt-4 border-t border-border mt-4">
-      {/* SIGN UP BUTTON FOR MOBILE */}
+//     <div className="flex flex-col space-y-4 pt-4 border-t border-border mt-4">
+//       {/* SIGN UP BUTTON FOR MOBILE */}
 
-      <SignUpAndOut isLoggedIn={isLoggedIn} />
+//       <SignUpAndOut isLoggedIn={isLoggedIn} />
 
-      {/* SIGN IN BUTTON FOR MOBILE */}
-      <SignInAndProfile isLoggedIn={isLoggedIn} />
-    </div>
-  </div>
-);
+//       {/* SIGN IN BUTTON FOR MOBILE */}
+//       <SignInAndProfile isLoggedIn={isLoggedIn} />
+//     </div>
+//   </div>
+// );
