@@ -40,6 +40,9 @@ export default function AboutUs() {
           <h1 className="text-4xl md:text-4xl mb-10 font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
             About Us
           </h1>
+          <p className="text-xl mt-10 text-muted-foreground max-w-3xl mx-auto">
+            The people responsible for building this movie platform.
+          </p>
         </div>
 
         {/* Team Members */}
@@ -141,13 +144,6 @@ export default function AboutUs() {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Footer Section */}
-        <div className="text-center mt-20 pt-12 border-t">
-          <p className="text-muted-foreground text-lg">
-            Together we have created this movie platform.
-          </p>
         </div>
       </div>
     </div>

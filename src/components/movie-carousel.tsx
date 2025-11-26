@@ -19,9 +19,9 @@ export default function MovieCarousel({
   id: string;
 }) {
   return (
-    <div className="my-8" id={id}>
+    <div className="my-8 px-10" id={id}>
       <h2 className="text-3xl font-bold mb-4 text-foreground">{title}</h2>
-      <Carousel className="w-full  max-w-7xl mx-auto">
+      <Carousel className="w-full max-w-7xl mx-auto">
         <CarouselContent className="-ml-1">
           {movies.map((movie) => (
             <CarouselItem

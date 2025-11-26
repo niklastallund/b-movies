@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect } from "react";
 
 export default function HeroSection() {
@@ -36,10 +37,17 @@ export default function HeroSection() {
     <div>
       <section
         id="desktop-hero"
-        className="relative h-screen w-screen flex flex-col justify-center items-center text-center px-4 bg-cover bg-center"
-        style={{ backgroundImage: 'url("/images/hero1.png")' }}
+        className="relative h-screen w-screen flex flex-col justify-center items-center text-center px-4"
       >
-        <div className="absolute inset-0 bg-background opacity-60"></div>
+        <Image
+          src="/images/hero1.png"
+          alt=""
+          fill
+          priority
+          aria-hidden
+          className="object-cover -z-10"
+        />
+        <div className="absolute inset-0 bg-background opacity-60 z-0"></div>
         <div className="z-10 relative">
           <h1
             id="main-heading"
