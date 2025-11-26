@@ -42,7 +42,9 @@ export default async function ShoppingCartSheet() {
         <SheetHeader>
           <SheetTitle>Your Shopping Cart</SheetTitle>
         </SheetHeader>
-        <div className="flex flex-col gap-4 py-4">
+
+        {/* Cart Items */}
+        <div className="flex flex-col gap-4 py-4 max-h-[70vh] overflow-auto pr-2">
           {cart.items.length > 0 ? (
             cart.items.map((item) => (
               <div
@@ -83,6 +85,7 @@ export default async function ShoppingCartSheet() {
             </div>
           )}
         </div>
+
         <Separator />
         {cart.items.length > 0 && (
           <div className="mt-4 m-6 flex justify-between font-bold">
